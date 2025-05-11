@@ -1,0 +1,58 @@
+Auflistung der Ordnerpfade
+Volumeseriennummer : 60EC-1DDB
+C:.
+³   .env
+³   .gitignore
+³   init_project.py
+³   project_structure.txt
+³   README.md
+³   requirements.txt
+³   
+ÃÄÄÄbackend
+³   ÃÄÄÄapi
+³   ³       __init__.py
+³   ³       
+³   ÃÄÄÄcore
+³   ³       change_point_parser.py
+³   ³       llm_integration.py
+³   ³       __init__.py
+³   ³       
+³   ÃÄÄÄdata
+³   ³       __init__.py
+³   ³       
+³   ÀÄÄÄutils
+³           __init__.py
+³           
+ÃÄÄÄconfig
+³       settings.py
+³       __init__.py
+³       
+ÃÄÄÄdata
+³   ÃÄÄÄoutputs
+³   ³       .gitkeep
+³   ³       __init__.py
+³   ³       
+³   ÃÄÄÄprocessed
+³   ³       .gitkeep
+³   ³       __init__.py
+³   ³       
+³   ÀÄÄÄraw
+³           .gitkeep
+³           __init__.py
+³           
+ÃÄÄÄfrontend
+³   ³   app.py
+³   ³   
+³   ÃÄÄÄcomponents
+³   ³       sidebar.py
+³   ³       __init__.py
+³   ³       
+³   ÀÄÄÄpages
+³           __init__.py
+³           
+ÃÄÄÄmodels
+³       __init__.py
+³       
+ÀÄÄÄtests
+        __init__.py
+        

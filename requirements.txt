@@ -1,0 +1,28 @@
+# Core dependencies
+pandas
+numpy<2
+matplotlib
+seaborn
+plotly
+scikit-learn
+python-dotenv
+pyarrow
+
+# LLM integration
+openai>=1.0.0
+
+# Data processing
+python-docx  # For Word documents
+python-pptx  # For PowerPoint files
+beautifulsoup4  # For HTML parsing (e.g., intranet)
+PyPDF2  # For PDF files
+fpdf2
+
+
+# Frontend
+streamlit
+streamlit-agraph  # For network visualizations
+streamlit-timeline  # For timeline visualizations
+
+# Testing
+pytest
