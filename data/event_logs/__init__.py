@@ -1,0 +1,1 @@
+# Init for event_logs

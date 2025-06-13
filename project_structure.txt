@@ -1,58 +1,49 @@
-Auflistung der Ordnerpfade
-Volumeseriennummer : 60EC-1DDB
-C:.
-³   .env
-³   .gitignore
-³   init_project.py
-³   project_structure.txt
-³   README.md
-³   requirements.txt
-³   
-ÃÄÄÄbackend
-³   ÃÄÄÄapi
-³   ³       __init__.py
-³   ³       
-³   ÃÄÄÄcore
-³   ³       change_point_parser.py
-³   ³       llm_integration.py
-³   ³       __init__.py
-³   ³       
-³   ÃÄÄÄdata
-³   ³       __init__.py
-³   ³       
-³   ÀÄÄÄutils
-³           __init__.py
-³           
-ÃÄÄÄconfig
-³       settings.py
-³       __init__.py
-³       
-ÃÄÄÄdata
-³   ÃÄÄÄoutputs
-³   ³       .gitkeep
-³   ³       __init__.py
-³   ³       
-³   ÃÄÄÄprocessed
-³   ³       .gitkeep
-³   ³       __init__.py
-³   ³       
-³   ÀÄÄÄraw
-³           .gitkeep
-³           __init__.py
-³           
-ÃÄÄÄfrontend
-³   ³   app.py
-³   ³   
-³   ÃÄÄÄcomponents
-³   ³       sidebar.py
-³   ³       __init__.py
-³   ³       
-³   ÀÄÄÄpages
-³           __init__.py
-³           
-ÃÄÄÄmodels
-³       __init__.py
-³       
-ÀÄÄÄtests
-        __init__.py
-        
+context_drift_explainer/
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ agents/
+â”‚   â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”‚   â”œâ”€â”€ drift_agent.py
+â”‚   â”‚   â”œâ”€â”€ context_retrieval_agent.py
+â”‚   â”‚   â”œâ”€â”€ context_mapper_agent.py
+â”‚   â”‚   â”œâ”€â”€ franzoi_mapper_agent.py
+â”‚   â”‚   â”œâ”€â”€ explanation_agent.py
+â”‚   â”‚   â”œâ”€â”€ evaluation_agent.py
+â”‚   â”‚   â””â”€â”€ chatbot_agent.py
+â”‚   â”‚
+â”‚   â”œâ”€â”€ graph/
+â”‚   â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”‚   â””â”€â”€ build_graph.py      # LangGraph orchestration
+â”‚   â”‚
+â”‚   â”œâ”€â”€ state/
+â”‚   â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”‚   â””â”€â”€ schema.py           # Shared state model
+â”‚   â”‚
+â”‚   â”œâ”€â”€ utils/
+â”‚   â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”‚   â”œâ”€â”€ embedding.py
+â”‚   â”‚   â”œâ”€â”€ retrieval.py
+â”‚   â”‚   â”œâ”€â”€ timestamp_utils.py
+â”‚   â”‚   â””â”€â”€ logging_config.py
+â”‚   â”‚
+â”‚   â”œâ”€â”€ run_pipeline.py         # Optional entrypoint to run the LangGraph
+â”‚ 
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ __init__.py
+â”‚   â”œâ”€â”€ streamlit_ui.py         # Interactive analyst interface
+â”‚   â””â”€â”€ cli.py                  # Optional CLI interface
+â”‚ 
+â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ event_logs/             # CSV/XES logs
+â”‚   â”œâ”€â”€ drift_outputs/          # CV4CDD JSON files
+â”‚   â””â”€â”€ documents/              # Intranet/org knowledge base
+â”‚ 
+â”œâ”€â”€ tests/
+â”‚   â”œâ”€â”€ test_drift_agent.py
+â”‚   â”œâ”€â”€ test_explanation_agent.py
+â”‚   â””â”€â”€ ...
+â”‚ 
+â”œâ”€â”€ .env
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ requirements.txt
+â”œâ”€â”€ project_structure.txt
+â”œâ”€â”€ README.md
