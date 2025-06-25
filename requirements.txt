@@ -5,11 +5,21 @@ matplotlib
 seaborn
 plotly
 scikit-learn
-python-dotenv
+python-dotenv # For environment variables
 pyarrow
 
 # LLM integration
 openai>=1.0.0
+
+# Core LLM orchestration
+langchain
+langchain-openai
+langchain-pinecone
+
+# Vector store and sentence embeddings
+pinecone-client
+sentence-transformers
+torch
 
 # Data processing
 python-docx  # For Word documents
@@ -17,6 +27,7 @@ python-pptx  # For PowerPoint files
 beautifulsoup4  # For HTML parsing (e.g., intranet)
 PyPDF2  # For PDF files
 fpdf2
+unstructured[pdf] # For document processing
 
 
 # Frontend
