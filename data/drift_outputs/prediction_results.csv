@@ -1,0 +1,2 @@
+,Detected Changepoints,Detected Drift Types,Prediction Confidence
+PermitLog,"[('travel permit 81954', 'travel permit 68879'), ('travel permit 80698', 'travel permit 8058')]","['incremental', 'gradual']",[0.6871 0.5593]
