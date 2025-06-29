@@ -12,7 +12,7 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 # Import our graph state schema
 from backend.state.schema import GraphState, ContextSnippet

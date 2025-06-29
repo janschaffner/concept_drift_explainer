@@ -13,17 +13,20 @@ class DriftInfo(TypedDict):
     start_timestamp: str
     end_timestamp: str
 
+class FranzoiClassification(TypedDict):
+    """Represents a single classification according to the Franzoi taxonomy."""
+    full_path: str  # e.g., "ORGANIZATION_INTERNAL::Process Management"
+    reasoning: str  # The LLM's reasoning for this classification
+
 class ContextSnippet(TypedDict):
     """
     Represents a single snippet of contextual information retrieved from a source document.
     """
     snippet_text: str
     source_document: str
-    # The timestamp will be added as metadata during ingestion into Pinecone.
-    # We will use it for temporal filtering.
-    timestamp: str 
-    # This field will be populated by the FranzoiMapperAgent.
-    franzoi_category: Optional[str]
+    timestamp: int # Stored as Unix timestamp
+    # MODIFIED: This now holds a list of detailed classifications
+    classifications: List[FranzoiClassification]
 
 class RankedCause(TypedDict):
     """
@@ -32,6 +35,8 @@ class RankedCause(TypedDict):
     cause_description: str
     evidence_snippet: str
     source_document: str
+    # ADDED: Include the classification in the final ranked cause
+    context_category: str 
     confidence_score: float
 
 class Explanation(TypedDict):
