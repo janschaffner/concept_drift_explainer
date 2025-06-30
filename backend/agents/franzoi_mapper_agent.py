@@ -13,7 +13,7 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 # Import our graph state schema
 from backend.state.schema import GraphState, ContextSnippet, FranzoiClassification

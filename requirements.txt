@@ -76,6 +76,10 @@ langchain-openai==0.3.27
 langchain-tests==0.3.20
 langchain-text-splitters==0.3.8
 langdetect==1.0.9
+langgraph==0.5.0
+langgraph-checkpoint==2.1.0
+langgraph-prebuilt==0.5.1
+langgraph-sdk==0.1.72
 langsmith==0.4.4
 lxml==6.0.0
 markdown-it-py==3.0.0
@@ -98,6 +102,7 @@ onnxruntime==1.19.2
 openai==1.93.0
 opencv-python==4.11.0.86
 orjson==3.10.18
+ormsgpack==1.10.0
 packaging==24.2
 pandas==2.3.0
 pdf2image==1.17.0
@@ -196,6 +201,7 @@ watchdog==6.0.0
 webencodings==0.5.1
 wrapt==1.17.2
 xlsxwriter==3.2.5
+xxhash==3.5.0
 yarl==1.20.1
 zipp==3.23.0
 zstandard==0.23.0
