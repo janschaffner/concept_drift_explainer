@@ -59,53 +59,48 @@ TEXT SNIPPET:
 
 def run_franzoi_mapper_agent(state: GraphState) -> dict:
     """
-    Classifies retrieved context snippets using the Franzoi taxonomy via LLM tool-calling.
+    Classifies retrieved context snippets using the Franzoi taxonomy and
+    updates them in-place within the state.
     """
     logging.info("--- Running Franzoi Mapper Agent (Tool-Calling Version) ---")
-    
-    retrieved_snippets: List[ContextSnippet] = state.get("raw_context_snippets", [])
-    if not retrieved_snippets:
+
+    # NOTE: We now get the list and modify it directly.
+    context_snippets: List[ContextSnippet] = state.get("raw_context_snippets", [])
+    if not context_snippets:
         logging.warning("No context snippets found to classify.")
-        return {"classified_context": []}
+        return {} # Return empty dict as we are done
 
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
         error_msg = "OPENAI_API_KEY not found in .env file."
         logging.error(error_msg)
         return {"error": error_msg}
-        
-    # Initialize the LLM
+
     llm = ChatOpenAI(model="gpt-4o", temperature=0)
-    # This is the new, more reliable method for getting structured output.
-    # We bind our Pydantic schema (ClassificationList) to the LLM as a "tool".
     structured_llm = llm.with_structured_output(ClassificationList)
-    
-    classified_snippets: List[ContextSnippet] = []
-    for snippet in retrieved_snippets:
+
+    for snippet in context_snippets: # Loop through and modify each snippet
         logging.info(f"Classifying snippet from: {snippet['source_document']}")
-        
+
         prompt = PROMPT_TEMPLATE.format(snippet_text=snippet["snippet_text"])
-        
+
         try:
-            # The LLM is now forced to return an object matching the ClassificationList schema.
             response_object = structured_llm.invoke(prompt)
-            
-            # The output is already a Pydantic object, not a JSON string.
-            # We convert it to a list of dicts for our state.
+
             typed_classifications: List[FranzoiClassification] = [
                 {"full_path": item.full_path, "reasoning": item.reasoning}
                 for item in response_object.classifications
             ]
-            
+
+            # This modifies the snippet dictionary directly within the state
             snippet['classifications'] = typed_classifications
             logging.info(f"  > Classified as: {[c['full_path'] for c in typed_classifications]}")
 
         except Exception as e:
             logging.error(f"Error classifying snippet: {e}")
             snippet['classifications'] = [{"full_path": "CLASSIFICATION_FAILED", "reasoning": str(e)}]
-        
-        classified_snippets.append(snippet)
 
     logging.info("Franzoi Mapper Agent execution successful.")
-    
-    return {"classified_context": classified_snippets}
+
+    # We modified the state in-place, so we return an empty dictionary.
+    return {}

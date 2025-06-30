@@ -59,19 +59,15 @@ class GraphState(TypedDict):
     # To be populated by DriftAgent
     drift_info: DriftInfo 
     
-    # To be populated by ContextRetrievalAgent
-    # These are snippets retrieved based on semantic similarity.
+    # To be populated by ContextRetrievalAgent.
+    # This list is already filtered by both semantic similarity and temporal relevance.
     raw_context_snippets: List[ContextSnippet]
-    
-    # To be populated by ContextMapperAgent (or refined retrieval agent)
-    # These are snippets that are also temporally relevant to the drift.
-    filtered_context_snippets: List[ContextSnippet]
 
     # To be populated by ExplanationAgent
     explanation: Explanation
 
     # To be populated and used by the ChatbotAgent
-    chat_history: List[Tuple[str, str]] # List of (human_message, ai_message)
+    chat_history: List[Tuple[str, str]]
 
     # To be populated by the EvaluationAgent via the UI
-    user_feedback: Optional[Dict[str, any]] # e.g., {'plausibility': 5, 'comment': '...'}
+    user_feedback: Optional[Dict[str, any]]

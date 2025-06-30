@@ -53,7 +53,7 @@ def run_explanation_agent(state: GraphState) -> dict:
     logging.info("--- Running Explanation Agent ---")
     
     drift_info = state.get("drift_info")
-    classified_context = state.get("classified_context", [])
+    classified_context = state.get("raw_context_snippets", [])
 
     if not classified_context:
         logging.warning("No classified context found. Cannot generate an explanation.")
