@@ -76,7 +76,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         logging.error(error_msg)
         return {"error": error_msg}
 
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     structured_llm = llm.with_structured_output(ClassificationList)
 
     for snippet in context_snippets: # Loop through and modify each snippet

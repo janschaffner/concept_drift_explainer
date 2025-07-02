@@ -65,7 +65,7 @@ Use the provided "Original Analysis Context" and "Previous Conversation" to answ
     prompt = prompt_template.format(context=full_context, question=user_question)
 
     try:
-        llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
         response = llm.invoke(prompt)
         ai_answer = response.content
 

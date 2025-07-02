@@ -1,3 +1,5 @@
+# backend/agents/explanation_agent.py
+
 import os
 import sys
 import logging
@@ -14,14 +16,13 @@ from langchain_openai import ChatOpenAI
 from pydantic.v1 import BaseModel, Field
 
 # Import our graph state schema
-from backend.state.schema import GraphState, Explanation, RankedCause
+from backend.state.schema import GraphState, Explanation
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- Pydantic Models for Structured Output ---
 class Cause(BaseModel):
-    """Represents a single, ranked potential cause for the drift."""
     cause_description: str = Field(description="The detailed analysis of what caused the drift, citing the evidence.")
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
@@ -29,9 +30,79 @@ class Cause(BaseModel):
     confidence_score: float = Field(description="Confidence in this cause, from 0.0 to 1.0.")
 
 class ExplanationOutput(BaseModel):
-    """The final, structured explanation for the concept drift."""
     summary: str = Field(description="A 1-3 sentence executive summary of the most likely cause.")
     ranked_causes: List[Cause] = Field(description="A list of potential causes, ordered from most to least likely.")
+
+
+# --- NEW: Specialized Prompt Templates for 4 Drift Types ---
+
+SUDDEN_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Sudden Drift**.
+A Sudden Drift involves an abrupt substitution of one process with another. From one point onward, the old process no longer occurs, and all new instances follow the updated version. This type of drift is often triggered by crises, emergencies, or immediate regulatory changes (Bose et al., 2011).
+Prioritize evidence that points to a single, discrete event with a specific date.
+
+**## 1. Detected Concept Drift**
+- **Drift Type:** {drift_type}
+- **Drift Period:** {start_timestamp} to {end_timestamp}
+
+**## 2. Evidence from Context Documents**
+{formatted_context}
+
+**## 3. Your Task**
+Based on the provided information, generate an explanation for the **SUDDEN** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
+- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on singular events.
+"""
+
+GRADUAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Gradual Drift**.
+A Gradual Drift describes a transition phase where both the old and new process variants coexist. This is common in rollout scenarios, where a new process is adopted for new cases, while ongoing cases continue under the old variant. Over time, the older version is phased out entirely (Bose et al., 2011).
+Prioritize evidence suggesting a transition, coexistence of old/new processes, or phased rollouts.
+
+**## 1. Detected Concept Drift**
+- **Drift Type:** {drift_type}
+- **Drift Period:** {start_timestamp} to {end_timestamp}
+
+**## 2. Evidence from Context Documents**
+{formatted_context}
+
+**## 3. Your Task**
+Based on the provided information, generate an explanation for the **GRADUAL** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
+- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on transition periods.
+"""
+
+INCREMENTAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain an **Incremental Drift**.
+An Incremental Drift consists of a sequence of small, continuous changes that cumulatively result in significant process transformation. It is often associated with agile BPM practices, where iterative adjustments are made without a single, identifiable change point (Bose et al., 2011; Kraus und van der Aa, 2025).
+Prioritize evidence of multiple small adjustments, iterative improvements, or agile practices over time.
+
+**## 1. Detected Concept Drift**
+- **Drift Type:** {drift_type}
+- **Drift Period:** {start_timestamp} to {end_timestamp}
+
+**## 2. Evidence from Context Documents**
+{formatted_context}
+
+**## 3. Your Task**
+Based on the provided information, generate an explanation for the **INCREMENTAL** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
+- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on a series of small changes.
+"""
+
+RECURRING_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Recurring Drift**.
+A Recurring Drift occurs when previously observed process versions reappear over time, often in a cyclical pattern. These drifts may follow seasonal cycles or non-periodic triggers (e.g., market-specific promotional workflows) (Bose et al., 2011; Kraus und van der Aa, 2025).
+Prioritize evidence of seasonal activities, cyclical patterns, or temporary process changes that are designed to reappear.
+
+**## 1. Detected Concept Drift**
+- **Drift Type:** {drift_type}
+- **Drift Period:** {start_timestamp} to {end_timestamp}
+
+**## 2. Evidence from Context Documents**
+{formatted_context}
+
+**## 3. Your Task**
+Based on the provided information, generate an explanation for the **RECURRING** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
+- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on cyclical or seasonal evidence.
+"""
 
 
 def format_context_for_prompt(classified_context: list) -> str:
@@ -57,7 +128,6 @@ def run_explanation_agent(state: GraphState) -> dict:
 
     if not classified_context:
         logging.warning("No classified context found. Cannot generate an explanation.")
-        # Create a default explanation indicating no context was found
         no_context_explanation: Explanation = {
             "summary": "No explanation could be generated as no relevant contextual documents were found for the detected drift period.",
             "ranked_causes": []
@@ -66,55 +136,39 @@ def run_explanation_agent(state: GraphState) -> dict:
 
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
-        error_msg = "OPENAI_API_KEY not found in .env file."
-        logging.error(error_msg)
-        return {"error": error_msg}
+        return {"error": "OPENAI_API_KEY not found."}
     
-    # Format the inputs for the prompt
+    # --- UPDATED: Dynamic Prompt Selection for 4 Drift Types ---
+    drift_type = drift_info.get('drift_type', '').lower()
+    
+    if 'sudden' in drift_type:
+        logging.info("Using SUDDEN drift prompt template.")
+        prompt_template = SUDDEN_DRIFT_PROMPT
+    elif 'gradual' in drift_type:
+        logging.info("Using GRADUAL drift prompt template.")
+        prompt_template = GRADUAL_DRIFT_PROMPT
+    elif 'recurring' in drift_type:
+        logging.info("Using RECURRING drift prompt template.")
+        prompt_template = RECURRING_DRIFT_PROMPT
+    else: # Default to incremental for 'incremental' or any other type
+        logging.info("Using INCREMENTAL drift prompt template.")
+        prompt_template = INCREMENTAL_DRIFT_PROMPT
+    
     formatted_context = format_context_for_prompt(classified_context)
-    
-    prompt_template = """You are an expert business process analyst and a skilled technical writer. Your goal is to explain a detected concept drift to a manager in a clear, concise, and actionable way.
-
-You will be given information about the detected drift and a list of potentially relevant text snippets that have been automatically classified according to the Franzoi et al. context taxonomy.
-
-**## 1. Detected Concept Drift**
-- **Drift Type:** {drift_type}
-- **Drift Period:** {start_timestamp} to {end_timestamp}
-- **Confidence:** {confidence:.2f}
-
-**## 2. Evidence from Context Documents**
-{formatted_context}
-
-**## 3. Your Task**
-Based on all the provided information, generate a final explanation. Structure your response as a valid JSON object with two keys: "summary" and "ranked_causes".
-
-- **"summary"**: A 1-3 sentence executive summary of the most likely cause of the drift.
-- **"ranked_causes"**: A list of potential causes, ordered from most to least likely. Each cause in the list should be a JSON object with the following keys:
-  - **"cause_description"**: Your analysis of what caused the drift.
-  - **"evidence_snippet"**: The specific text snippet that supports your analysis.
-  - **"source_document"**: The name of the source document for the evidence.
-  - **"context_category"**: The most relevant classification path for this cause (e.g., "ORGANIZATION_INTERNAL::Process_Management").
-  - **"confidence_score"**: Your confidence in this cause, from 0.0 to 1.0.
-
-Your tone should be objective and professional. Use phrases like "The evidence suggests..." or "A potential cause is...".
-"""
-    
     prompt = prompt_template.format(
         drift_type=drift_info['drift_type'],
         start_timestamp=drift_info['start_timestamp'],
         end_timestamp=drift_info['end_timestamp'],
-        confidence=drift_info['confidence'],
         formatted_context=formatted_context
     )
     
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     structured_llm = llm.with_structured_output(ExplanationOutput)
 
     try:
         logging.info("Synthesizing final explanation...")
         explanation_obj = structured_llm.invoke(prompt)
 
-        # Convert from Pydantic models to TypedDicts for the state
         final_explanation: Explanation = {
             "summary": explanation_obj.summary,
             "ranked_causes": [cause.dict() for cause in explanation_obj.ranked_causes]
