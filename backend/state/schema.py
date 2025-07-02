@@ -71,3 +71,6 @@ class GraphState(TypedDict):
 
     # To be populated by the EvaluationAgent via the UI
     user_feedback: Optional[Dict[str, any]]
+
+    # To be populated by the chatbot UI
+    user_question: Optional[str]
