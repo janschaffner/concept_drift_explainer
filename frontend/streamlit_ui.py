@@ -1,6 +1,8 @@
 import sys
 import os
+import json
 from pathlib import Path
+from datetime import datetime
 import streamlit as st
 
 # --- Path Correction ---
@@ -38,13 +40,18 @@ with st.sidebar:
     st.header("Controls")
     # The main button that triggers the entire agent pipeline
     run_analysis = st.button("Run Drift Explanation Analysis")
+    if run_analysis:
+        # When a new analysis is run, reset the feedback state
+        st.session_state.feedback_given = {}
 
 # --- Session State Initialization ---
-# We use session_state to store the result so it persists across reruns
+# We use session_state to store results so they persist across reruns
 if 'explanation_result' not in st.session_state:
     st.session_state.explanation_result = None
 if 'error_message' not in st.session_state:
     st.session_state.error_message = None
+if 'feedback_given' not in st.session_state:
+    st.session_state.feedback_given = {}
 
 # --- Logic to Run the Graph ---
 if run_analysis:
@@ -59,6 +66,7 @@ if run_analysis:
             # Store the results in the session state
             st.session_state.explanation_result = final_state.get('explanation')
             st.session_state.error_message = final_state.get('error')
+            st.session_state.full_state = final_state # Store the full state for logging
 
         except Exception as e:
             st.session_state.error_message = f"An unexpected error occurred: {e}"
@@ -86,17 +94,62 @@ elif st.session_state.explanation_result:
         st.warning("No specific causes were identified.")
     else:
         for i, cause in enumerate(ranked_causes):
-            # Use an expander for each cause to keep the UI clean
             with st.expander(f"**Cause #{i+1}:** {cause.get('context_category', 'N/A')}", expanded=i==0):
                 st.markdown(f"**Description:** {cause.get('cause_description', 'N/A')}")
-                st.markdown(f"**Confidence:** `{cause.get('confidence_score', 'N/A')*100:.1f}%`")
-                
+                st.markdown(f"**Confidence:** `{cause.get('confidence_score', 0.0)*100:.1f}%`")
                 st.markdown("---")
-                
-                # Use a code block to display the evidence snippet
                 st.markdown("**Evidence:**")
                 st.code(cause.get('evidence_snippet', 'N/A'), language='text')
                 st.caption(f"Source: `{cause.get('source_document', 'N/A')}`")
 
+                # --- Granular Feedback Mechanism ---
+                st.markdown("---")
+                
+                # Check if feedback has been given for this specific cause
+                if st.session_state.feedback_given.get(i):
+                    st.success("Thank you for your feedback on this cause!")
+                else:
+                    st.write("Was this specific cause helpful?")
+                    col1, col2, _ = st.columns([1, 1, 8])
+                    
+                    with col1:
+                        if st.button("👍", key=f"up_{i}"):
+                            st.session_state.feedback_given[i] = "positive"
+                            
+                            feedback_data = {
+                                "timestamp": datetime.now().isoformat(),
+                                "feedback_type": "positive",
+                                "cause_rated": cause,
+                                "full_state": st.session_state.get('full_state', {})
+                            }
+                            # Define the path for the feedback log
+                            feedback_dir = project_root / "data" / "feedback"
+                            feedback_dir.mkdir(exist_ok=True)
+                            feedback_file = feedback_dir / "feedback_log.jsonl"
+                            # Append feedback as a new line in a JSONL file
+                            with open(feedback_file, "a") as f:
+                                f.write(json.dumps(feedback_data) + "\n")
+                            
+                            print(f"Positive feedback for cause #{i} logged to {feedback_file}")
+                            st.rerun()
+
+                    with col2:
+                        if st.button("👎", key=f"down_{i}"):
+                            st.session_state.feedback_given[i] = "negative"
+
+                            feedback_data = {
+                                "timestamp": datetime.now().isoformat(),
+                                "feedback_type": "negative",
+                                "cause_rated": cause,
+                                "full_state": st.session_state.get('full_state', {})
+                            }
+                            feedback_dir = project_root / "data" / "feedback"
+                            feedback_dir.mkdir(exist_ok=True)
+                            feedback_file = feedback_dir / "feedback_log.jsonl"
+                            with open(feedback_file, "a") as f:
+                                f.write(json.dumps(feedback_data) + "\n")
+
+                            print(f"Negative feedback for cause #{i} logged to {feedback_file}")
+                            st.rerun()
 else:
     st.info("Click the 'Run Analysis' button in the sidebar to start.")
