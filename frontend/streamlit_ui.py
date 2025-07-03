@@ -13,6 +13,7 @@ sys.path.append(str(project_root))
 
 from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
+from backend.agents.drift_linker_agent import run_drift_linker_agent
 
 # --- Helper Function to Load and Unpack Drifts ---
 @st.cache_data
@@ -58,6 +59,7 @@ def init_session_state():
     st.session_state.feedback_states = {}
     st.session_state.chat_history = []
     st.session_state.full_state_log = []
+    st.session_state.linked_drift_summary = None
 
 # --- Main Application ---
 # Initialize state on first load if it doesn't exist
@@ -77,20 +79,16 @@ with st.sidebar:
         st.info(f"Found **{len(drift_options)}** drift(s) to analyze.")
         
         if st.button("Run Full Analysis"):
-            init_session_state()
+            init_session_state() # Reset state for a new run
             all_explanations = []
             full_state_log = []
             
-            progress_bar = st.progress(0.0, text="Starting Analysis...")
-            
-            # The spinner is good for the overall process
-            with st.spinner(f"Analyzing {len(drift_options)} drift(s)...This may take several minutes."):
+            with st.spinner(f"Analyzing {len(drift_options)} drift(s)... This may take several minutes."):
                 try:
                     app = build_graph()
                     # Loop to process each drift sequentially
                     for i, drift in enumerate(drift_options):
-                        progress = (i + 1) / len(drift_options)
-                        progress_bar.progress(progress, text=f"Analyzing {drift['display']}...")
+                        st.toast(f"Analyzing {drift['display']}...")
                         
                         row_idx, drift_idx = map(int, drift['id'].split('-'))
                         initial_input = {"selected_drift": {"row_index": row_idx, "drift_index": drift_idx}}
@@ -100,12 +98,18 @@ with st.sidebar:
                             st.session_state.error_message = f"Error on {drift['display']}: {final_state['error']}"
                             break 
                         
-                        # --- NEW: Add a success toast after each successful run ---
                         st.toast(f"✅ {drift['display']} successfully analyzed!")
                         
                         all_explanations.append(final_state.get('explanation'))
                         full_state_log.append(final_state)
 
+                    # --- NEW: Call the Drift Linker Agent after the loop ---
+                    if not st.session_state.error_message and len(all_explanations) > 1:
+                        st.toast("🔗 Analyzing relationships between drifts...")
+                        linker_result = run_drift_linker_agent(all_explanations)
+                        st.session_state.linked_drift_summary = linker_result.get("linked_drift_summary")
+
+                    # Store results in the session state
                     if not st.session_state.error_message:
                         st.session_state.all_explanations = all_explanations
                         st.session_state.full_state_log = full_state_log
@@ -113,7 +117,8 @@ with st.sidebar:
                 except Exception as e:
                     st.session_state.error_message = f"An unexpected error occurred: {e}"
             
-            progress_bar.empty()
+            # Rerun the script to display all the results on the main page
+            st.rerun()
     else:
         st.error("Could not find or parse `prediction_results.csv`.")
 
@@ -156,7 +161,11 @@ if st.session_state.error_message:
 elif st.session_state.all_explanations:
     st.success(f"Successfully analyzed {len(st.session_state.all_explanations)} drift(s).")
     
-    # (Placeholder for the Drift Linker Agent's output)
+    # --- Display the linked drift analysis summary ---
+    if st.session_state.linked_drift_summary:
+        with st.container(border=True):
+            st.subheader("🔗 Cross-Drift Analysis")
+            st.markdown(st.session_state.linked_drift_summary)
     
     # Loop through each explanation object in the list
     for explanation_idx, explanation in enumerate(st.session_state.all_explanations):
