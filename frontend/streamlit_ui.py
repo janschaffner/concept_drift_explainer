@@ -69,6 +69,12 @@ if 'all_explanations' not in st.session_state:
 st.title("🤖 Concept Drift Explanation Prototype")
 st.markdown("Welcome! Press the button in the sidebar to begin the analysis of all detected drifts.")
 
+# --- Hallucination Warning ---
+st.warning(
+    "The Concept Drift Explainer can make mistakes. Check important information.", 
+    icon="⚠️"
+)
+
 drift_options = load_and_unpack_drifts()
 
 # --- Sidebar for Controls ---
