@@ -66,13 +66,13 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
 
     # 3. Define Temporal Filter
     # Create a time window around the drift to filter documents by metadata.
-    # Window: 90 days before the drift started to 30 days after it ended.
+    # Window: 14 days before the drift started to 14 days after it ended.
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
         end_date = datetime.fromisoformat(drift_info["end_timestamp"])
 
-        filter_start = start_date - timedelta(days=150)
-        filter_end = end_date + timedelta(days=30)
+        filter_start = start_date - timedelta(days=14)
+        filter_end = end_date + timedelta(days=14)
 
         # Convert the filter dates to integer Unix timestamps for the query
         temporal_filter = {
