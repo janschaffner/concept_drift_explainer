@@ -1,7 +1,6 @@
-# backend/agents/explanation_agent.py
-
 import os
 import sys
+import json
 import logging
 from pathlib import Path
 from typing import List, Dict
@@ -18,9 +17,12 @@ from pydantic.v1 import BaseModel, Field
 
 # Import our graph state schema
 from backend.state.schema import GraphState, Explanation
+# Import cache utils
+from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+MODEL_NAME = "gpt-4o-mini"
 
 # --- Pydantic Models for Structured Output ---
 class Cause(BaseModel):
@@ -180,8 +182,8 @@ def calibrate_scores(ranked_causes: List[Dict], drift_info: Dict) -> List[Dict]:
 
 def run_explanation_agent(state: GraphState) -> dict:
     """
-    Generates a final explanation using a two-step "draft and refine" chain,
-    with drift-type-specific logic for the draft stage.
+    Generates and then calibrates a final explanation using a two-step "draft and refine" chain,
+    with drift-type-specific logic and persistent caching.
     """
     logging.info("--- Running Explanation Agent ---")
     
@@ -194,66 +196,98 @@ def run_explanation_agent(state: GraphState) -> dict:
             "summary": "No explanation could be generated as no relevant contextual documents were found for the detected drift period.",
             "ranked_causes": []
         }
-        return {"explanation": {"summary": "No explanation could be generated...", "ranked_causes": []}}
+        return {"explanation": no_context_explanation}
 
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # --- Dynamic Prompt Selection for 4 Drift Types ---
-    drift_type = drift_info.get('drift_type', '').lower()
+    # Load the cache at the start
+    llm_cache = load_cache()
+    cache_updated = False
     
-    if 'sudden' in drift_type:
-        logging.info("Using SUDDEN drift prompt template.")
-        draft_prompt_template = SUDDEN_DRIFT_PROMPT
-    elif 'gradual' in drift_type:
-        logging.info("Using GRADUAL drift prompt template.")
-        draft_prompt_template = GRADUAL_DRIFT_PROMPT
-    elif 'recurring' in drift_type:
-        logging.info("Using RECURRING drift prompt template.")
-        draft_prompt_template = RECURRING_DRIFT_PROMPT
-    else: # Default to incremental for 'incremental' or any other type
-        logging.info("Using INCREMENTAL drift prompt template.")
-        draft_prompt_template = INCREMENTAL_DRIFT_PROMPT
+    llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
+    structured_llm = llm.with_structured_output(ExplanationOutput)
     
     formatted_context = format_context_for_prompt(classified_context)
-    draft_prompt = draft_prompt_template.format(
-        drift_type=drift_info['drift_type'],
-        start_timestamp=drift_info['start_timestamp'],
-        end_timestamp=drift_info['end_timestamp'],
-        formatted_context=formatted_context
-    )
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    structured_llm = llm.with_structured_output(ExplanationOutput)
-
     try:
-        # === STEP 1: Generate the Draft ===
-        logging.info(f"Step 1: Generating draft explanation with {drift_type.upper()} prompt...")
-        draft_explanation_obj = structured_llm.invoke(draft_prompt)
-        logging.info("Draft generated successfully.")
+        # === STEP 1: Generate the Draft (with Caching) ===
+        drift_type = drift_info.get('drift_type', '').lower()
+        
+        if 'sudden' in drift_type:
+            logging.info("Using SUDDEN drift prompt template.")
+            draft_prompt_template = SUDDEN_DRIFT_PROMPT
+        elif 'gradual' in drift_type:
+            logging.info("Using GRADUAL drift prompt template.")
+            draft_prompt_template = GRADUAL_DRIFT_PROMPT
+        elif 'recurring' in drift_type:
+            logging.info("Using RECURRING drift prompt template.")
+            draft_prompt_template = RECURRING_DRIFT_PROMPT
+        else: # Default to incremental for 'incremental' or any other type
+            logging.info("Using INCREMENTAL drift prompt template.")
+            draft_prompt_template = INCREMENTAL_DRIFT_PROMPT
+        
+        draft_prompt = draft_prompt_template.format(
+            drift_type=drift_info['drift_type'],
+            start_timestamp=drift_info['start_timestamp'],
+            end_timestamp=drift_info['end_timestamp'],
+            formatted_context=formatted_context
+        )
+        
+        draft_cache_key = get_cache_key(draft_prompt, MODEL_NAME)
+        
+        if draft_cache_key in llm_cache:
+            logging.info("Step 1: CACHE HIT for draft explanation.")
+            draft_explanation_dict = llm_cache[draft_cache_key]
+        else:
+            logging.info(f"Step 1: CACHE MISS. Generating draft with {drift_type.upper()} prompt...")
+            draft_explanation_obj = structured_llm.invoke(draft_prompt)
+            draft_explanation_dict = draft_explanation_obj.dict()
+            llm_cache[draft_cache_key] = draft_explanation_dict
+            cache_updated = True
+            logging.info("Draft generated and cached successfully.")
 
-        # === STEP 2: Critique and Refine the Draft ===
-        logging.info("Step 2: Refining draft with self-correction prompt...")
+        # === STEP 2: Critique and Refine the Draft (with Caching) ===
         refine_prompt = REFINE_PROMPT_TEMPLATE.format(
             formatted_context=formatted_context,
-            draft_explanation=draft_explanation_obj.json()
+            draft_explanation=json.dumps(draft_explanation_dict, indent=2)
         )
-        final_explanation_obj = structured_llm.invoke(refine_prompt)
-        logging.info("Successfully synthesized final explanation.")
-
-        # Convert Pydantic object to a list of dictionaries
-        ranked_causes_dicts = [cause.dict() for cause in final_explanation_obj.ranked_causes]
+        
+        refine_cache_key = get_cache_key(refine_prompt, MODEL_NAME)
+        
+        if refine_cache_key in llm_cache:
+            logging.info("Step 2: CACHE HIT for refined explanation.")
+            final_explanation_dict = llm_cache[refine_cache_key]
+        else:
+            logging.info("Step 2: CACHE MISS. Refining draft...")
+            final_explanation_obj = structured_llm.invoke(refine_prompt)
+            final_explanation_dict = final_explanation_obj.dict()
+            llm_cache[refine_cache_key] = final_explanation_dict
+            cache_updated = True
+            logging.info("Successfully synthesized and cached final explanation.")
 
         # === STEP 3: Calibrate Confidence Scores ===
-        calibrated_causes = calibrate_scores(ranked_causes_dicts, drift_info)
+        # Ensure ranked_causes is a list before passing to calibration
+        causes_to_calibrate = final_explanation_dict.get("ranked_causes", [])
+        if not isinstance(causes_to_calibrate, list):
+            causes_to_calibrate = []
 
+        calibrated_causes = calibrate_scores(causes_to_calibrate, drift_info)
+
+        # Use the calibrated_causes in the final output
         final_explanation: Explanation = {
-            "summary": final_explanation_obj.summary,
-            "ranked_causes": [cause.dict() for cause in final_explanation_obj.ranked_causes]
+            "summary": final_explanation_dict.get("summary"),
+            "ranked_causes": calibrated_causes
         }
+        
+        # Save cache to file if we made any new API calls
+        if cache_updated:
+            save_to_cache(llm_cache)
+            logging.info("LLM cache file updated.")
+            
         return {"explanation": final_explanation}
 
     except Exception as e:
-        logging.error(f"Failed to generate final explanation: {e}")
+        logging.error(f"Failed to generate final explanation: {e}", exc_info=True)
         return {"error": f"Failed to generate final explanation: {e}"}

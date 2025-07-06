@@ -11,9 +11,11 @@ sys.path.append(str(project_root))
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from backend.state.schema import GraphState
+from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+MODEL_NAME = "gpt-4o-mini"
 
 def format_chat_history(chat_history: list) -> str:
     """Formats the chat history into a string for the prompt."""
@@ -64,16 +66,31 @@ Use the provided "Original Analysis Context" and "Previous Conversation" to answ
 """
     prompt = prompt_template.format(context=full_context, question=user_question)
 
-    try:
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
-        response = llm.invoke(prompt)
-        ai_answer = response.content
+    llm = ChatOpenAI(model=MODEL_NAME, temperature=0.3)
+    
+    # --- Caching Logic ---
+    llm_cache = load_cache()
+    cache_key = get_cache_key(prompt, MODEL_NAME)
 
-        # Append the new interaction to the history
-        new_history = chat_history + [(user_question, ai_answer)]
-        
-        return {"chat_history": new_history}
+    if cache_key in llm_cache:
+        logging.info(f"CACHE HIT for user question: '{user_question}'")
+        ai_answer = llm_cache[cache_key]
+    else:
+        logging.info(f"CACHE MISS. Calling API for user question: '{user_question}'")
+        try:
+            response = llm.invoke(prompt)
+            ai_answer = response.content
+            
+            # Save the new response to the cache
+            llm_cache[cache_key] = ai_answer
+            save_to_cache(llm_cache)
+            logging.info("Chatbot response cached successfully.")
+        except Exception as e:
+            logging.error(f"Error in Chatbot Agent: {e}")
+            return {"error": str(e)}
 
-    except Exception as e:
-        logging.error(f"Error in Chatbot Agent: {e}")
-        return {"error": str(e)}
+    # Append the new interaction to the history
+    chat_history = state.get('chat_history', [])
+    new_history = chat_history + [(user_question, ai_answer)]
+    
+    return {"chat_history": new_history}

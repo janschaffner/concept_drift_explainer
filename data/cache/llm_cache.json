@@ -1,0 +1,146 @@
+{
+  "7dc4bccffb8641eafc430ac60767f1ac": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses a realignment of the Travel Authorization Division, which involves changes to internal workflows and processes, indicating a redesign of how approvals are managed."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The notice mentions a restructuring of the Travel Authorization Division, including the dissolution of the Central Authorization Desk and the establishment of a new Policy Coordination Unit, which reflects organizational changes."
+      }
+    ]
+  },
+  "6f91e98892eecaeea9ad3dd51fe06c2a": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text snippet discusses revisions to a national regulation (National Reimbursement Regulation) which indicates compliance requirements and legal changes affecting travel reimbursements."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The snippet outlines a revised pre-approval framework for travel reimbursements, indicating changes in processes and procedures within the organization."
+      }
+    ]
+  },
+  "e7cb0a67efcbe1af07415099e43a0aa4": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text discusses planned changes to domestic declaration procedures under a specific legal reform (\u00a726b EStG), indicating a new law or regulation."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text outlines a new streamlined handling procedure for domestic declarations, which involves changes to existing processes and procedures."
+      }
+    ]
+  },
+  "e41f212d87a31304a3f9f8cadfafce37": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The announcement discusses a new strategic shift in financial governance and the introduction of a Decentralized Authorization Model, which relates to process redesign and new Standard Operating Procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The appointment of a new CFO indicates a change in organizational structure and leadership roles."
+      }
+    ]
+  },
+  "8f07055fac402491b32b5aa924359226": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses standard validation and clearance rules for payment requests, which relates to process management and standard operating procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The mention of the RP-Form system indicates a technical system used for processing payment requests, which falls under IT management."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The reference to Validation Directive FZ/2009 suggests compliance with legal regulations governing payment requests."
+      }
+    ]
+  },
+  "8b822cdc0700ace73aeb89021559ca1b": {
+    "summary": "The incremental drift observed from late 2017 to mid-2018 is primarily driven by a series of small, iterative changes aimed at enhancing operational efficiency within the Travel Authorization Division and related processes. These changes reflect an agile approach to process management, characterized by decentralized decision-making and streamlined procedures, which collectively transformed the workflow significantly over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, which marked the beginning of a series of small adjustments aimed at improving efficiency.",
+        "evidence_snippet": "\"The Central Authorization Desk (CAD) will be dissolved. Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of a revised pre-approval framework for travel reimbursements in November 2017 allowed departments to approve expenses without escalation, reflecting a shift towards a more agile and responsive approval process.",
+        "evidence_snippet": "\"Approve prepaid travel expenses up to \u20ac1,500 without escalation.\"",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures announced in December 2017 aimed to streamline processes by removing mandatory steps and introducing new forms, indicating a continuous effort to enhance operational efficiency.",
+        "evidence_snippet": "\"Removal of the mandatory regional routing step for declarations below \u20ac15,000.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a background in agile finance transformation in December 2017 signaled a strategic shift towards decentralized authorization models, further contributing to the incremental changes in financial governance.",
+        "evidence_snippet": "\"The CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational",
+        "confidence_score": 0.75
+      },
+      {
+        "cause_description": "The existing reimbursement procedures remained unchanged through Q4 2017, indicating that while some processes were stable, the groundwork for future changes was being laid, allowing for gradual improvements to be implemented.",
+        "evidence_snippet": "\"This protocol has been in continuous use since 2013 and remains unchanged through Q4 2017.\"",
+        "source_document": "2017-11-01_RP_Guide_2017_StandardValidationRules.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "1132c155d9b2aaa4d71db0e89a61a8a3": {
+    "summary": "The observed incremental drift from late 2017 to mid-2018 is primarily driven by a series of strategic changes aimed at enhancing operational efficiency within the Travel Authorization Division and related processes. These changes reflect a shift towards decentralized decision-making and streamlined procedures, collectively transforming workflows over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, marking the start of a series of adjustments aimed at improving efficiency.",
+        "evidence_snippet": "\"The Central Authorization Desk (CAD) will be dissolved. Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of a revised pre-approval framework for travel reimbursements in November 2017 allowed departments to approve expenses up to \u20ac1,500 without escalation, reflecting a shift towards a more agile and responsive approval process.",
+        "evidence_snippet": "\"Approve prepaid travel expenses up to \u20ac1,500 without escalation.\"",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures announced in December 2017 aimed to streamline processes by removing mandatory steps and introducing new forms, indicating a continuous effort to enhance operational efficiency.",
+        "evidence_snippet": "\"Removal of the mandatory regional routing step for declarations below \u20ac15,000.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a background in agile finance transformation in December 2017 signaled a strategic shift towards decentralized authorization models, further contributing to the incremental changes in financial governance.",
+        "evidence_snippet": "\"The CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational",
+        "confidence_score": 0.75
+      },
+      {
+        "cause_description": "The existing reimbursement procedures remained unchanged through Q4 2017, indicating that while some processes were stable, the groundwork for future changes was being laid, allowing for gradual improvements to be implemented.",
+        "evidence_snippet": "\"This protocol has been in continuous use since 2013 and remains unchanged through Q4 2017.\"",
+        "source_document": "2017-11-01_RP_Guide_2017_StandardValidationRules.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  }
+}
