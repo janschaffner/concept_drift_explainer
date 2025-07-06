@@ -1,27 +1,34 @@
+# scripts/test_specific_drift.py
+
 import sys
 import pprint
 from pathlib import Path
 
 # --- Path Correction ---
-# Add the project's root directory (the parent of 'scripts') to the Python path
-# This allows us to import from the 'backend' package as if we were running from the root
 project_root = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_root))
 # -----------------------
 
-from backend.agents.drift_agent import run_drift_agent
+from backend.graph.build_graph import build_graph
 
 if __name__ == "__main__":
-    print("--- Starting Agent Test (from scripts folder) ---")
+    print("--- Testing analysis of a specific drift ---")
 
-    # The graph always starts with an initial state.
-    # For the Drift Agent, the initial state can be empty.
-    initial_state = {}
+    app = build_graph()
 
-    # Call the agent function directly
-    result = run_drift_agent(initial_state)
+    # Manually specify which drift to analyze.
+    # This example tests the second drift (index 1) within the first row (index 0) of the CSV.
+    # Change these values to test other drifts.
+    drift_selection_to_test = {"row_index": 0, "drift_index": 1}
+    
+    # The initial input for the graph must now match the expected state key.
+    initial_input = {"selected_drift": drift_selection_to_test}
 
-    print("\n--- Agent Execution Result ---")
-    # Use pprint for a nicely formatted output of the dictionary
-    pprint.pprint(result)
-    print("--- End of Agent Test ---")
+    print(f"\nInvoking graph for drift: {drift_selection_to_test}...")
+    final_state = app.invoke(initial_input)
+
+    print("\n--- Final State from LangGraph Execution ---")
+    pp = pprint.PrettyPrinter(indent=2)
+    pp.pprint(final_state)
+
+    print("\n--- End of Test ---")

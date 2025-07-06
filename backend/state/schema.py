@@ -55,22 +55,32 @@ class GraphState(TypedDict):
     This dictionary is passed between all agents (nodes) in the LangGraph workflow.
     Each agent reads from this state and writes its output back to it.
     """
-    
-    # To be populated by DriftAgent
-    drift_info: DriftInfo 
-    
-    # To be populated by ContextRetrievalAgent.
-    # This list is already filtered by both semantic similarity and temporal relevance.
-    raw_context_snippets: List[ContextSnippet]
+    # Populated by the UI
+    selected_drift: Optional[Dict]
 
-    # To be populated by ExplanationAgent
+    # Populated by the Drift Agent
+    drift_info: Dict
+    drift_keywords: Optional[List[str]]
+
+    # This key holds the initial large list of candidates from the retrieval agent
+    raw_context_snippets: List[Dict]
+
+    # This will hold the refined list after re-ranking
+    reranked_context_snippets: List[Dict]
+
+    # Populated by the Explanation Agent
     explanation: Explanation
+    
+    # Used for the full analysis log and Chatbot context
+    full_state_log: List[Dict]
+    linked_drift_summary: Optional[str]
 
-    # To be populated and used by the ChatbotAgent
-    chat_history: List[Tuple[str, str]]
-
-    # To be populated by the EvaluationAgent via the UI
-    user_feedback: Optional[Dict[str, any]]
-
-    # To be populated by the chatbot UI
+    # Used by the Chatbot
     user_question: Optional[str]
+    chat_history: List[Tuple[str, str]]
+    
+    # Used by the UI for feedback
+    feedback_states: dict
+    
+    # Used for error handling
+    error_message: Optional[str]

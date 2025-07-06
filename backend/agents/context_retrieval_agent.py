@@ -1,3 +1,5 @@
+# backend/agents/context_retrieval_agent.py
+
 import os
 import sys
 import logging
@@ -22,21 +24,25 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 PINECONE_INDEX_NAME = "masterthesis"
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-roberta-large-v1"
-TOP_K_RESULTS = 5 # Retrieve the top 5 most relevant snippets
+# UPDATED: We now retrieve more candidates for the Re-Ranker agent
+TOP_K_RESULTS = 15
 
 def run_context_retrieval_agent(state: GraphState) -> dict:
     """
-    Retrieves context snippets from Pinecone based on the drift information.
+    Retrieves a broad set of context snippets from Pinecone using an enhanced query.
 
     Args:
-        state: The current graph state, which must contain `drift_info`.
+        state: The current graph state, which must contain `drift_info` and `drift_keywords`.
 
     Returns:
-        A dictionary with the `raw_context_snippets` field populated.
+        A dictionary with the `raw_context_snippets` field populated with candidate snippets.
     """
-    logging.info("--- Running Context Retrieval Agent ---")
+    logging.info("--- Running Context Retrieval Agent (Broad Search) ---")
     
     drift_info = state.get("drift_info")
+    # NEW: Get the keywords extracted by the Drift Agent
+    drift_keywords = state.get("drift_keywords", [])
+
     if not drift_info:
         error_msg = "Drift info not found in state. Cannot retrieve context."
         logging.error(error_msg)
@@ -55,13 +61,21 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     embedder = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
 
     # 2. Formulate Semantic Query
-    # We create a descriptive sentence to embed for the semantic search.
+    # We create a descriptive sentence and enhance it with specific keywords.
     start_activity, end_activity = drift_info["changepoints"]
-    query_text = (
+    base_query = (
         f"A concept drift of type '{drift_info['drift_type']}' was detected. "
         f"It occurred in the process involving the activities '{start_activity}' and '{end_activity}'."
     )
-    logging.info(f"Formulated semantic query: {query_text}")
+    
+    # NEW: Append the specific keywords to the query if they exist
+    if drift_keywords:
+        keyword_str = ", ".join(drift_keywords)
+        query_text = f"{base_query} Associated keywords include: {keyword_str}."
+    else:
+        query_text = base_query
+    
+    logging.info(f"Formulated enhanced query: {query_text}")
     query_vector = embedder.embed_query(query_text)
 
     # 3. Define Temporal Filter
@@ -92,7 +106,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     try:
         query_response = index.query(
             vector=query_vector,
-            filter=temporal_filter,   # Disable for debugging
+            filter=temporal_filter,
             top_k=TOP_K_RESULTS,
             include_metadata=True
         )
@@ -106,18 +120,15 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     if query_response.get("matches"):
         for match in query_response["matches"]:
             metadata = match.get("metadata", {})
-            text = metadata.get("text", "")
-            source = metadata.get("source", "Unknown")
-            timestamp = metadata.get("timestamp", "Unknown")
-
+            # UPDATED: The data structure now uses 'classifications' as per our latest schema
             snippet: ContextSnippet = {
-                "snippet_text": text,
-                "source_document": source,
-                "timestamp": timestamp,
-                "franzoi_category": None # To be filled by a later agent
+                "snippet_text": metadata.get("text", ""),
+                "source_document": metadata.get("source", "Unknown"),
+                "timestamp": metadata.get("timestamp", 0),
+                "classifications": [] # Initialize as an empty list
             }
             retrieved_snippets.append(snippet)
-        logging.info(f"Successfully retrieved {len(retrieved_snippets)} context snippets.")
+        logging.info(f"Successfully retrieved {len(retrieved_snippets)} candidate context snippets.")
     else:
         logging.warning("No context snippets found matching the criteria.")
 

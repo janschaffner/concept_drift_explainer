@@ -142,5 +142,358 @@
         "confidence_score": 0.7
       }
     ]
+  },
+  "0e312f8ceb47fd3a97f2e1feff3818ac": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The directive is a response to compliance requirements and regulations enacted by a governmental authority, indicating a legal context."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The update involves changes to existing processes, specifically the suspension of auto-approval and the requirement for manual review, which relates to process management."
+      }
+    ]
+  },
+  "1d283714e8d8b36d2e22690ccab70f96": {
+    "summary": "The sudden drift in the payment approval process on January 8, 2018, was triggered by an emergency directive issued by the Public Finance Authority in response to confirmed misuse of delegated payment authority across federal agencies. This directive mandated an immediate suspension of auto-approval for payment requests, requiring full manual reviews and additional documentation, effectively replacing the previous process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated the immediate suspension of auto-approval for payment requests due to misuse of delegated authority, leading to a complete overhaul of the payment approval process.",
+        "evidence_snippet": "\"In response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The need for enhanced fraud prevention measures in federal agencies prompted the immediate change in the payment approval process, reflecting a broader trend towards stricter compliance and oversight.",
+        "evidence_snippet": "\"Departments found bypassing the new rules will face administrative penalties.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The abrupt change may also be linked to a specific incident of fraud or misuse that catalyzed the directive, although details of such incidents are not explicitly mentioned in the directive.",
+        "evidence_snippet": "\"Subject: Immediate Suspension of Auto-Approval for Payment Requests\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.75
+      }
+    ]
+  },
+  "68a396b5a9917d9d1b7c1bad47996b5d": {
+    "summary": "The payment approval process underwent a significant change on January 8, 2018, due to an emergency directive from the Public Finance Authority, which was enacted in response to confirmed misuse of delegated payment authority across federal agencies. This directive mandated the immediate suspension of auto-approval for payment requests, requiring full manual reviews and additional documentation, thereby replacing the previous process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated the immediate suspension of auto-approval for payment requests due to confirmed misuse of delegated authority, resulting in a comprehensive overhaul of the payment approval process.",
+        "evidence_snippet": "\"In response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The directive reflects a broader trend towards enhanced fraud prevention measures in federal agencies, necessitating stricter compliance and oversight in the payment approval process.",
+        "evidence_snippet": "\"Departments found bypassing the new rules will face administrative penalties.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The directive may have been catalyzed by a specific incident of fraud or misuse, although the details of such incidents are not explicitly mentioned in the directive itself.",
+        "evidence_snippet": "\"Subject: Immediate Suspension of Auto-Approval for Payment Requests\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.75
+      }
+    ]
+  },
+  "6b012e50aa75d275a47848feb4b088a4": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "Executive Leadership Bulletin Date: 11.12.2017\n\nSubject: Appointment of New CFO and Strategic Shift in Financial Governance\n\nWe are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\n\nAs part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes:\n\nLocal budget holder approval for payments up to \u20ac10,000\n\nRemoval of redundant compliance reviews for standard invoices\n\nPhased introduction of \u201cauto-clear\u201d logic in the RP submission system\n\nAffected teams will be contacted by the Finance Transformation Office in January. Further rollouts expected across Q2 and Q3.\n\n\u2014 Issued by: Office of the CEO Group Communications",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 1512950400,
+        "classifications": [
+          {
+            "full_path": "organizational unit 65463",
+            "reasoning": "The snippet discusses a strategic shift in financial governance that may affect the organizational unit."
+          },
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "The mention of local budget holder approval implies a supervisory role in the new model."
+          },
+          {
+            "full_path": "EMPLOYEE",
+            "reasoning": "The changes will impact employees involved in the payment processes."
+          },
+          {
+            "full_path": "PRE_APPROVER",
+            "reasoning": "The decentralized model suggests a shift in pre-approval processes."
+          },
+          {
+            "full_path": "project 148216",
+            "reasoning": "The pilot program may relate to project management and financial oversight."
+          }
+        ]
+      },
+      {
+        "snippet_text": "EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515379200,
+        "classifications": [
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "The directive requires manual review, indicating a supervisory oversight role."
+          },
+          {
+            "full_path": "EMPLOYEE",
+            "reasoning": "Employees must comply with the new manual review process."
+          },
+          {
+            "full_path": "organizational unit 65463",
+            "reasoning": "The directive affects all departments, including the specified organizational unit."
+          },
+          {
+            "full_path": "PRE_APPROVER",
+            "reasoning": "The suspension of auto-approval impacts pre-approval processes."
+          },
+          {
+            "full_path": "project 148216",
+            "reasoning": "The changes may relate to project funding and compliance."
+          }
+        ]
+      }
+    ]
+  },
+  "ba7f39fa18aa3666f1f77a04205488c6": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text snippet discusses a mandatory compliance update and new rules enacted by a public authority, which falls under legal regulations and compliance requirements."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The directive outlines new procedures for payment requests, indicating a redesign of existing processes and the introduction of new Standard Operating Procedures (SOPs)."
+      }
+    ]
+  },
+  "f04b29e047ec48ccf895d7fb8efa03eb": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily attributed to a series of small, iterative changes in financial governance and compliance protocols, driven by the appointment of a new CFO who emphasized agile transformation practices. These changes included the introduction of a decentralized authorization model and the suspension of auto-approval for payment requests, reflecting a continuous evolution in process management.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation initiated a series of small adjustments in financial governance, including the pilot of a decentralized authorization model and the phased introduction of auto-clear logic in the RP submission system.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Financial Governance/Agile Practices",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The emergency directive mandating full manual review of payment requests and the inclusion of formal invoice attachments represented a significant shift in compliance protocols, indicating a response to previous issues and a move towards stricter governance.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Compliance Management/Process Changes",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The removal of redundant compliance reviews for standard invoices and the introduction of local budget holder approvals for payments up to \u20ac10,000 reflect incremental changes aimed at streamlining processes and enhancing efficiency within the financial operations.",
+        "evidence_snippet": "\"Local budget holder approval for payments up to \u20ac10,000; Removal of redundant compliance reviews for standard invoices\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Process Optimization/Agile Practices",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "1c2a6e2a105336238000595080beab3c": {
+    "summary": "The observed drift between December 2017 and October 2018 is primarily due to a series of strategic changes in financial governance initiated by the new CFO, which included the implementation of a decentralized authorization model and the suspension of auto-approval for payment requests. These adjustments reflect a shift towards stricter compliance and process optimization in response to previous governance issues.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO focused on agile finance transformation led to the introduction of a decentralized authorization model, which aimed to enhance efficiency and accountability in financial operations.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Financial Governance/Agile Practices",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The emergency directive mandating full manual review of payment requests and the requirement for formal invoice attachments marked a significant shift in compliance protocols, addressing prior misuse of delegated payment authority and enhancing governance.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Compliance Management/Process Changes",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The removal of redundant compliance reviews for standard invoices and the introduction of local budget holder approvals for payments up to \u20ac10,000 were incremental changes aimed at streamlining processes and improving operational efficiency.",
+        "evidence_snippet": "\"Local budget holder approval for payments up to \u20ac10,000; Removal of redundant compliance reviews for standard invoices\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Process Optimization/Agile Practices",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "e772c0023d9337af7487481ce946e8cd": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515360000,
+        "classifications": [
+          {
+            "full_path": "Emergency Directive Compliance",
+            "reasoning": "The directive indicates a sudden change in payment approval processes, which directly relates to the drift keywords regarding supervisor and employee roles in organizational units."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The recent changes in the organizational structure have led to a re-evaluation of the roles of supervisors and employees within unit 65463. This includes a new emphasis on pre-approval processes for project 148216, which has been flagged for increased scrutiny due to past issues.",
+        "source_document": "2023-09-15_OrganizationalChanges_Report.pdf",
+        "timestamp": 1694745600,
+        "classifications": [
+          {
+            "full_path": "Organizational Changes",
+            "reasoning": "This snippet discusses changes in organizational roles and pre-approval processes, directly linking to the drift keywords."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Due to the recent incidents involving project 148216, the management has decided to implement stricter controls over the approval process. Supervisors will now have to ensure that all employee submissions are pre-approved before moving forward.",
+        "source_document": "2023-09-20_ProjectManagement_Update.pdf",
+        "timestamp": 1695168000,
+        "classifications": [
+          {
+            "full_path": "Project Management Controls",
+            "reasoning": "This snippet highlights the implementation of stricter controls related to project 148216, which is relevant to the drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "A review of the payment approval process has revealed that the previous system allowed for too much autonomy among employees in unit 65463. As a result, new measures are being put in place to require supervisor oversight for all payment requests.",
+        "source_document": "2023-09-10_PaymentApproval_Review.pdf",
+        "timestamp": 1694304000,
+        "classifications": [
+          {
+            "full_path": "Payment Approval Review",
+            "reasoning": "This snippet addresses the need for supervisor oversight in payment requests, which is a key aspect of the detected drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The compliance team has reported an increase in discrepancies related to payment requests from organizational unit 65463. As a response, all requests will now require a pre-approval step from supervisors to mitigate risks.",
+        "source_document": "2023-09-25_Compliance_Report.pdf",
+        "timestamp": 1695600000,
+        "classifications": [
+          {
+            "full_path": "Compliance Measures",
+            "reasoning": "This snippet discusses the need for pre-approval from supervisors due to discrepancies, aligning with the drift keywords."
+          }
+        ]
+      }
+    ]
+  },
+  "a8b97b50865eedb66a7015f3a68eb940": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text snippet discusses a mandatory compliance update and new rules enacted by a public authority, which relates to legal regulations and compliance requirements."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The directive outlines new procedures for payment requests, indicating a change in process management and the introduction of new Standard Operating Procedures (SOPs)."
+      }
+    ]
+  },
+  "c59c00866ae78ad8720a15c3739e50fc": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The text discusses changes in the organizational structure and the roles of supervisors and employees, which falls under the Organizational category."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The mention of a new emphasis on pre-approval processes indicates a change in process management, which aligns with the Process Management category."
+      }
+    ]
+  },
+  "69e7f130f66a1b8225117d81fc824565": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses implementing stricter controls over the approval process, which relates to process redesign and new Standard Operating Procedures (SOPs)."
+      }
+    ]
+  },
+  "11581f41ab008c88b25df44e91189b84": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses a review of the payment approval process and mentions new measures being implemented, which relates to process redesign and management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of requiring supervisor oversight indicates a change in roles and responsibilities within the organization."
+      }
+    ]
+  },
+  "5796aacaa01e109df201944cf5650107": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses a change in the process related to payment requests, specifically the introduction of a pre-approval step, which falls under process management."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The mention of compliance requirements indicates a legal context, as it relates to adhering to regulations regarding payment requests."
+      }
+    ]
+  },
+  "c616b7d0d9c68da468829008811a3fa4": {
+    "summary": "The sudden drift in the payment approval process on January 8, 2018, was triggered by an emergency directive issued by the Public Finance Authority in response to confirmed misuse of delegated payment authority across federal agencies. This directive mandated an immediate suspension of auto-approval for payment requests, requiring full manual reviews and additional documentation, effectively replacing the previous process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated the immediate suspension of auto-approval for payment requests due to misuse of delegated authority, leading to a complete overhaul of the payment approval process.",
+        "evidence_snippet": "\"In response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The directive's enforcement of manual reviews and additional documentation requirements indicates a significant regulatory response to a crisis situation, further solidifying the need for immediate process change.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The potential for administrative penalties for non-compliance suggests a strong motivation for departments to adhere to the new process, reinforcing the abrupt shift in operational procedures.",
+        "evidence_snippet": "\"Departments found bypassing the new rules will face administrative penalties.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.75
+      }
+    ]
+  },
+  "73ad1b7aa519376285f1e50d61064f8c": {
+    "summary": "The payment approval process underwent a sudden change on January 8, 2018, due to an emergency directive from the Public Finance Authority, which was enacted in response to confirmed misuse of delegated payment authority across federal agencies. This directive mandated the immediate suspension of auto-approval for payment requests, requiring full manual reviews and additional documentation, thereby replacing the previous process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated the immediate suspension of auto-approval for payment requests due to confirmed misuse of delegated authority, resulting in a comprehensive overhaul of the payment approval process.",
+        "evidence_snippet": "\"In response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The directive's requirement for manual reviews and additional documentation signifies a substantial regulatory response to a crisis, emphasizing the necessity for immediate changes in the payment approval process.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The imposition of administrative penalties for non-compliance indicates a strong incentive for departments to adhere to the new process, further reinforcing the abrupt shift in operational procedures.",
+        "evidence_snippet": "\"Departments found bypassing the new rules will face administrative penalties.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Compliance Changes",
+        "confidence_score": 0.75
+      }
+    ]
   }
 }
