@@ -11,9 +11,18 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from pydantic.v1 import BaseModel, Field # Using pydantic.v1 for compatibility
+from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+MODEL_NAME = "gpt-4o-mini"
+
+# --- Pydantic Model for Structured Output ---
+class DriftLinkAnalysis(BaseModel):
+    """Data model for the drift relationship analysis."""
+    connection_found: bool = Field(description="Set to true ONLY if there is a clear, evidence-based connection between the drifts. Otherwise, set to false.")
+    summary: str = Field(description="If connection_found is true, describe the connection here. Otherwise, state that no significant connection was identified.")
 
 def format_explanations_for_prompt(all_explanations: List[Dict]) -> str:
     """Formats the list of full explanation objects into a string for the LLM prompt."""
@@ -53,32 +62,49 @@ def run_drift_linker_agent(all_explanations: List[Dict]) -> dict:
     # Format the inputs for the prompt
     formatted_explanations = format_explanations_for_prompt(all_explanations)
     
-    prompt_template = """You are a senior business process analyst conducting a meta-analysis. Your goal is to find high-level insights by identifying relationships between several independently explained concept drifts.
+    # --- Prompt Template ---
+    prompt_template = """You are a senior business process analyst conducting a meta-analysis. Your goal is to find high-level insights by identifying potential relationships between several independently explained concept drifts.
 
-You will be provided with a list of explanations for multiple concept drifts that occurred in the same process log.
+    You will be provided with a list of explanations for multiple concept drifts that occurred in the same process log.
 
-**## Explained Drifts**
-{formatted_explanations}
+    **## Explained Drifts**
+    {formatted_explanations}
 
-**## Your Task**
-Review all the provided drift explanations. Identify any potential relationships, common root causes, or cascading effects between them. For example:
-- Are multiple drifts caused by the same source document (e.g., a single policy change causing drifts in different parts of the process)?
-- Do the explanations share common keywords, themes, or context categories?
-- Does one drift seem to be a direct consequence of another?
-
-Summarize your findings in a short, insightful markdown-formatted paragraph. Start with a clear headline. If no clear relationships are found, state that explicitly.
-"""
+    **## Your Task**
+    Carefully review all the provided drift explanations. First, decide if there is a clear, evidence-based connection between any of the drifts. A connection exists if they share a common root cause, cite the same source document, or one directly causes another.
+    
+    Then, provide your analysis using the following structured format.
+    """
     
     prompt = prompt_template.format(formatted_explanations=formatted_explanations)
     
-    try:
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
-        response = llm.invoke(prompt)
-        linked_summary = response.content
+    # Use the structured output method to force a yes/no decision
+    llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
+    structured_llm = llm.with_structured_output(DriftLinkAnalysis)
+    
+    # Caching Logic
+    llm_cache = load_cache()
+    cache_key = get_cache_key(prompt, MODEL_NAME)
 
-        logging.info("Successfully generated linked drift summary.")
-        return {"linked_drift_summary": linked_summary}
+    if cache_key in llm_cache:
+        logging.info("CACHE HIT for drift relationship analysis.")
+        response_data = llm_cache[cache_key]
+    else:
+        logging.info("CACHE MISS. Calling API for drift relationship analysis...")
+        try:
+            response_object = structured_llm.invoke(prompt)
+            response_data = response_object.dict()
+            llm_cache[cache_key] = response_data
+            save_to_cache(llm_cache)
+            logging.info("Drift link analysis cached successfully.")
+        except Exception as e:
+            logging.error(f"Failed to generate linked drift summary: {e}")
+            return {"error": str(e)}
 
-    except Exception as e:
-        logging.error(f"Failed to generate linked drift summary: {e}")
-        return {"error": str(e)}
+    # Only return the summary if a connection was explicitly found
+    if response_data.get("connection_found"):
+        logging.info("Connection between drifts found.")
+        return {"linked_drift_summary": response_data.get("summary")}
+    else:
+        logging.info("No significant connection found between drifts.")
+        return {"linked_drift_summary": None}

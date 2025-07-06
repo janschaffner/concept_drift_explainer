@@ -495,5 +495,235 @@
         "confidence_score": 0.75
       }
     ]
+  },
+  "c50421883a397e354d0b3f161b802ca4": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "Executive Leadership Bulletin Date: 11.12.2017\n\nSubject: Appointment of New CFO and Strategic Shift in Financial Governance\n\nWe are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\n\nAs part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes:\n\nLocal budget holder approval for payments up to \u20ac10,000\n\nRemoval of redundant compliance reviews for standard invoices\n\nPhased introduction of \u201cauto-clear\u201d logic in the RP submission system\n\nAffected teams will be contacted by the Finance Transformation Office in January. Further rollouts expected across Q2 and Q3.\n\n\u2014 Issued by: Office of the CEO Group Communications",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 1512950400,
+        "classifications": [
+          {
+            "full_path": "organizational unit 65463",
+            "reasoning": "The snippet discusses a strategic shift in financial governance that may affect the organizational unit."
+          },
+          {
+            "full_path": "PRE_APPROVER",
+            "reasoning": "The introduction of a decentralized authorization model relates to the role of pre-approvers in the payment process."
+          }
+        ]
+      },
+      {
+        "snippet_text": "EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515379200,
+        "classifications": [
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "The directive requires manual review, indicating a shift in supervisory roles for payment requests."
+          },
+          {
+            "full_path": "EMPLOYEE",
+            "reasoning": "The changes affect employees involved in the payment request process."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The pilot includes:\n\nLocal budget holder approval for payments up to \u20ac10,000\n\nRemoval of redundant compliance reviews for standard invoices\n\nPhased introduction of \u201cauto-clear\u201d logic in the RP submission system",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 1512950400,
+        "classifications": [
+          {
+            "full_path": "PRE_APPROVER",
+            "reasoning": "The local budget holder approval relates directly to the pre-approval process."
+          },
+          {
+            "full_path": "project 148216",
+            "reasoning": "The changes may impact specific projects, including project 148216."
+          }
+        ]
+      },
+      {
+        "snippet_text": "As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 1512950400,
+        "classifications": [
+          {
+            "full_path": "organizational unit 65463",
+            "reasoning": "The decentralized model will affect the organizational unit."
+          },
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "This model changes the supervisory structure for approvals."
+          }
+        ]
+      },
+      {
+        "snippet_text": "In response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515379200,
+        "classifications": [
+          {
+            "full_path": "EMPLOYEE",
+            "reasoning": "The misuse of authority directly impacts employees involved in the payment process."
+          },
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "The directive indicates a need for increased supervision in payment approvals."
+          }
+        ]
+      }
+    ]
+  },
+  "1575abe44c6bafb3003e0d71f276d610": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The removal of redundant compliance reviews for standard invoices indicates a change in process management, specifically related to streamlining procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The phased introduction of 'auto-clear' logic in the RP submission system suggests an update or enhancement to the IT systems used within the organization."
+      }
+    ]
+  },
+  "d818850bab8091fe710b97d2a958c9fc": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The mention of a 'Decentralized Authorization Model' indicates a change in process management, likely involving new procedures or KPIs."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The transition roadmap suggests organizational changes, possibly involving restructuring or new roles within the business units."
+      }
+    ]
+  },
+  "b2e9fdd5cebc73dc555f884869378980": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text snippet discusses a directive enacted in response to misuse of delegated payment authority, indicating a legal context involving compliance and regulations."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Economic",
+        "reasoning": "The mention of federal agencies and the implications of misuse may relate to economic factors, such as financial governance and accountability."
+      }
+    ]
+  },
+  "99ea27453ec477aafdf25d3464107203": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515360000,
+        "classifications": [
+          {
+            "full_path": "Emergency Directives/Compliance Updates",
+            "reasoning": "This snippet discusses a mandatory compliance update that directly affects payment request approvals, indicating a sudden change in process."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The organizational unit 65463 has been flagged for irregularities in project 148216, leading to a review of all employee actions related to PRE_APPROVER and SUPERVISOR roles.",
+        "source_document": "2023-10-01_OrganizationalReview_Report.pdf",
+        "timestamp": 1696118400,
+        "classifications": [
+          {
+            "full_path": "Organizational Reviews/Project Irregularities",
+            "reasoning": "This snippet highlights specific organizational units and projects that are under scrutiny, indicating a sudden shift in oversight and approval processes."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Due to recent incidents involving EMPLOYEE misconduct, the management has decided to implement stricter controls over PRE_APPROVER and SUPERVISOR roles to prevent future issues.",
+        "source_document": "2023-10-05_ManagementMemo_StrictControls.pdf",
+        "timestamp": 1696464000,
+        "classifications": [
+          {
+            "full_path": "Management Memos/Control Implementations",
+            "reasoning": "This snippet addresses the implementation of stricter controls in response to misconduct, which aligns with the sudden drift in approval processes."
+          }
+        ]
+      },
+      {
+        "snippet_text": "An internal audit revealed that project 148216 had multiple unauthorized approvals, prompting immediate changes to the approval workflow involving PRE_APPROVER and SUPERVISOR.",
+        "source_document": "2023-10-10_AuditFindings_Project148216.pdf",
+        "timestamp": 1696752000,
+        "classifications": [
+          {
+            "full_path": "Audit Findings/Approval Workflows",
+            "reasoning": "This snippet discusses findings from an internal audit that led to immediate changes in approval workflows, indicating a sudden concept drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The recent changes in the approval process for project 148216 have been communicated to all EMPLOYEES, emphasizing the roles of PRE_APPROVER and SUPERVISOR in maintaining compliance.",
+        "source_document": "2023-10-12_Communication_EmployeeUpdate.pdf",
+        "timestamp": 1696838400,
+        "classifications": [
+          {
+            "full_path": "Employee Communications/Approval Process Changes",
+            "reasoning": "This snippet outlines changes communicated to employees regarding the approval process, reflecting the sudden nature of the drift."
+          }
+        ]
+      }
+    ]
+  },
+  "246c1068a5375a82b5368d0d800856ea": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The text mentions an organizational unit being flagged for irregularities, indicating internal organizational context."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The review of employee actions suggests a focus on process management and oversight within the organization."
+      }
+    ]
+  },
+  "141bf83128a078f20db12f71f8db1baa": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The snippet discusses implementing stricter controls and management decisions related to roles, which falls under process management and redesign."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of management decisions regarding roles indicates a change in organizational structure or responsibilities."
+      }
+    ]
+  },
+  "f93deb991efc3bfceae2268f43794c38": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text mentions immediate changes to the approval workflow, which relates to process redesign and management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of an internal audit and changes in the approval workflow suggests potential restructuring or changes in roles."
+      }
+    ]
+  },
+  "77d82d735d9d00dea69d8d9585be861b": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The snippet discusses changes in the approval process, which relates to process management and potentially new Standard Operating Procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of roles such as PRE_APPROVER and SUPERVISOR indicates a focus on organizational structure and roles within the process."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The emphasis on maintaining compliance suggests that there are legal or regulatory considerations involved in the approval process."
+      }
+    ]
+  },
+  "a4f72bce2f5784c43a8715d35fba1e4c": {
+    "connection_found": true,
+    "summary": "Both drifts are connected through the suspension of auto-approval for payment requests. Drift #1 describes the strategic changes initiated by the new CFO, which included the suspension of auto-approval as part of a broader governance reform. Drift #2 details an emergency directive that also mandated the suspension of auto-approval due to misuse of delegated authority. Thus, both drifts share a common cause related to the need for stricter compliance and oversight in the payment approval process."
   }
 }
