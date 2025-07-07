@@ -76,11 +76,12 @@ def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, sour
     logging.info(f"  > Ingested {len(vectors_to_upsert)} vectors from {source_document_name}.")
     return len(vectors_to_upsert)
 
-def main():
+# --- Main function ---
+def process_files(files_to_process: list):
     """
-    Main function to load, chunk, embed, and ingest documents into Pinecone.
+    Main function to load, chunk, embed, and ingest a given list of documents into Pinecone.
     """
-    logging.info("--- Starting Document Ingestion ---")
+    logging.info(f"--- Starting Ingestion for {len(files_to_process)} files ---")
     
     # 1. Load API Key
     load_dotenv()
@@ -112,20 +113,7 @@ def main():
     embedder = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     
-    # 5. Process and Ingest Documents
-    files_to_process = (
-        list(DOCUMENTS_PATH.glob("*.pdf")) +
-        list(DOCUMENTS_PATH.glob("*.pptx")) +
-        list(DOCUMENTS_PATH.glob("*.png")) +
-        list(DOCUMENTS_PATH.glob("*.jpg")) +
-        list(DOCUMENTS_PATH.glob("*.docx")) +
-        list(DOCUMENTS_PATH.glob("*.txt"))
-    )
-
-    if not files_to_process:
-        logging.warning(f"No supported documents found in {DOCUMENTS_PATH}. Aborting.")
-        return
-
+    # 5. Process and Ingest the provided list of documents
     logging.info(f"Found {len(files_to_process)} documents to process.")
     
     total_vectors_ingested = 0
@@ -180,8 +168,23 @@ def main():
             logging.warning(f"No text or valid images could be extracted from '{doc_path.name}'.")
 
     logging.info(f"\n--- Ingestion Complete ---")
-    logging.info(f"Total vectors ingested into index '{PINECONE_INDEX_NAME}': {total_vectors_ingested}")
+    logging.info(f"Total new vectors ingested: {total_vectors_ingested}")
 
 
 if __name__ == "__main__":
-    main()
+    # This block allows the script to be run directly from the command line.
+    # It will find all supported files in the documents directory and process them.
+    logging.info("Running ingestion script in standalone mode...")
+    all_files_to_process = (
+        list(DOCUMENTS_PATH.glob("*.pdf")) +
+        list(DOCUMENTS_PATH.glob("*.pptx")) +
+        list(DOCUMENTS_PATH.glob("*.png")) +
+        list(DOCUMENTS_PATH.glob("*.jpg")) +
+        list(DOCUMENTS_PATH.glob("*.docx")) +
+        list(DOCUMENTS_PATH.glob("*.txt"))
+    )
+
+    if all_files_to_process:
+        process_files(all_files_to_process)
+    else:
+        logging.warning(f"No supported documents found in {DOCUMENTS_PATH} to process.")

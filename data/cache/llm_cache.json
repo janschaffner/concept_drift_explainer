@@ -725,5 +725,150 @@
   "a4f72bce2f5784c43a8715d35fba1e4c": {
     "connection_found": true,
     "summary": "Both drifts are connected through the suspension of auto-approval for payment requests. Drift #1 describes the strategic changes initiated by the new CFO, which included the suspension of auto-approval as part of a broader governance reform. Drift #2 details an emergency directive that also mandated the suspension of auto-approval due to misuse of delegated authority. Thus, both drifts share a common cause related to the need for stricter compliance and oversight in the payment approval process."
+  },
+  "aaa98e6636292a8747b4651df7a3f801": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "Executive Leadership Bulletin Date: 11.12.2017\n\nSubject: Appointment of New CFO and Strategic Shift in Financial Governance\n\nWe are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\n\nAs part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes:\n\nLocal budget holder approval for payments up to \u20ac10,000\n\nRemoval of redundant compliance reviews for standard invoices\n\nPhased introduction of \u201cauto-clear\u201d logic in the RP submission system\n\nAffected teams will be contacted by the Finance Transformation Office in January. Further rollouts expected across Q2 and Q3.\n\n\u2014 Issued by: Office of the CEO Group Communications",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 1512950400,
+        "classifications": [
+          {
+            "full_path": "organizational unit 65463",
+            "reasoning": "The snippet discusses a strategic shift in financial governance and the introduction of a decentralized authorization model, which may impact the organizational unit."
+          },
+          {
+            "full_path": "EMPLOYEE",
+            "reasoning": "The appointment of a new CFO and changes in approval processes directly relate to employee roles and responsibilities."
+          }
+        ]
+      },
+      {
+        "snippet_text": "EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515379200,
+        "classifications": [
+          {
+            "full_path": "PRE_APPROVER",
+            "reasoning": "The suspension of auto-approval for payment requests directly affects the pre-approval process and the roles of employees involved."
+          },
+          {
+            "full_path": "SUPERVISOR",
+            "reasoning": "The directive requires manual reviews, impacting supervisors' responsibilities in overseeing compliance."
+          }
+        ]
+      }
+    ]
+  },
+  "417ca14bd26f92df948893e104cf1a7f": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018\n\nSubject: Immediate Suspension of Auto-Approval for Payment Requests\n\nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.\n\nAll RP-form-based payment requests must now:\n\nUndergo full manual review by the Central Payment Control Office\n\nInclude formal invoice attachments and budget justification letters\n\nBe logged via the Secure Approval Ledger (SAL)\n\nDepartments found bypassing the new rules will face administrative penalties. This directive overrides all prior RP protocols and remains in force until further notice.\n\n\u2014 Issued under emergency powers by: Director-General, Public Finance Authority Office for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515360000,
+        "classifications": [
+          {
+            "full_path": "Compliance Updates",
+            "reasoning": "The directive indicates a sudden change in compliance requirements affecting payment requests, which may relate to the organizational unit and employee roles."
+          }
+        ]
+      },
+      {
+        "snippet_text": "The organizational unit 65463 has been flagged for increased scrutiny due to irregularities in project 148216. Employees in this unit are now required to submit all approvals through the PRE_APPROVER role to ensure compliance with new oversight measures.",
+        "source_document": "2023-10-01_Organizational_Review_Report.pdf",
+        "timestamp": 1696118400,
+        "classifications": [
+          {
+            "full_path": "Organizational Changes",
+            "reasoning": "This snippet directly mentions the organizational unit and the project, indicating a sudden shift in approval processes."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Due to recent incidents involving the SUPERVISOR role, all employees must now undergo additional training on compliance and approval processes. This change is effective immediately and aims to prevent further misuse of authority.",
+        "source_document": "2023-10-05_Training_Protocol_Update.pdf",
+        "timestamp": 1696464000,
+        "classifications": [
+          {
+            "full_path": "Training and Compliance",
+            "reasoning": "The snippet highlights a sudden change in training requirements for employees, which is relevant to the drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "An internal audit revealed that the PRE_APPROVER role was being bypassed in several instances, leading to unauthorized approvals. As a result, all payment requests must now be reviewed by the SUPERVISOR before proceeding.",
+        "source_document": "2023-09-15_Audit_Findings_Report.pdf",
+        "timestamp": 1694736000,
+        "classifications": [
+          {
+            "full_path": "Audit Findings",
+            "reasoning": "This snippet discusses the bypassing of approval roles, which is directly related to the concept drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Effective immediately, all employees in organizational unit 65463 must report any discrepancies in project 148216 to their SUPERVISOR. This measure is part of a broader initiative to enhance accountability and prevent misuse of delegated authority.",
+        "source_document": "2023-10-10_Accountability_Initiative.pdf",
+        "timestamp": 1696886400,
+        "classifications": [
+          {
+            "full_path": "Accountability Measures",
+            "reasoning": "This snippet emphasizes the need for reporting discrepancies, linking it to the organizational unit and project, which is relevant to the drift."
+          }
+        ]
+      }
+    ]
+  },
+  "4e7fdcbe043f664d35c24a65f96082c5": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The text mentions an organizational unit being flagged for scrutiny, indicating a change in oversight and possibly a restructuring of roles."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The requirement for employees to submit approvals through a specific role suggests a change in process management and oversight measures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The mention of compliance with new oversight measures may imply the introduction of new systems or software to manage these approvals."
+      }
+    ]
+  },
+  "8ba538f4aefac847647c1eb9d3e3dcd6": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text mentions a change in training related to compliance and approval processes, which indicates a redesign or update in the process management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of the SUPERVISOR role and the requirement for additional training suggests an internal organizational change related to roles and responsibilities."
+      }
+    ]
+  },
+  "803a1851384ff9d3efa030c162cc211a": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses a change in the approval process, indicating a redesign of procedures to ensure compliance and proper authorization."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of the PRE_APPROVER role and the new requirement for SUPERVISOR review suggests changes in roles and responsibilities within the organization."
+      }
+    ]
+  },
+  "68de9c78b7dd81498929b07f8a22eeb2": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text snippet mentions a broader initiative to enhance accountability, which relates to process management and potentially new Standard Operating Procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The directive affects employees in a specific organizational unit, indicating a change in roles or responsibilities."
+      }
+    ]
   }
 }

@@ -14,6 +14,8 @@ sys.path.append(str(project_root))
 from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
 from backend.agents.drift_linker_agent import run_drift_linker_agent
+# --- NEW: Import the ingestion function ---
+from backend.utils.ingest_documents import process_files
 
 # --- Helper Function to Load and Unpack Drifts ---
 @st.cache_data
@@ -76,11 +78,41 @@ st.warning(
 )
 
 drift_options = load_and_unpack_drifts()
+DOCUMENTS_PATH = project_root / "data" / "documents"
 
 # --- Sidebar for Controls ---
 with st.sidebar:
     st.header("Controls")
     
+    # --- File Uploader Section ---
+    st.divider()
+    st.header("Add New Context")
+    uploaded_files = st.file_uploader(
+        "Upload new documents (.pdf, .pptx, etc.)",
+        accept_multiple_files=True,
+        type=['pdf', 'pptx', 'docx', 'txt', 'png', 'jpg']
+    )
+
+    if st.button("Process Uploaded Files") and uploaded_files:
+        saved_files_paths = []
+        with st.spinner("Saving and processing uploaded files..."):
+            for uploaded_file in uploaded_files:
+                # We must save the file to our documents folder first
+                file_path = DOCUMENTS_PATH / uploaded_file.name
+                with open(file_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                saved_files_paths.append(file_path)
+            
+            # Now, call the ingestion logic with only the new files
+            process_files(saved_files_paths)
+            st.success(f"Successfully processed {len(saved_files_paths)} new document(s)!")
+            # Clear the drift data cache so the UI reloads it if necessary
+            st.cache_data.clear()
+            st.rerun()
+
+    st.divider()
+    st.header("Run Analysis")
+
     if drift_options:
         st.info(f"Found **{len(drift_options)}** drift(s) to analyze.")
         
@@ -89,12 +121,15 @@ with st.sidebar:
             all_explanations = []
             full_state_log = []
             
-            with st.spinner(f"Analyzing {len(drift_options)} drift(s)... This may take several minutes."):
+            progress_bar = st.progress(0.0, text="Starting Analysis...")
+            
+            with st.spinner(f"Analyzing {len(drift_options)} drift(s)...This may take several minutes."):
                 try:
                     app = build_graph()
                     # Loop to process each drift sequentially
                     for i, drift in enumerate(drift_options):
-                        st.toast(f"Analyzing {drift['display']}...")
+                        progress = (i + 1) / len(drift_options)
+                        progress_bar.progress(progress, text=f"Analyzing {drift['display']}...")
                         
                         row_idx, drift_idx = map(int, drift['id'].split('-'))
                         initial_input = {"selected_drift": {"row_index": row_idx, "drift_index": drift_idx}}
@@ -109,13 +144,11 @@ with st.sidebar:
                         all_explanations.append(final_state.get('explanation'))
                         full_state_log.append(final_state)
 
-                    # --- NEW: Call the Drift Linker Agent after the loop ---
                     if not st.session_state.error_message and len(all_explanations) > 1:
                         st.toast("🔗 Analyzing relationships between drifts...")
                         linker_result = run_drift_linker_agent(all_explanations)
                         st.session_state.linked_drift_summary = linker_result.get("linked_drift_summary")
 
-                    # Store results in the session state
                     if not st.session_state.error_message:
                         st.session_state.all_explanations = all_explanations
                         st.session_state.full_state_log = full_state_log
@@ -123,7 +156,7 @@ with st.sidebar:
                 except Exception as e:
                     st.session_state.error_message = f"An unexpected error occurred: {e}"
             
-            # Rerun the script to display all the results on the main page
+            progress_bar.empty()
             st.rerun()
     else:
         st.error("Could not find or parse `prediction_results.csv`.")
