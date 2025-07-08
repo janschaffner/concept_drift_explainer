@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 import logging
 import io
+import pandas as pd
 
 # --- Path Correction ---
 project_root = Path(__file__).resolve().parents[2]
@@ -13,8 +14,9 @@ sys.path.append(str(project_root))
 from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import UnstructuredFileLoader # keep this even though it may be old
-from langchain_huggingface import HuggingFaceEmbeddings
+# keep this even though it may be old
+from langchain_community.document_loaders import UnstructuredFileLoader, PyPDFLoader
+from langchain_openai import OpenAIEmbeddings
 # Imports for multimodal processing
 from backend.utils.image_analyzer import analyze_image_content
 from pptx import Presentation
@@ -22,12 +24,13 @@ from pptx import Presentation
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Pinecone setup
-PINECONE_INDEX_NAME = "masterthesis"
-PINECONE_DIMENSION = 1024
+# --- Pinecone setup ---
+PINECONE_DIMENSION = 1536
+EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has a 1536 dimension
+# --- NEW: Define Namespace Constants ---
+CONTEXT_NS = "context"
+KB_NS      = "bpm-kb"
 
-# Embedding model setup - Must match the Pinecone dimension
-EMBEDDING_MODEL_NAME = "sentence-transformers/all-roberta-large-v1" # This model has a 1024 dimension
 
 # Data path
 DOCUMENTS_PATH = project_root / "data" / "documents"
@@ -46,8 +49,9 @@ def get_timestamp_from_filename(filename: str) -> int:
     except (ValueError, IndexError):
         return None
 
-def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, source_document_name: str, doc_timestamp: int):
-    """Helper function to chunk, embed, and upsert a list of texts."""
+# process_and_embed now accepts a namespace parameter
+def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, source_document_name: str, doc_timestamp: int, namespace: str):
+    """Helper function to chunk, embed, and upsert a list of texts into a specific namespace."""
     if not texts_to_embed:
         return 0
     
@@ -72,49 +76,51 @@ def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, sour
         }
         vectors_to_upsert.append((vector_id, vectors[i], metadata))
         
-    index.upsert(vectors=vectors_to_upsert)
-    logging.info(f"  > Ingested {len(vectors_to_upsert)} vectors from {source_document_name}.")
+    # Use the provided namespace for the upsert operation
+    index.upsert(vectors=vectors_to_upsert, namespace=namespace)
+    logging.info(f"  > Ingested {len(vectors_to_upsert)} vectors into namespace '{namespace}' from {source_document_name}.")
     return len(vectors_to_upsert)
 
-# --- Main function ---
-def process_files(files_to_process: list):
-    """
-    Main function to load, chunk, embed, and ingest a given list of documents into Pinecone.
-    """
-    logging.info(f"--- Starting Ingestion for {len(files_to_process)} files ---")
-    
-    # 1. Load API Key
-    load_dotenv()
-    api_key = os.getenv("PINECONE_API_KEY")
-    if not api_key:
-        logging.error("PINECONE_API_KEY not found in .env file.")
+# Function to specifically process the glossary file
+def process_glossary_file(index, embedder):
+    """Loads, embeds, and upserts the BPM glossary into the 'bpm-kb' namespace."""
+    glossary_path = project_root / "data" / "knowledge_base" / "bpm_glossary.csv"
+    if not glossary_path.exists():
+        logging.warning(f"BPM glossary not found at {glossary_path}. Skipping glossary ingestion.")
         return
 
-    # 2. Initialize Pinecone
-    pc = Pinecone(api_key=api_key)
-    
-    # 3. Check for and create the index if it doesn't exist
-    if PINECONE_INDEX_NAME not in pc.list_indexes().names():
-        logging.info(f"Index '{PINECONE_INDEX_NAME}' not found. Creating a new one...")
-        pc.create_index(
-            name=PINECONE_INDEX_NAME,
-            dimension=PINECONE_DIMENSION,
-            metric="cosine",
-            spec=ServerlessSpec(cloud="aws", region="us-east-1") # A default serverless spec
-        )
-        logging.info(f"Index '{PINECONE_INDEX_NAME}' created successfully.")
-    else:
-        logging.info(f"Connected to existing index: '{PINECONE_INDEX_NAME}'")
+    logging.info(f"--- Processing BPM Glossary ---")
+    try:
+        df = pd.read_csv(glossary_path)
+        # Combine term and definition into a single text for embedding
+        df['text_to_embed'] = df['term'] + ": " + df['definition']
+        
+        texts = df['text_to_embed'].tolist()
+        vectors = embedder.embed_documents(texts)
+        
+        vectors_to_upsert = []
+        for i, row in df.iterrows():
+            vector_id = f"bpm_kb_{i}"
+            metadata = {
+                "text": row['text_to_embed'],
+                "source": "BPM Glossary",
+                "timestamp": 0 # Timestamp is not relevant for the glossary
+            }
+            vectors_to_upsert.append((vector_id, vectors[i], metadata))
+            
+        # Upsert into the dedicated "bpm-kb" namespace using the constant
+        index.upsert(vectors=vectors_to_upsert, namespace=KB_NS)
+        logging.info(f"Successfully ingested {len(vectors_to_upsert)} terms into the '{KB_NS}' namespace.")
 
-    index = pc.Index(PINECONE_INDEX_NAME)
+    except Exception as e:
+        logging.error(f"Error processing glossary file: {e}")
 
-    # 4. Initialize Embedder and Text Splitter
-    logging.info(f"Loading embedding model: '{EMBEDDING_MODEL_NAME}'...")
-    embedder = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    
-    # 5. Process and Ingest the provided list of documents
-    logging.info(f"Found {len(files_to_process)} documents to process.")
+# Main function to process context documents
+def process_context_files(files_to_process: list, index, embedder, text_splitter):
+    """
+    Processes a list of context documents (PDF, PPTX, images, etc.).
+    """
+    logging.info(f"--- Processing {len(files_to_process)} Context Documents ---")
     
     total_vectors_ingested = 0
     for doc_path in files_to_process:
@@ -156,25 +162,71 @@ def process_files(files_to_process: list):
                 logging.error(f"Error processing PowerPoint file {doc_path.name}: {e}")
                 continue
         
-        else: # Default for .pdf, .txt, .docx, etc.
-            loader = UnstructuredFileLoader(str(doc_path), strategy="fast")
-            documents = loader.load()
-            texts_to_embed.extend([doc.page_content for doc in documents])
+        elif file_suffix == ".pdf":
+            try:
+                loader = PyPDFLoader(str(doc_path))
+                documents = loader.load_and_split()
+                texts_to_embed.extend([doc.page_content for doc in documents])
+            except Exception as e:
+                logging.error(f"Error processing PDF file with PyPDFLoader {doc_path.name}: {e}")
+                continue
+        
+        else: # Default for .txt, .docx, etc.
+            try:
+                loader = UnstructuredFileLoader(str(doc_path))
+                documents = loader.load()
+                texts_to_embed.extend([doc.page_content for doc in documents])
+            except Exception as e:
+                logging.error(f"Error processing document with UnstructuredFileLoader {doc_path.name}: {e}")
+                continue
 
         if texts_to_embed:
-            count = process_and_embed(index, text_splitter, embedder, texts_to_embed, doc_path.name, doc_timestamp)
+            # Call process_and_embed with the "context" namespace using the constant
+            count = process_and_embed(index, text_splitter, embedder, texts_to_embed, doc_path.name, doc_timestamp, namespace=CONTEXT_NS)
             total_vectors_ingested += count
         else:
             logging.warning(f"No text or valid images could be extracted from '{doc_path.name}'.")
-
-    logging.info(f"\n--- Ingestion Complete ---")
-    logging.info(f"Total new vectors ingested: {total_vectors_ingested}")
-
+    
+    return total_vectors_ingested
 
 if __name__ == "__main__":
     # This block allows the script to be run directly from the command line.
     # It will find all supported files in the documents directory and process them.
-    logging.info("Running ingestion script in standalone mode...")
+    logging.info("--- Running Ingestion Script in Standalone Mode ---")
+    
+    # 1. Load API Key and Index Name from .env
+    load_dotenv()
+    api_key = os.getenv("PINECONE_API_KEY")
+    pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
+
+    if not all([api_key, pinecone_index_name]):
+        logging.error("PINECONE_API_KEY or PINECONE_INDEX_NAME not found in .env file.")
+        sys.exit(1)
+
+    # 2. Initialize Pinecone
+    pc = Pinecone(api_key=api_key)
+    
+    # 3. Check for and create the index if it doesn't exist
+    if pinecone_index_name not in pc.list_indexes().names():
+        logging.info(f"Index '{pinecone_index_name}' not found. Creating a new one...")
+        pc.create_index(
+            name=pinecone_index_name,
+            dimension=PINECONE_DIMENSION,
+            metric="cosine",
+            spec=ServerlessSpec(cloud="aws", region="us-east-1")
+        )
+        logging.info(f"Index '{pinecone_index_name}' created successfully.")
+    else:
+        logging.info(f"Connected to existing index: '{pinecone_index_name}'")
+
+    index = pc.Index(pinecone_index_name)
+
+    # 4. Initialize Embedder and Text Splitter
+    logging.info(f"Loading embedding model: '{EMBEDDING_MODEL_NAME}'...")
+    embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    
+    # 5. Process Context Documents
     all_files_to_process = (
         list(DOCUMENTS_PATH.glob("*.pdf")) +
         list(DOCUMENTS_PATH.glob("*.pptx")) +
@@ -185,6 +237,11 @@ if __name__ == "__main__":
     )
 
     if all_files_to_process:
-        process_files(all_files_to_process)
+        process_context_files(all_files_to_process, index, embedder, text_splitter)
     else:
-        logging.warning(f"No supported documents found in {DOCUMENTS_PATH} to process.")
+        logging.warning(f"No context documents found in {DOCUMENTS_PATH} to process.")
+
+    # 6. Process Glossary File
+    process_glossary_file(index, embedder)
+
+    logging.info("\n--- Full Ingestion Process Complete ---")

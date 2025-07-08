@@ -870,5 +870,305 @@
         "reasoning": "The directive affects employees in a specific organizational unit, indicating a change in roles or responsibilities."
       }
     ]
+  },
+  "7c99895826d6c0b17b23d190b833cd24": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "Incremental Drift: Series of small, continuous changes accumulating into major transformation.",
+        "source_document": "BPM Glossary",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "BPM Glossary/Drift Types/Incremental Drift",
+            "reasoning": "Defines the concept of incremental drift, which aligns with the detected drift type."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Executive Leadership Bulletin\nDate: 11.12.2017\nSubject: Appointment of New CFO and Strategic Shift in Financial Governance\nWe are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\nAs part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes:\n\u2022 Local budget holder approval for payments up to \u20ac10,000\n\u2022 Removal of redundant compliance reviews for standard invoices\n\u2022 Phased introduction of \u201cauto-clear\u201d logic in the RP submission system\nAffected teams will be contacted by the Finance Transformation Office in January. Further rollouts expected across Q2 and Q3.\n\u2014 Issued by:\nOffice of the CEO\nGroup Communications",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "2017-12-11_Executive_Notice_FinanceLeadershipTransition/Leadership Changes",
+            "reasoning": "Describes a strategic shift in financial governance that may relate to the organizational changes indicated by the drift keywords."
+          }
+        ]
+      },
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 \nDate: 08.01.2018 \nSubject: Immediate Suspension of Auto-Approval for Payment Requests \nIn response to the confirmed misuse of delegated payment authority in multiple federal \nagencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect. \nAll RP-form-based payment requests must now: \n\u2022 Undergo full manual review by the Central Payment Control Office \n\u2022 Include formal invoice attachments and budget justification letters \n\u2022 Be logged via the Secure Approval Ledger (SAL) \nDepartments found bypassing the new rules will face administrative penalties. This directive \noverrides all prior RP protocols and remains in force until further notice. \n\u2014 Issued under emergency powers by: \nDirector-General, Public Finance Authority \nOffice for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "2018-01-08_EmergencyDirective_RP_Safeguards/Compliance Changes",
+            "reasoning": "Details a significant compliance change that could impact the roles of supervisors and employees in the approval process."
+          }
+        ]
+      }
+    ]
+  },
+  "af50ebbbabe34c30fc3167d3a5fc626d": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The concept of 'Incremental Drift' relates to continuous changes in processes, which aligns with process redesign and management."
+      }
+    ]
+  },
+  "80417b51381dec37e71c593fc7d2a547": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The announcement discusses a new strategic shift in financial governance and the introduction of a Decentralized Authorization Model, which relates to process redesign and new Standard Operating Procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The appointment of a new CFO indicates a change in organizational structure and leadership roles."
+      }
+    ]
+  },
+  "ac30cff2384e0296c216e1f6d3128f22": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text snippet discusses a mandatory compliance update related to new rules and regulations enacted by a public authority, which falls under legal context."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The directive outlines new procedures for processing payment requests, indicating a redesign of existing processes and the introduction of new Standard Operating Procedures (SOPs)."
+      }
+    ]
+  },
+  "0fc99d07241186a5517f58ef96467874": {
+    "summary": "The Incremental Drift observed between December 2017 and October 2018 is primarily attributed to a series of small, iterative changes in financial governance and compliance protocols, driven by the appointment of a new CFO who emphasized agile transformation practices. These adjustments, including the introduction of a decentralized authorization model and mandatory compliance updates, collectively contributed to a significant transformation in the process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation led to a series of small adjustments in financial governance, including the pilot of a decentralized authorization model and the removal of redundant compliance reviews.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Executive Leadership Changes",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The implementation of the Emergency Directive mandated a full manual review of payment requests, which represented a significant shift in compliance practices, reflecting an incremental change in operational processes.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office...\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Compliance Updates",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The phased introduction of 'auto-clear' logic in the RP submission system indicates a series of iterative improvements aimed at streamlining processes, contributing to the overall transformation during the drift period.",
+        "evidence_snippet": "\"Phased introduction of 'auto-clear' logic in the RP submission system.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Process Improvements",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The recurring nature of process adjustments, as indicated by the Emergency Directive and the strategic shift in financial governance, suggests a pattern of incremental changes rather than a single identifiable change point.",
+        "evidence_snippet": "\"Incremental Drift: Series of small, continuous changes accumulating into major transformation.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Conceptual Framework",
+        "confidence_score": 0.75
+      }
+    ]
+  },
+  "86f7bb9cf0f18a43edb22da52d6af1ad": {
+    "summary": "The Incremental Drift observed between December 2017 and October 2018 is primarily due to a series of small, iterative changes in financial governance and compliance protocols, initiated by the appointment of a new CFO focused on agile transformation. Key adjustments, including the introduction of a decentralized authorization model and mandatory compliance updates, collectively led to significant operational changes.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation resulted in several adjustments in financial governance, including the pilot of a decentralized authorization model and the removal of redundant compliance reviews, which facilitated a more agile operational framework.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Executive Leadership Changes",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The implementation of the Emergency Directive mandated a full manual review of payment requests, marking a significant shift in compliance practices and reflecting an incremental change in operational processes that impacted the overall workflow.",
+        "evidence_snippet": "\"All RP-form-based payment requests must now: Undergo full manual review by the Central Payment Control Office...\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Compliance Updates",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The phased introduction of 'auto-clear' logic in the RP submission system represents a series of iterative improvements aimed at streamlining processes, contributing to the overall transformation during the drift period.",
+        "evidence_snippet": "\"Phased introduction of 'auto-clear' logic in the RP submission system.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "Process Improvements",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The recurring nature of process adjustments, as indicated by the Emergency Directive and the strategic shift in financial governance, suggests a pattern of incremental changes rather than a single identifiable change point, aligning with the concept of Incremental Drift.",
+        "evidence_snippet": "\"Incremental Drift: Series of small, continuous changes accumulating into major transformation.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Conceptual Framework",
+        "confidence_score": 0.75
+      }
+    ]
+  },
+  "c7a459096586ffdb5d7155c0228c905c": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "Incremental Drift: Series of small, continuous changes accumulating into major transformation.",
+        "source_document": "BPM Glossary",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "BPM Glossary/Incremental Drift",
+            "reasoning": "Defines the type of drift detected, indicating that the changes are gradual and cumulative."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Executive Leadership Bulletin\nDate: 11.12.2017\nSubject: Appointment of New CFO and Strategic Shift in Financial Governance\nWe are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\nAs part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes:\n\u2022 Local budget holder approval for payments up to \u20ac10,000\n\u2022 Removal of redundant compliance reviews for standard invoices\n\u2022 Phased introduction of \u201cauto-clear\u201d logic in the RP submission system\nAffected teams will be contacted by the Finance Transformation Office in January. Further rollouts expected across Q2 and Q3.\n\u2014 Issued by:\nOffice of the CEO\nGroup Communications",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "2017-12-11_Executive_Notice_FinanceLeadershipTransition/Strategic Shift",
+            "reasoning": "Describes a strategic shift in financial governance that may relate to the incremental changes in approval processes."
+          }
+        ]
+      },
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 \nDate: 08.01.2018 \nSubject: Immediate Suspension of Auto-Approval for Payment Requests \nIn response to the confirmed misuse of delegated payment authority in multiple federal \nagencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect. \nAll RP-form-based payment requests must now: \n\u2022 Undergo full manual review by the Central Payment Control Office \n\u2022 Include formal invoice attachments and budget justification letters \n\u2022 Be logged via the Secure Approval Ledger (SAL) \nDepartments found bypassing the new rules will face administrative penalties. This directive \noverrides all prior RP protocols and remains in force until further notice. \n\u2014 Issued under emergency powers by: \nDirector-General, Public Finance Authority \nOffice for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "2018-01-08_EmergencyDirective_RP_Safeguards/Compliance Update",
+            "reasoning": "Details a significant change in compliance requirements that could be a direct cause of the drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Incremental Drift: Series of small, continuous changes accumulating into major transformation.",
+        "source_document": "BPM Glossary",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "BPM Glossary/Incremental Drift",
+            "reasoning": "Defines the type of drift detected, indicating that the changes are gradual and cumulative."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Recurring Drift: Previously seen process variant reappears periodically or cyclically.",
+        "source_document": "BPM Glossary",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "BPM Glossary/Recurring Drift",
+            "reasoning": "While not directly related to the incremental drift, it provides context on how processes can evolve over time."
+          }
+        ]
+      }
+    ]
+  },
+  "25b380954b0f373c7b0ee29af67c6953": {
+    "classifications": [
+      {
+        "full_path": "PROCESS_IMMEDIATE::Case",
+        "reasoning": "The mention of a 'process variant' suggests a focus on specific instances of processes, which aligns with the properties of a single process instance."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The concept of a 'recurring drift' implies a need for monitoring and potentially redesigning processes, which relates to process management and the evaluation of process performance."
+      }
+    ]
+  },
+  "327b921d5ffee8fdb8e40bf50ff84f97": {
+    "reranked_snippets": [
+      {
+        "snippet_text": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 \nDate: 08.01.2018 \nSubject: Immediate Suspension of Auto-Approval for Payment Requests \nIn response to the confirmed misuse of delegated payment authority in multiple federal \nagencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect. \nAll RP-form-based payment requests must now: \n\u2022 Undergo full manual review by the Central Payment Control Office \n\u2022 Include formal invoice attachments and budget justification letters \n\u2022 Be logged via the Secure Approval Ledger (SAL) \nDepartments found bypassing the new rules will face administrative penalties. This directive \noverrides all prior RP protocols and remains in force until further notice. \n\u2014 Issued under emergency powers by: \nDirector-General, Public Finance Authority \nOffice for Anti-Fraud Compliance",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "timestamp": 1515360000,
+        "classifications": [
+          {
+            "full_path": "Drift/Sudden",
+            "reasoning": "This snippet describes an immediate and abrupt change in compliance protocols, which aligns with the concept of sudden drift."
+          }
+        ]
+      },
+      {
+        "snippet_text": "Sudden Drift: Abrupt replacement of old process variant by a new one at a specific time.",
+        "source_document": "BPM Glossary",
+        "timestamp": 0,
+        "classifications": [
+          {
+            "full_path": "Drift/Sudden",
+            "reasoning": "This snippet defines sudden drift, which is relevant to the detected drift type."
+          }
+        ]
+      }
+    ]
+  },
+  "529958d52bd8a8a0e0f928ebd43841d8": {
+    "classifications": [
+      {
+        "full_path": "PROCESS_IMMEDIATE::Case",
+        "reasoning": "The snippet refers to a specific instance of a process variant being replaced, which relates to the properties of a process instance."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The abrupt replacement of a process variant suggests a change in process management, possibly indicating a redesign or new Standard Operating Procedures."
+      }
+    ]
+  },
+  "59a4532aab2bb895c67e86f74fac3b10": {
+    "summary": "The sudden drift observed on January 8, 2018, was triggered by an emergency directive issued by the Public Finance Authority, mandating an immediate suspension of auto-approval for payment requests due to misuse of delegated payment authority. This directive replaced the previous process with a new, more stringent manual review process for all payment requests.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated an immediate change in the payment request process, requiring full manual reviews and additional documentation, thus replacing the old auto-approval process.",
+        "evidence_snippet": "\"\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018 Subject: Immediate Suspension of Auto-Approval for Payment Requests... This directive overrides all prior RP protocols and remains in force until further notice.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Directives",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The definition of sudden drift aligns with the abrupt replacement of the old process by a new one at a specific time, as noted in the BPM Glossary.",
+        "evidence_snippet": "\"Sudden Drift: Abrupt replacement of old process variant by a new one at a specific time.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Process Definitions",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The context of the drift suggests that it was not a recurring issue but rather a unique response to a specific crisis, as indicated by the emergency nature of the directive.",
+        "evidence_snippet": "\"Recurring Drift: Previously seen process variant reappears periodically or cyclically.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Process Definitions",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "229a01d3b7fc28f272b068e7fa26513b": {
+    "summary": "The sudden drift observed on January 8, 2018, was caused by an emergency directive from the Public Finance Authority, which mandated the immediate suspension of auto-approval for payment requests due to misuse of delegated authority. This directive replaced the previous process with a more stringent manual review requirement, marking a significant procedural shift.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued on January 8, 2018, mandated an immediate change in the payment request process, requiring full manual reviews and additional documentation, thus replacing the old auto-approval process.",
+        "evidence_snippet": "\"\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 Date: 08.01.2018 Subject: Immediate Suspension of Auto-Approval for Payment Requests... This directive overrides all prior RP protocols and remains in force until further notice.\"",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "Emergency Directives",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The definition of sudden drift aligns with the abrupt replacement of the old process by a new one at a specific time, as noted in the BPM Glossary, confirming the nature of the change.",
+        "evidence_snippet": "\"Sudden Drift: Abrupt replacement of old process variant by a new one at a specific time.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Process Definitions",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The context of the drift indicates it was a unique response to a specific crisis, rather than a recurring issue, as highlighted by the emergency nature of the directive.",
+        "evidence_snippet": "\"Recurring Drift: Previously seen process variant reappears periodically or cyclically.\"",
+        "source_document": "BPM Glossary",
+        "context_category": "Process Definitions",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "a24b9c18365ff00eadf9475294707031": {
+    "connection_found": true,
+    "summary": "Both drifts are related to changes in financial governance and compliance protocols. The first drift, driven by the new CFO's initiatives, set the stage for a more agile operational framework, which was subsequently disrupted by the emergency directive in the second drift. The emergency directive can be seen as a direct response to the changes initiated by the CFO, as it aimed to address the misuse of delegated authority that arose from the new decentralized model introduced in the first drift."
   }
 }

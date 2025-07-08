@@ -1,5 +1,3 @@
-# backend/agents/context_retrieval_agent.py
-
 import os
 import sys
 import logging
@@ -14,7 +12,8 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-from langchain_huggingface import HuggingFaceEmbeddings
+# --- Use OpenAIEmbeddings ---
+from langchain_openai import OpenAIEmbeddings
 
 # Import our graph state schema
 from backend.state.schema import GraphState, ContextSnippet
@@ -22,25 +21,29 @@ from backend.state.schema import GraphState, ContextSnippet
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-PINECONE_INDEX_NAME = "masterthesis"
-EMBEDDING_MODEL_NAME = "sentence-transformers/all-roberta-large-v1"
-# UPDATED: We now retrieve more candidates for the Re-Ranker agent
-TOP_K_RESULTS = 15
+# The index name is now loaded from .env, so the hardcoded constant is removed.
+EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has a 1536 dimension
+# --- NEW: Define Namespace Constants ---
+CONTEXT_NS = "context"
+KB_NS      = "bpm-kb"
+
 
 def run_context_retrieval_agent(state: GraphState) -> dict:
     """
-    Retrieves a broad set of context snippets from Pinecone using an enhanced query.
+    Retrieves and merges context snippets from both the 'context' and 'bpm-kb' namespaces.
 
     Args:
         state: The current graph state, which must contain `drift_info` and `drift_keywords`.
 
     Returns:
-        A dictionary with the `raw_context_snippets` field populated with candidate snippets.
+        A dictionary with the `raw_context_snippets` field populated with up to 10 candidate
+        snippets, of which up to 8 are from the 'context' namespace and up to 2 are
+        from the 'bpm-kb' namespace, sorted by relevance.
     """
-    logging.info("--- Running Context Retrieval Agent (Broad Search) ---")
+    logging.info("--- Running Context Retrieval Agent (Dual Namespace Search) ---")
     
     drift_info = state.get("drift_info")
-    # NEW: Get the keywords extracted by the Drift Agent
+    # Get the keywords extracted by the Drift Agent
     drift_keywords = state.get("drift_keywords", [])
 
     if not drift_info:
@@ -51,14 +54,18 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     # 1. Initialize Pinecone & Embedder
     load_dotenv()
     api_key = os.getenv("PINECONE_API_KEY")
-    if not api_key:
-        error_msg = "PINECONE_API_KEY not found in .env file."
+    # --- Load index name from .env ---
+    pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
+    
+    if not all([api_key, pinecone_index_name]):
+        error_msg = "PINECONE_API_KEY or PINECONE_INDEX_NAME not found in .env file."
         logging.error(error_msg)
         return {"error": error_msg}
 
     pc = Pinecone(api_key=api_key)
-    index = pc.Index(PINECONE_INDEX_NAME)
-    embedder = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
+    index = pc.Index(pinecone_index_name) # Use the variable for the index name
+    # --- Use OpenAIEmbeddings ---
+    embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 
     # 2. Formulate Semantic Query
     # We create a descriptive sentence and enhance it with specific keywords.
@@ -68,7 +75,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
         f"It occurred in the process involving the activities '{start_activity}' and '{end_activity}'."
     )
     
-    # NEW: Append the specific keywords to the query if they exist
+    # Append the specific keywords to the query if they exist
     if drift_keywords:
         keyword_str = ", ".join(drift_keywords)
         query_text = f"{base_query} Associated keywords include: {keyword_str}."
@@ -78,9 +85,10 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     logging.info(f"Formulated enhanced query: {query_text}")
     query_vector = embedder.embed_query(query_text)
 
-    # 3. Define Temporal Filter
+    # 3. Define Temporal Filter (only for the 'context' namespace)
     # Create a time window around the drift to filter documents by metadata.
     # Window: 14 days before the drift started to 14 days after it ended.
+    temporal_filter = {}
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
         end_date = datetime.fromisoformat(drift_info["end_timestamp"])
@@ -97,38 +105,61 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
         }
         logging.info(f"Temporal filter window: {filter_start.date()} to {filter_end.date()}")
     except (ValueError, TypeError) as e:
-        error_msg = f"Could not create temporal filter due to invalid timestamps: {e}"
-        logging.error(error_msg)
-        return {"error": error_msg}
+        # Log a warning but don't stop the process, just proceed without a time filter
+        logging.warning(f"Could not create temporal filter due to invalid timestamps: {e}. Proceeding without it.")
 
-    # 4. Query Pinecone
-    logging.info(f"Querying Pinecone index '{PINECONE_INDEX_NAME}' with top_k={TOP_K_RESULTS}...")
+    # 4. Query Both Namespaces and Merge Results
+    all_hits = {}
+
+    # Query the 'context' namespace for 8 hits with a temporal filter
     try:
-        query_response = index.query(
+        logging.info(f"Querying '{CONTEXT_NS}' namespace for top 8 hits...")
+        context_response = index.query(
             vector=query_vector,
+            top_k=8,
             filter=temporal_filter,
-            top_k=TOP_K_RESULTS,
+            namespace=CONTEXT_NS,
             include_metadata=True
         )
+        for match in context_response.get('matches', []):
+            text_key = match['metadata']['text']
+            if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
+                all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': CONTEXT_NS}
     except Exception as e:
-        error_msg = f"An error occurred while querying Pinecone: {e}"
-        logging.error(error_msg)
-        return {"error": error_msg}
-        
-    # 5. Process Results and Update State
+        logging.error(f"Error querying '{CONTEXT_NS}' namespace: {e}")
+
+    # Query the 'bpm-kb' namespace for 2 hits (no temporal filter)
+    try:
+        logging.info(f"Querying '{KB_NS}' namespace for top 2 hits...")
+        kb_response = index.query(
+            vector=query_vector,
+            top_k=2,
+            namespace=KB_NS,
+            include_metadata=True
+        )
+        for match in kb_response.get('matches', []):
+            text_key = match['metadata']['text']
+            if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
+                all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': KB_NS}
+    except Exception as e:
+        logging.error(f"Error querying '{KB_NS}' namespace: {e}")
+
+    # 5. Sort the combined list by score and process the final snippets
+    sorted_hits = sorted(all_hits.values(), key=lambda x: x['score'], reverse=True)
+    
     retrieved_snippets: list[ContextSnippet] = []
-    if query_response.get("matches"):
-        for match in query_response["matches"]:
-            metadata = match.get("metadata", {})
-            # UPDATED: The data structure now uses 'classifications' as per our latest schema
+    if sorted_hits:
+        for hit in sorted_hits:
+            metadata = hit['metadata']
             snippet: ContextSnippet = {
                 "snippet_text": metadata.get("text", ""),
                 "source_document": metadata.get("source", "Unknown"),
                 "timestamp": metadata.get("timestamp", 0),
-                "classifications": [] # Initialize as an empty list
+                "classifications": [], # Initialize as an empty list
+                "source_type": hit['source_type'] # Add the source tag
             }
             retrieved_snippets.append(snippet)
-        logging.info(f"Successfully retrieved {len(retrieved_snippets)} candidate context snippets.")
+        logging.info(f"Successfully retrieved and merged {len(retrieved_snippets)} candidate context snippets.")
     else:
         logging.warning("No context snippets found matching the criteria.")
 

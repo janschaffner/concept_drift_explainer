@@ -15,7 +15,7 @@ from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
 from backend.agents.drift_linker_agent import run_drift_linker_agent
 # --- NEW: Import the ingestion function ---
-from backend.utils.ingest_documents import process_files
+from backend.utils.ingest_documents import process_context_files
 
 # --- Helper Function to Load and Unpack Drifts ---
 @st.cache_data
@@ -104,7 +104,7 @@ with st.sidebar:
                 saved_files_paths.append(file_path)
             
             # Now, call the ingestion logic with only the new files
-            process_files(saved_files_paths)
+            process_context_files(saved_files_paths)
             st.success(f"Successfully processed {len(saved_files_paths)} new document(s)!")
             # Clear the drift data cache so the UI reloads it if necessary
             st.cache_data.clear()

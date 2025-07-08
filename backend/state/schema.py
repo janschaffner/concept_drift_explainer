@@ -25,6 +25,7 @@ class ContextSnippet(TypedDict):
     snippet_text: str
     source_document: str
     timestamp: int # Stored as Unix timestamp
+    source_type: str # "context" or "bpm-kb"
     # MODIFIED: This now holds a list of detailed classifications
     classifications: List[FranzoiClassification]
 

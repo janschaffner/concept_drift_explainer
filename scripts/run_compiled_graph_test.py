@@ -15,12 +15,15 @@ if __name__ == "__main__":
     # 1. Compile the graph from our builder function
     app = build_graph()
 
-    # 2. Define the initial input for the graph
-    # Our graph starts empty and the first agent loads the data from files.
-    initial_input = {}
+    # 2. UPDATED: Define the initial input for the graph
+    # We must now specify which drift to analyze.
+    # This example will run the first drift (index 0) from the first row (index 0).
+    initial_input = {
+        "selected_drift": {"row_index": 0, "drift_index": 0}
+    }
 
     # 3. Invoke the graph and run the full pipeline
-    print("\nInvoking the graph...")
+    print(f"\nInvoking the graph for drift: {initial_input['selected_drift']}...")
     final_state = app.invoke(initial_input)
 
     # 4. Print the final state
