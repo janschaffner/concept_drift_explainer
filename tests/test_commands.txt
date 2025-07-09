@@ -1,2 +1,3 @@
 pytest -v tests/test_glossary_visibility.py
-test
+
+python tests/test_eval.py
