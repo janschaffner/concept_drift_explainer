@@ -15,9 +15,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from pydantic.v1 import BaseModel, Field
 
-# Import our graph state schema
 from backend.state.schema import GraphState, Explanation
-# Import cache utils
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
@@ -47,11 +45,14 @@ Prioritize evidence that points to a single, discrete event with a specific date
 - **Drift Type:** {drift_type}
 - **Drift Period:** {start_timestamp} to {end_timestamp}
 
-**## 2. Evidence from Context Documents**
-{formatted_context}
+**## 2. Reference Glossary (for your eyes only — DO NOT cite)**
+{formatted_glossary}
 
-**## 3. Your Task**
-Based on the provided information, generate an explanation for the **SUDDEN** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+**## 3. Evidence from Context Documents**
+{formatted_evidence}
+
+**## 4. Your Task**
+Based on the provided information, generate an explanation for the **SUDDEN** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on singular events.
 """
@@ -64,11 +65,14 @@ Prioritize evidence suggesting a transition, coexistence of old/new processes, o
 - **Drift Type:** {drift_type}
 - **Drift Period:** {start_timestamp} to {end_timestamp}
 
-**## 2. Evidence from Context Documents**
-{formatted_context}
+**## 2. Reference Glossary (for your eyes only — DO NOT cite)**
+{formatted_glossary}
 
-**## 3. Your Task**
-Based on the provided information, generate an explanation for the **GRADUAL** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+**## 3. Evidence from Context Documents**
+{formatted_evidence}
+
+**## 4. Your Task**
+Based on the provided information, generate an explanation for the **GRADUAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on transition periods.
 """
@@ -81,11 +85,14 @@ Prioritize evidence of multiple small adjustments, iterative improvements, or ag
 - **Drift Type:** {drift_type}
 - **Drift Period:** {start_timestamp} to {end_timestamp}
 
-**## 2. Evidence from Context Documents**
-{formatted_context}
+**## 2. Reference Glossary (for your eyes only — DO NOT cite)**
+{formatted_glossary}
 
-**## 3. Your Task**
-Based on the provided information, generate an explanation for the **INCREMENTAL** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+**## 3. Evidence from Context Documents**
+{formatted_evidence}
+
+**## 4. Your Task**
+Based on the provided information, generate an explanation for the **INCREMENTAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on a series of small changes.
 """
@@ -98,30 +105,34 @@ Prioritize evidence of seasonal activities, cyclical patterns, or temporary proc
 - **Drift Type:** {drift_type}
 - **Drift Period:** {start_timestamp} to {end_timestamp}
 
-**## 2. Evidence from Context Documents**
-{formatted_context}
+**## 2. Reference Glossary (for your eyes only — DO NOT cite)**
+{formatted_glossary}
 
-**## 3. Your Task**
-Based on the provided information, generate an explanation for the **RECURRING** drift. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+**## 3. Evidence from Context Documents**
+{formatted_evidence}
+
+**## 4. Your Task**
+Based on the provided information, generate an explanation for the **RECURRING** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on cyclical or seasonal evidence.
 """
 
 # --- REFINE PROMPT: A single, generic prompt for refinement ---
-
 REFINE_PROMPT_TEMPLATE = """You are a senior editor reviewing an analysis from a junior analyst.
-Your task is to critique and refine the provided "Draft Explanation" based on the original "Evidence".
+Your task is to critique and refine the provided "Draft Explanation" based on the original "Evidence" and "Reference Glossary".
 Ensure the final summary is concise, the cause descriptions are logical, and that every claim is strongly supported by the cited evidence.
-Produce a final, improved version of the explanation.
+
+**## Original Reference Glossary (for your eyes only — DO NOT cite)**
+{formatted_glossary}
 
 **## Original Evidence**
-{formatted_context}
+{formatted_evidence}
 
 **## Draft Explanation to Review**
 {draft_explanation}
 
 **## 3. Your Task**
-Generate the final, high-quality version of the explanation. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
+Generate the final, high-quality version of the explanation. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
 """
 
 
@@ -182,21 +193,20 @@ def calibrate_scores(ranked_causes: List[Dict], drift_info: Dict) -> List[Dict]:
 
 def run_explanation_agent(state: GraphState) -> dict:
     """
-    Generates and then calibrates a final explanation using a two-step "draft and refine" chain,
-    with drift-type-specific logic and persistent caching.
+    Generates and then calibrates a final explanation using a two-step "draft and refine" chain.
     """
-    logging.info("--- Running Explanation Agent ---")
+    logging.info("--- Running Explanation Agent (Self-Correction Chain) ---")
     
     drift_info = state.get("drift_info")
-    classified_context = (
-        state.get("reranked_context_snippets")
-        or state.get("raw_context_snippets", [])
-    )
+    # Use the refined list from the re-ranker
+    evidence_context = state.get("reranked_context_snippets", [])
+    # Get the supporting glossary terms
+    glossary_context = state.get("supporting_context", [])
 
-    if not classified_context:
-        logging.warning("No classified context found. Cannot generate an explanation.")
+    if not evidence_context:
+        logging.warning("No relevant evidence snippets found after re-ranking. Cannot generate an explanation.")
         no_context_explanation: Explanation = {
-            "summary": "No explanation could be generated as no relevant contextual documents were found for the detected drift period.",
+            "summary": "No explanation could be generated as no relevant contextual documents were found.",
             "ranked_causes": []
         }
         return {"explanation": no_context_explanation}
@@ -205,39 +215,35 @@ def run_explanation_agent(state: GraphState) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # Load the cache at the start
+    # Format both lists of snippets for the prompts
+    formatted_evidence = format_context_for_prompt(evidence_context)
+    formatted_glossary = format_context_for_prompt(glossary_context)
+
+    # Dynamic Prompt Selection logic remains the same...
+    drift_type = drift_info.get('drift_type', '').lower()
+    if 'sudden' in drift_type:
+        draft_prompt_template = SUDDEN_DRIFT_PROMPT
+    elif 'gradual' in drift_type:
+        draft_prompt_template = GRADUAL_DRIFT_PROMPT
+    elif 'recurring' in drift_type:
+        draft_prompt_template = RECURRING_DRIFT_PROMPT
+    else:
+        draft_prompt_template = INCREMENTAL_DRIFT_PROMPT
+    
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    structured_llm = llm.with_structured_output(ExplanationOutput)
     llm_cache = load_cache()
     cache_updated = False
     
-    llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
-    structured_llm = llm.with_structured_output(ExplanationOutput)
-    
-    formatted_context = format_context_for_prompt(classified_context)
-    
     try:
-        # === STEP 1: Generate the Draft (with Caching) ===
-        drift_type = drift_info.get('drift_type', '').lower()
-        
-        if 'sudden' in drift_type:
-            logging.info("Using SUDDEN drift prompt template.")
-            draft_prompt_template = SUDDEN_DRIFT_PROMPT
-        elif 'gradual' in drift_type:
-            logging.info("Using GRADUAL drift prompt template.")
-            draft_prompt_template = GRADUAL_DRIFT_PROMPT
-        elif 'recurring' in drift_type:
-            logging.info("Using RECURRING drift prompt template.")
-            draft_prompt_template = RECURRING_DRIFT_PROMPT
-        else: # Default to incremental for 'incremental' or any other type
-            logging.info("Using INCREMENTAL drift prompt template.")
-            draft_prompt_template = INCREMENTAL_DRIFT_PROMPT
-        
+        # === STEP 1: Generate the Draft ===
         draft_prompt = draft_prompt_template.format(
             drift_type=drift_info['drift_type'],
             start_timestamp=drift_info['start_timestamp'],
             end_timestamp=drift_info['end_timestamp'],
-            formatted_context=formatted_context
+            formatted_glossary=formatted_glossary,
+            formatted_evidence=formatted_evidence
         )
-        
         draft_cache_key = get_cache_key(draft_prompt, MODEL_NAME)
         
         if draft_cache_key in llm_cache:
@@ -251,12 +257,13 @@ def run_explanation_agent(state: GraphState) -> dict:
             cache_updated = True
             logging.info("Draft generated and cached successfully.")
 
-        # === STEP 2: Critique and Refine the Draft (with Caching) ===
+        # === STEP 2: Critique and Refine the Draft ===
+        # CORRECTED: The .format() call now uses the correct variable names
         refine_prompt = REFINE_PROMPT_TEMPLATE.format(
-            formatted_context=formatted_context,
+            formatted_glossary=formatted_glossary,
+            formatted_evidence=formatted_evidence,
             draft_explanation=json.dumps(draft_explanation_dict, indent=2)
         )
-        
         refine_cache_key = get_cache_key(refine_prompt, MODEL_NAME)
         
         if refine_cache_key in llm_cache:
@@ -271,20 +278,13 @@ def run_explanation_agent(state: GraphState) -> dict:
             logging.info("Successfully synthesized and cached final explanation.")
 
         # === STEP 3: Calibrate Confidence Scores ===
-        # Ensure ranked_causes is a list before passing to calibration
-        causes_to_calibrate = final_explanation_dict.get("ranked_causes", [])
-        if not isinstance(causes_to_calibrate, list):
-            causes_to_calibrate = []
+        calibrated_causes = calibrate_scores(final_explanation_dict.get("ranked_causes", []), drift_info)
 
-        calibrated_causes = calibrate_scores(causes_to_calibrate, drift_info)
-
-        # Use the calibrated_causes in the final output
         final_explanation: Explanation = {
             "summary": final_explanation_dict.get("summary"),
             "ranked_causes": calibrated_causes
         }
         
-        # Save cache to file if we made any new API calls
         if cache_updated:
             save_to_cache(llm_cache)
             logging.info("LLM cache file updated.")

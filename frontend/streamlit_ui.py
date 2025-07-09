@@ -219,6 +219,10 @@ elif st.session_state.all_explanations:
         else:
             # Loop through each cause within an explanation
             for cause_idx, cause in enumerate(ranked_causes):
+                # Add a one-line guard-rail that prevents that glossary entries are displayed
+                if cause.get("source_document") == "BPM Glossary":
+                    continue   # hide glossary citations
+
                 with st.expander(f"**Cause #{cause_idx+1}:** {cause.get('context_category', 'N/A')}", expanded=cause_idx==0):
                     st.markdown(f"**Description:** {cause.get('cause_description', 'N/A')}")
                     st.markdown(f"**Confidence:** `{cause.get('confidence_score', 0.0)*100:.1f}%`")

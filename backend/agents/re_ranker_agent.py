@@ -105,5 +105,15 @@ def run_reranker_agent(state: GraphState) -> dict:
 
     logging.info(f"Re-ranking complete. Kept {len(reranked_list)} of {len(candidate_snippets)} snippets.")
     
+    # --- Split glossary vs. real evidence ---
+    supporting = [s for s in reranked_list if s.get("source_type") == "bpm-kb"]
+    evidence   = [s for s in reranked_list if s.get("source_type") == "context"]
+
+    # cap to at most ONE glossary snippet to keep prompts lean
+    supporting = supporting[:1]
+
+    state["supporting_context"]        = supporting       # NEW key
+    state["reranked_context_snippets"] = evidence         # overwrite with real docs
+
     # The key for the new list of snippets
     return {"reranked_context_snippets": reranked_list}
