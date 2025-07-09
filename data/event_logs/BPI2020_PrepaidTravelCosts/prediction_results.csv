@@ -1,0 +1,2 @@
+,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
+PrepaidTravelCost,"[('request for payment 84707', 'request for payment 61517')]",['incremental'],[0.8699],"['2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf']"
