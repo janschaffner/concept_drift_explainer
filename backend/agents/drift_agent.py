@@ -50,7 +50,7 @@ def extract_keywords_from_trace(trace: etree._Element) -> list:
 
 def run_drift_agent(state: GraphState) -> dict:
     """
-    Parses a user-selected concept drift and extracts keywords from the event log.
+    Parses a user-selected concept drift from a specific or default data directory.
     """
     logging.info("--- Running Drift Agent ---")
 
@@ -58,9 +58,16 @@ def run_drift_agent(state: GraphState) -> dict:
     if not selection:
         return {"error": "No drift was selected."}
     
-    # --- 1. Define File Paths ---
-    data_dir = project_root / "data" / "drift_outputs"
-    logging.info(f"Searching for data files in: {data_dir}")
+    # --- Intelligent Path Logic ---
+    # The agent will use a specific data_dir if provided (for testing),
+    # otherwise it will default to the standard drift_outputs folder (for the UI).
+    data_dir = selection.get("data_dir")
+    if data_dir and Path(data_dir).exists():
+        logging.info(f"Using provided data directory: {data_dir}")
+        data_dir = Path(data_dir)
+    else:
+        data_dir = project_root / "data" / "drift_outputs"
+        logging.info(f"Using default data directory: {data_dir}")
 
     try:
         # Assumes there is only one of each file type in the directory
@@ -68,9 +75,8 @@ def run_drift_agent(state: GraphState) -> dict:
         json_path = next(data_dir.glob("*.json"))
         xes_path = next(data_dir.glob("*.xes"))
     except StopIteration:
-        return {"error": "Could not find required .csv, .json, or .xes file in data/drift_outputs/"}
-    
-    # --- 2. Load and Parse Data ---
+        return {"error": f"Could not find required .csv, .json, or .xes file in {data_dir}"}
+
     try:
         drift_df = pd.read_csv(csv_path)
         with open(json_path, 'r') as f:

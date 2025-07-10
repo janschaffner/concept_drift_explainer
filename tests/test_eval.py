@@ -1,3 +1,5 @@
+# Script for testing ONE drift, located in folder data/drift_output
+
 import sys
 import pandas as pd
 import ast
