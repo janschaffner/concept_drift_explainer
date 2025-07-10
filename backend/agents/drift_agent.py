@@ -7,6 +7,8 @@ import ast
 import json
 import pm4py
 from lxml import etree
+import re
+from nltk.stem import PorterStemmer
 
 # --- Path Correction ---
 project_root = Path(__file__).resolve().parents[2]
@@ -30,22 +32,31 @@ def build_activity_to_timestamp_map(window_info: dict) -> dict:
         activity_map[activity_name] = timestamp
     return activity_map
 
+# --- Keyword Extraction to enrich VecDB Query ---
 def extract_keywords_from_trace(trace: etree._Element) -> list:
     """Extracts relevant keywords from a single trace in an XES log."""
     keywords = set()
-    # Extract trace-level attributes that have a value
-    for attribute in trace.findall('string'):
-        key = attribute.get('key')
-        value = attribute.get('value')
-        if key in ["Project", "Task", "OrganizationalEntity"] and value and value != "UNKNOWN":
-            keywords.add(value)
-            
-    # Extract event-level roles that have a value
+    
+    # Trace-level attributes (costCenter, region, etc.)
+    for attr in trace.findall("string"):
+        val = attr.get("value", "")
+        if val and val not in {"UNKNOWN", "MISSING"} and len(val) > 3:
+            keywords.add(val)
+
+    # Event-level roles
     for event in trace.findall('event'):
         role = event.find("string[@key='org:role']")
         if role is not None and role.get('value') and role.get('value') not in ["SYSTEM", "MISSING", "UNDEFINED"]:
             keywords.add(role.get('value'))
             
+    # Activity stems
+    st = PorterStemmer()
+    for ev in trace.findall("event"):
+        act = ev.find("string[@key='concept:name']").get("value", "")
+        for word in re.split(r"[ _]", act):
+            if word and word.isalpha() and len(word) > 3:
+                keywords.add(st.stem(word.lower()))
+
     return list(keywords)
 
 def run_drift_agent(state: GraphState) -> dict:
@@ -136,6 +147,13 @@ def run_drift_agent(state: GraphState) -> dict:
 
     logging.info(f"Populated drift_info: {drift_info}")
     logging.info(f"Extracted Keywords: {extracted_keywords}")
-    
-    # Return both drift info and the new keywords
-    return {"drift_info": drift_info, "drift_keywords": extracted_keywords}
+    # '''
+    # --- Diagnostic Logging (outcomment if not run) ---
+    logging.debug(
+        "Keyword list (%d): %s",
+        len(extracted_keywords),
+        extracted_keywords
+    )
+    # '''
+    # Cap the final list to max 8 items and return
+    return {"drift_info": drift_info, "drift_keywords": extracted_keywords[:8]}

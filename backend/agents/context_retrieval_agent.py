@@ -23,9 +23,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # The index name is now loaded from .env, so the hardcoded constant is removed.
 EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has a 1536 dimension
-# --- NEW: Define Namespace Constants ---
+# Define Namespace Constants
 CONTEXT_NS = "context"
 KB_NS      = "bpm-kb"
+# Skewed temporal window constants
+WINDOW_BEFORE = 14
+WINDOW_AFTER  = 3      # days *after* start
 
 
 def run_context_retrieval_agent(state: GraphState) -> dict:
@@ -87,16 +90,13 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
 
     # 3. Define Temporal Filter (only for the 'context' namespace)
     # Create a time window around the drift to filter documents by metadata.
-    # Window: 14 days before the drift started to 14 days after it ended.
-    temporal_filter = {}
+    # Window: 14 days before the drift started to 3 days after it ended.
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
-        end_date = datetime.fromisoformat(drift_info["end_timestamp"])
+        # --- UPDATED: Skewed temporal window logic ---
+        filter_start = start_date - timedelta(days=WINDOW_BEFORE)
+        filter_end   = start_date + timedelta(days=WINDOW_AFTER)
 
-        filter_start = start_date - timedelta(days=14)
-        filter_end = end_date + timedelta(days=14)
-
-        # Convert the filter dates to integer Unix timestamps for the query
         temporal_filter = {
             "timestamp": {
                 "$gte": int(filter_start.timestamp()),
@@ -105,18 +105,18 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
         }
         logging.info(f"Temporal filter window: {filter_start.date()} to {filter_end.date()}")
     except (ValueError, TypeError) as e:
-        # Log a warning but don't stop the process, just proceed without a time filter
-        logging.warning(f"Could not create temporal filter due to invalid timestamps: {e}. Proceeding without it.")
+        logging.warning(f"Could not create temporal filter: {e}. Proceeding without it.")
+        temporal_filter = {}
 
     # 4. Query Both Namespaces and Merge Results
     all_hits = {}
 
-    # Query the 'context' namespace for 8 hits with a temporal filter
+    # Query 'context' namespace for top 30 hits
     try:
-        logging.info(f"Querying '{CONTEXT_NS}' namespace for top 8 hits...")
+        logging.info(f"Querying '{CONTEXT_NS}' namespace for top 30 hits...")
         context_response = index.query(
             vector=query_vector,
-            top_k=8,
+            top_k=30, # Bring entire corpus
             filter=temporal_filter,
             namespace=CONTEXT_NS,
             include_metadata=True
@@ -128,17 +128,19 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     except Exception as e:
         logging.error(f"Error querying '{CONTEXT_NS}' namespace: {e}")
 
-    # Query the 'bpm-kb' namespace for 2 hits (no temporal filter)
+    # Query 'bpm-kb' namespace for top 1 hit
     try:
-        logging.info(f"Querying '{KB_NS}' namespace for top 2 hits...")
+        logging.info(f"Querying '{KB_NS}' namespace for top 1 hit...")
         kb_response = index.query(
             vector=query_vector,
-            top_k=2,
+            top_k=1, # Bring only the single most relevant term
             namespace=KB_NS,
             include_metadata=True
         )
         for match in kb_response.get('matches', []):
             text_key = match['metadata']['text']
+            # --- NEW: Mark glossary snippets as support-only ---
+            match['metadata']['support_only'] = True
             if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
                 all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': KB_NS}
     except Exception as e:

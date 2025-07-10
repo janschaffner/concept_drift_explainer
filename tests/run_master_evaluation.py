@@ -52,11 +52,15 @@ def run_master_evaluation():
                 drift_id = f"{test_set_name}_drift_{row_index}_{drift_index_in_row}"
                 print(f"  Processing {drift_id} ({drift_type})...")
 
+                # UPDATED: Pass the gold_doc into the initial state for better logging
+                gold_doc_for_this_drift = gold_docs[drift_index_in_row]
+                
                 initial_input = {
                     "selected_drift": {
                         "row_index": row_index,
                         "drift_index": drift_index_in_row,
-                        "data_dir": str(test_dir)
+                        "data_dir": str(test_dir),
+                        "gold_doc": gold_doc_for_this_drift # Add gold doc for logging
                     }
                 }
 
@@ -68,7 +72,7 @@ def run_master_evaluation():
 
                 explanation = final_state.get("explanation", {})
                 ranked_causes = explanation.get("ranked_causes", [])
-                gold_doc = gold_docs[drift_index_in_row].lower()
+                gold_doc = gold_doc_for_this_drift.lower()
                 cause_docs = [cause.get("source_document", "").lower() for cause in ranked_causes]
 
                 # --- Calculate Metrics ---
@@ -86,7 +90,7 @@ def run_master_evaluation():
                     "test_set": test_set_name,
                     "drift_id": drift_id,
                     "drift_type": drift_type,
-                    "gold_document": gold_docs[drift_index_in_row],
+                    "gold_document": gold_doc_for_this_drift,
                     "predicted_doc_1": cause_docs[0] if len(cause_docs) > 0 else "N/A",
                     "predicted_doc_2": cause_docs[1] if len(cause_docs) > 1 else "N/A",
                     "recall@1": recall_at_1,
@@ -95,7 +99,7 @@ def run_master_evaluation():
                 })
 
                 # --- UPDATED: Print all metrics during the run ---
-                print(f"    > Gold Doc: {gold_docs[drift_index_in_row]}")
+                print(f"    > Gold Doc: {gold_doc_for_this_drift}")
                 print(f"    > Predicted Doc #1: {cause_docs[0] if len(cause_docs) > 0 else 'N/A'}")
                 print(f"    > Recall@1: {'HIT' if recall_at_1 else 'MISS'}")
                 print(f"    > Recall@2: {'HIT' if recall_at_2 else 'MISS'}")

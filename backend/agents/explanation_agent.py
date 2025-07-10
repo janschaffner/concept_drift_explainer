@@ -203,7 +203,14 @@ def run_explanation_agent(state: GraphState) -> dict:
     # Get the supporting glossary terms
     glossary_context = state.get("supporting_context", [])
 
-    if not evidence_context:
+    # --- Filter out any glossary items from the main evidence list ---
+    # This acts as a guard-rail to enforce the prompt's instructions.
+    usable_evidence = [
+        s for s in evidence_context
+        if not s.get("support_only") and s.get("source_type") != "bpm-kb"
+    ]
+
+    if not usable_evidence:
         logging.warning("No relevant evidence snippets found after re-ranking. Cannot generate an explanation.")
         no_context_explanation: Explanation = {
             "summary": "No explanation could be generated as no relevant contextual documents were found.",
@@ -215,8 +222,9 @@ def run_explanation_agent(state: GraphState) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # Format both lists of snippets for the prompts
-    formatted_evidence = format_context_for_prompt(evidence_context)
+    # --- Format two separate context strings ---
+    # UPDATED: Use the filtered 'usable_evidence' list
+    formatted_evidence = format_context_for_prompt(usable_evidence)
     formatted_glossary = format_context_for_prompt(glossary_context)
 
     # Dynamic Prompt Selection logic remains the same...
