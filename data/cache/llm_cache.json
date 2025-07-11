@@ -6189,5 +6189,353 @@
   "30a154a50ad5a539e7d149be49be37dc": {
     "connection_found": false,
     "summary": "No significant connection was identified between the drifts. Drift #1 is primarily driven by internal changes initiated by the new CFO, while Drift #2 is a response to an external emergency directive from the Public Finance Authority. They do not share a common root cause or evidence source."
+  },
+  "0357428c7e7e9f530f31ce369d07cc17": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "19d3cdf5c9258fadd5d8f7ba97b09b53": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "f07417c3f436ccbceb0729232616cee3": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "856fbc24cd13540a74b3694388ee94dc": {
+    "summary": "The incremental drift observed between October 2017 and June 2018 is primarily attributed to a series of small, iterative changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes reflect agile practices in process management, as evidenced by the phased realignment of the Travel Authorization Division and the gradual implementation of new reporting obligations.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated in October 2017 involved multiple small adjustments, such as dissolving the Central Authorization Desk and decentralizing approval responsibilities, which collectively aimed to improve operational efficiency.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting obligations introduced in October 2017 required organizations to adapt their workflows gradually, including the integration of digital processes and training sessions, reflecting an incremental approach to compliance.",
+        "evidence_snippet": "\"Key transitional provisions include: Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The directive for training sessions and updated FAQs indicates a continuous effort to support the gradual implementation of new processes, showcasing an iterative approach to change management.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "d492a47e53af8fbf8a9673907c409186": {
+    "summary": "The observed drift between October 2017 and June 2018 is primarily due to incremental changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. This includes the phased realignment of the Travel Authorization Division and the gradual implementation of updated reporting obligations, reflecting a strategic approach to process management.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated in October 2017 involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, which collectively aimed to improve operational efficiency.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting obligations introduced in October 2017 required organizations to adapt their workflows gradually, including the integration of digital processes and training sessions, reflecting an incremental approach to compliance.",
+        "evidence_snippet": "\"Key transitional provisions include: Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The directive for training sessions and updated FAQs indicates a continuous effort to support the gradual implementation of new processes, showcasing an iterative approach to change management.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "94e0813d7a9863155e2cabba1f11d4aa": {
+    "reranked_indices": [
+      2,
+      4,
+      1,
+      3
+    ]
+  },
+  "c083f1cab730a403b06b18317545c8ef": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The mention of the 'International Compliance Division' suggests a focus on compliance with external regulations and laws."
+      }
+    ]
+  },
+  "8895058ec891264493af1bab91c1bae3": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily attributed to the phased realignment of the Travel Authorization Division, which initiated a transition to a decentralized approval model while allowing existing processes to continue temporarily. This coexistence of old and new processes is further supported by the gradual integration of digital reporting obligations, which permits dual processing during the transition period.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated on October 23, 2017, allowed for a transition to a decentralized model while existing workflows were updated, indicating a coexistence of old and new processes during this period.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of mandatory submissions and the activation of a Centralized International Validation Portal as part of the Cross-Border Coordination Directive indicates a gradual shift towards digital processes, allowing for a dual-process option during the transition period.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The leadership transition memo indicates that unit leads should begin reviewing internal SOPs in anticipation of progressive refinements, suggesting a planned transition phase where old processes may still be in effect while new procedures are developed.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "177c0b21dca3d94e40f275752dbeec6e": {
+    "summary": "The observed drift from October 2017 to January 2018 is primarily due to the phased realignment of the Travel Authorization Division, which transitioned to a decentralized approval model while allowing existing processes to coexist temporarily. This dual processing is further supported by the gradual integration of digital reporting obligations, which permitted a dual-process approach during the transition period.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated on October 23, 2017, allowed for a transition to a decentralized model while existing workflows were updated, indicating a coexistence of old and new processes during this period.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of mandatory submissions and the activation of a Centralized International Validation Portal as part of the Cross-Border Coordination Directive indicates a gradual shift towards digital processes, allowing for a dual-process option during the transition period.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The leadership transition memo indicates that unit leads should begin reviewing internal SOPs in anticipation of progressive refinements, suggesting a planned transition phase where old processes may still be in effect while new procedures are developed.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "abd9de18975be93e9fbd9ea3ffcade67": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "e475387192d9d4320e39ad86bf514a4b": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The text discusses revisions to the National Reimbursement Regulation (NRR), which is a legal framework affecting travel reimbursements."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The snippet outlines a revised pre-approval framework for travel reimbursements, indicating a change in process management and procedures."
+      }
+    ]
+  },
+  "393403eef4313876e423b36ee9a47fa7": {
+    "summary": "The incremental drift observed between November 2017 and July 2018 is primarily attributed to a series of small, iterative adjustments in the travel reimbursement process, as outlined in the revised Pre-Approval Framework. These changes, which include simplified approval models and the delegation of pre-approval rights, reflect agile practices aimed at enhancing efficiency and compliance during the transition period.",
+    "ranked_causes": [
+      {
+        "cause_description": "The implementation of a revised Pre-Approval Framework for travel reimbursements introduced multiple small changes, such as allowing departments to approve prepaid travel expenses up to \u20ac1,500 without escalation and submitting bundled cost forecasts without itemized receipts. These adjustments were made to streamline the process and adapt to new regulations, indicating a gradual transformation rather than a single change point.",
+        "evidence_snippet": "Effective from January 15, 2018, departments will be permitted to: \u2022 Approve prepaid travel expenses up to \u20ac1,500 without escalation. \u2022 Submit bundled cost forecasts through the Pre-Costing Tool (PCT) without itemized receipts for tier-1 travel routes.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transition period from January to June 2018 allowed for dual compliance under both the legacy and new models, indicating a phased approach to implementing changes. This gradual adaptation reflects an agile methodology where feedback and adjustments are made continuously over time.",
+        "evidence_snippet": "A transition period from January through June 2018 allows dual compliance under legacy and new models.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The formal audit templates being updated by March 2018 suggest ongoing improvements and refinements to the process, further supporting the notion of incremental changes being made to enhance the travel reimbursement framework.",
+        "evidence_snippet": "Formal audit templates will be updated by March.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "6f3179ec5457d8ab47121657fd0e68ab": {
+    "summary": "The incremental drift observed between November 2017 and July 2018 is primarily due to a series of iterative adjustments in the travel reimbursement process, as detailed in the revised Pre-Approval Framework. These changes, including simplified approval models and the delegation of pre-approval rights, reflect a strategic approach to enhance efficiency and compliance during the transition period.",
+    "ranked_causes": [
+      {
+        "cause_description": "The revised Pre-Approval Framework for travel reimbursements introduced several key changes, such as allowing departments to approve prepaid travel expenses up to \u20ac1,500 without escalation and enabling the submission of bundled cost forecasts without itemized receipts. These modifications were designed to streamline the process and align with new regulations, indicating a gradual transformation rather than a single change point.",
+        "evidence_snippet": "Effective from January 15, 2018, departments will be permitted to: \u2022 Approve prepaid travel expenses up to \u20ac1,500 without escalation. \u2022 Submit bundled cost forecasts through the Pre-Costing Tool (PCT) without itemized receipts for tier-1 travel routes.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transition period from January to June 2018 allowed for dual compliance under both the legacy and new models, indicating a phased approach to implementing changes. This gradual adaptation reflects an agile methodology where feedback and adjustments are made continuously over time.",
+        "evidence_snippet": "A transition period from January through June 2018 allows dual compliance under legacy and new models.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The planned updates to formal audit templates by March 2018 suggest ongoing improvements and refinements to the process, further supporting the notion of incremental changes being made to enhance the travel reimbursement framework.",
+        "evidence_snippet": "Formal audit templates will be updated by March.",
+        "source_document": "2017-11-10_TR_Notice_2018-PreApprovalFramework.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "899acbecfbd14cbc1107f834cf1d80d5": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "92bf18cfb0d3ddd6bdc1884ce9088c24": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "989b55108d024a6f8bb4862a383e785a": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "5dd0992833d2c85555d2594cd4bd5dad": {
+    "summary": "The incremental drift observed between October 2017 and June 2018 is primarily attributed to a series of small, iterative changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes included the decentralization of approval responsibilities and the gradual integration of new reporting obligations, reflecting agile practices in process management.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated in October 2017 involved multiple small adjustments, such as dissolving the Central Authorization Desk and decentralizing approval responsibilities to regional clusters, which collectively aimed to improve operational efficiency.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations under Article 42A, effective January 2018, required organizations to adapt their workflows gradually, including the introduction of a dual-process option for reporting, which reflects an incremental approach to compliance.",
+        "evidence_snippet": "\"Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Gradual integration of digital clearance certificates (Form IDR-e) replacing manual endorsements by Q2 2018.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The training sessions and updated FAQs scheduled for November 2017 indicate a commitment to continuous improvement and adaptation of processes, supporting the incremental drift through ongoing education and support for staff.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "971be0e467d1b29c44dd49ee70a2f8f9": {
+    "summary": "The observed drift between October 2017 and June 2018 is primarily due to a series of incremental changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. Key changes included the decentralization of approval responsibilities within the Travel Authorization Division and the gradual implementation of new reporting obligations, reflecting a commitment to agile process management.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division (TAD) initiated in October 2017 involved significant adjustments, such as dissolving the Central Authorization Desk and decentralizing approval responsibilities to regional clusters, which collectively aimed to improve operational efficiency.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations under Article 42A, effective January 2018, necessitated organizations to gradually adapt their workflows, including the introduction of a dual-process option for reporting, which illustrates an incremental approach to compliance.",
+        "evidence_snippet": "\"Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Gradual integration of digital clearance certificates (Form IDR-e) replacing manual endorsements by Q2 2018.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The scheduled training sessions and updated FAQs for November 2017 demonstrate a commitment to continuous improvement and adaptation of processes, supporting the incremental drift through ongoing education and support for staff.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "b4608cc5d260487c0ae8bd5155bcef66": {
+    "reranked_indices": [
+      2
+    ]
+  },
+  "68ee8e3eee86467aa65769e151a80b8c": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "088c25fc2d3dd40974a51fdbdac73220": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "fe84734dcd42e17ba68306a43167deb1": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "5f19a332f70dc59a08862cf0c1349254": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "19ecd6b88d57b14778904912a7af69be": {
+    "reranked_indices": [
+      2,
+      3,
+      1,
+      5
+    ]
+  },
+  "a8af8677688fd30c9ed04ac355891286": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "02242a5ac546850c39d7ad3537de67fb": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "7b0986bc6d3473f0850bdaf70026a6a7": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "0e0d2b38562e7de7a6b07a6a1fe76bc5": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "24454b1919fd089c6218cae6b312a44b": {
+    "reranked_indices": [
+      1,
+      2
+    ]
   }
 }

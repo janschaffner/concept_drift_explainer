@@ -12,10 +12,7 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from pinecone import Pinecone
-# --- Use OpenAIEmbeddings ---
 from langchain_openai import OpenAIEmbeddings
-
-# Import our graph state schema
 from backend.state.schema import GraphState, ContextSnippet
 
 # --- Configuration ---
@@ -26,6 +23,7 @@ EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has a 1536 dimensio
 # Define Namespace Constants
 CONTEXT_NS = "context"
 KB_NS      = "bpm-kb"
+CONTEXT_TOP_K = 30 # Query all vectors
 # Skewed temporal window constants
 WINDOW_BEFORE = 14
 WINDOW_AFTER  = 3      # days *after* start
@@ -93,7 +91,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     # Window: 14 days before the drift started to 3 days after it ended.
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
-        # --- UPDATED: Skewed temporal window logic ---
+        # Skewed temporal window logic
         filter_start = start_date - timedelta(days=WINDOW_BEFORE)
         filter_end   = start_date + timedelta(days=WINDOW_AFTER)
 
@@ -111,16 +109,27 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     # 4. Query Both Namespaces and Merge Results
     all_hits = {}
 
-    # Query 'context' namespace for top 30 hits
+    # Query 'context' namespace with the time filter
     try:
-        logging.info(f"Querying '{CONTEXT_NS}' namespace for top 30 hits...")
+        logging.info(f"Querying '{CONTEXT_NS}' namespace with top_k={CONTEXT_TOP_K}...")
         context_response = index.query(
             vector=query_vector,
-            top_k=30, # Bring entire corpus
+            top_k=CONTEXT_TOP_K, # Bring entire corpus
             filter=temporal_filter,
             namespace=CONTEXT_NS,
             include_metadata=True
         )
+
+        # --- Adaptive temporal window fallback ---
+        if not context_response.get('matches'):
+            logging.info("Fallback: disabled time filter to find more results.")
+            context_response = index.query(
+                vector=query_vector, 
+                top_k=CONTEXT_TOP_K, 
+                namespace=CONTEXT_NS, 
+                include_metadata=True
+            )
+
         for match in context_response.get('matches', []):
             text_key = match['metadata']['text']
             if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
@@ -139,7 +148,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
         )
         for match in kb_response.get('matches', []):
             text_key = match['metadata']['text']
-            # --- NEW: Mark glossary snippets as support-only ---
+            # Mark glossary snippets as support-only ---
             match['metadata']['support_only'] = True
             if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
                 all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': KB_NS}
@@ -157,6 +166,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
                 "snippet_text": metadata.get("text", ""),
                 "source_document": metadata.get("source", "Unknown"),
                 "timestamp": metadata.get("timestamp", 0),
+                "score": hit.get('score', 0.0), # Add raw score to each snippet
                 "classifications": [], # Initialize as an empty list
                 "source_type": hit['source_type'] # Add the source tag
             }

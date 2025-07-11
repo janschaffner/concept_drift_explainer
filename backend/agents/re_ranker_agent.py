@@ -32,13 +32,13 @@ class RerankedIndices(BaseModel):
 
 # --- Prompt Template ---
 PROMPT_TEMPLATE = """You are an expert business process analyst. Your task is to identify the most relevant evidence to explain a concept drift.
-You will be given information about the drift and a numbered list of candidate text snippets.
+You will be given information about the drift and a numbered list of candidates.
 
 **## 1. Detected Concept Drift**
 - **Drift Type:** {drift_type}
 - **Drift Keywords:** {drift_keywords}
 
-**## 2. Candidate Snippets**
+**## 2. Candidate Snippets (already sorted by initial similarity)**
 {formatted_snippets}
 
 **## 3. Your Task**
@@ -46,12 +46,16 @@ Read all the candidate snippets carefully. Identify and return ONLY the integer 
 Your output must be a valid JSON object containing a single key "reranked_indices" with a list of numbers.
 """
 
-def format_snippets_for_reranking(snippets: List[ContextSnippet]) -> str:
-    """Formats a list of snippets into a numbered string for the prompt."""
+def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: datetime) -> str:
+    """Formats snippets with score and date delta for the prompt."""
     formatted_str = ""
     for i, snippet in enumerate(snippets):
-        # The prompt now uses 1-based indexing for the LLM
-        formatted_str += f"### Snippet {i+1} (Source: {snippet['source_document']})\n"
+        delta_days = "N/A"
+        if snippet.get("timestamp", 0):
+            delta = abs((datetime.fromtimestamp(snippet['timestamp']) - start_date).days)
+            delta_days = f"{delta} days"
+        score = snippet.get('score', 0.0)
+        formatted_str += f"### Snippet {i+1} (Source: {snippet['source_document']}, Score: {score:.3f}, Δdays: {delta_days})\n"
         formatted_str += f"{snippet['snippet_text']}\n\n"
     return formatted_str
 
@@ -85,50 +89,67 @@ def run_reranker_agent(state: GraphState) -> dict:
     # Re-sort candidates after applying bonus
     candidate_snippets = sorted(candidate_snippets, key=lambda x: x.get('score', 0.0), reverse=True)
 
-    load_dotenv()
-    if not os.getenv("OPENAI_API_KEY"):
-        return {"error": "OPENAI_API_KEY not found."}
-        
-    llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
-    structured_llm = llm.with_structured_output(RerankedIndices)
+    # --- NEW: Force-keep the single highest-scoring context snippet ---
+    # This acts as a safety net to guarantee the best initial hit is considered.
+    best_context_hit = next((s for s in candidate_snippets if s.get("source_type") == "context"), None)
     
-    # --- Caching Logic ---
-    llm_cache = load_cache()
-    
-    prompt = PROMPT_TEMPLATE.format(
-        drift_type=drift_info.get("drift_type", "N/A"),
-        drift_keywords=", ".join(drift_keywords),
-        formatted_snippets=format_snippets_for_reranking(candidate_snippets),
-        num_to_keep=NUM_SNIPPETS_TO_KEEP
-    )
-    
-    cache_key = get_cache_key(prompt, MODEL_NAME)
-    reranked_list = []
-    
-    if cache_key in llm_cache:
-        logging.info("CACHE HIT for re-ranking.")
-        response_data = llm_cache[cache_key]
-    else:
-        logging.info("CACHE MISS. Calling API for re-ranking...")
-        try:
-            response_object = structured_llm.invoke(prompt)
-            response_data = response_object.dict()
-            llm_cache[cache_key] = response_data
-            save_to_cache(llm_cache)
-            logging.info("Re-ranking response cached successfully.")
-        except Exception as e:
-            logging.error(f"Error during re-ranking: {e}")
-            return {"error": str(e)}
+    final_reranked_list = []
+    if best_context_hit:
+        final_reranked_list.append(best_context_hit)
 
-    # --- Reconstruct the list of full snippets using the returned indices ---
-    # The LLM returns 1-based indices, so we subtract 1 for 0-based list access.
-    indices = response_data.get("reranked_indices", [])
-    reranked_list = [candidate_snippets[i - 1] for i in indices if 0 < i <= len(candidate_snippets)]
+    # The list of candidates for the LLM to rank is now everything *except* our force-kept best hit.
+    other_candidates = [s for s in candidate_snippets if s != best_context_hit]
+    
+    # We only call the LLM if there are other candidates to rank.
+    if other_candidates:
+        load_dotenv()
+        if not os.getenv("OPENAI_API_KEY"):
+            return {"error": "OPENAI_API_KEY not found."}
+            
+        llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
+        structured_llm = llm.with_structured_output(RerankedIndices)
+        
+        llm_cache = load_cache()
+        
+        # We ask the LLM to choose from the remaining candidates.
+        # We need 3 more to reach our budget of 4 (1 force-kept + 3 from LLM).
+        num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(final_reranked_list)
+
+        prompt = PROMPT_TEMPLATE.format(
+            drift_type=drift_info.get("drift_type", "N/A"),
+            drift_keywords=", ".join(drift_keywords),
+            formatted_snippets=format_snippets_for_reranking(other_candidates, start_date),
+            num_to_keep=num_to_keep_from_llm
+        )
+        
+        cache_key = get_cache_key(prompt, MODEL_NAME)
+        
+        if cache_key in llm_cache:
+            logging.info("CACHE HIT for re-ranking.")
+            response_data = llm_cache[cache_key]
+        else:
+            logging.info("CACHE MISS. Calling API for re-ranking...")
+            try:
+                response_object = structured_llm.invoke(prompt)
+                response_data = response_object.dict()
+                llm_cache[cache_key] = response_data
+                save_to_cache(llm_cache)
+                logging.info("Re-ranking response cached successfully.")
+            except Exception as e:
+                logging.error(f"Error during re-ranking: {e}")
+                return {"error": str(e)}
+
+        # --- Reconstruct the list of full snippets using the returned indices ---
+        indices = response_data.get("reranked_indices", [])
+        llm_ranked_snippets = [other_candidates[i - 1] for i in indices if 0 < i <= len(other_candidates)]
+        
+        # Add the LLM's choices to our final list
+        final_reranked_list.extend(llm_ranked_snippets)
 
     # --- De-duplicate the list to prevent errors ---
     seen = set()
     deduped = []
-    for snip in reranked_list:
+    for snip in final_reranked_list:
         key = (snip["source_document"], snip["snippet_text"])
         if key in seen:
             continue
@@ -143,7 +164,7 @@ def run_reranker_agent(state: GraphState) -> dict:
     gold_doc = state["drift_info"].get("gold_doc", "N/A")
     kept_docs = [s["source_document"] for s in reranked_list]
     logging.info("[Re-rank] kept=%s  gold_in_keep=%s",
-                 kept_docs,
+                 [Path(d).name for d in kept_docs],
                  "YES" if gold_doc in kept_docs else "NO")
     #'''
 
@@ -153,9 +174,6 @@ def run_reranker_agent(state: GraphState) -> dict:
 
     # cap to at most ONE glossary snippet to keep prompts lean
     supporting = supporting[:1]
-
-    state["supporting_context"]        = supporting       # NEW key
-    state["reranked_context_snippets"] = evidence         # overwrite with real docs
 
     # --- Return both lists to update the state correctly ---
     return {

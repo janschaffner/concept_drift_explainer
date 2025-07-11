@@ -107,6 +107,7 @@ def run_drift_agent(state: GraphState) -> dict:
         
     selected_row = drift_df.iloc[row_index]
     trace_to_analyze = traces[row_index]
+    gold_docs = ast.literal_eval(selected_row['gold_source_document'])
     
     logging.info(f"Processing drift #{drift_index_in_row + 1} from CSV row #{row_index + 1}")
     
@@ -143,6 +144,7 @@ def run_drift_agent(state: GraphState) -> dict:
         "confidence": confidence,
         "start_timestamp": start_timestamp,
         "end_timestamp": end_timestamp,
+        "gold_doc": gold_docs[drift_index_in_row] # Pass gold doc for logging
     }
 
     logging.info(f"Populated drift_info: {drift_info}")
@@ -155,5 +157,6 @@ def run_drift_agent(state: GraphState) -> dict:
         extracted_keywords
     )
     # '''
-    # Cap the final list to max 8 items and return
-    return {"drift_info": drift_info, "drift_keywords": extracted_keywords[:8]}
+    # Cap the final list to max 8 items and return or send full list
+    # return {"drift_info": drift_info, "drift_keywords": extracted_keywords[:8]}
+    return {"drift_info": drift_info, "drift_keywords": extracted_keywords}

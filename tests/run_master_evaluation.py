@@ -101,8 +101,8 @@ def run_master_evaluation():
                 # --- UPDATED: Print all metrics during the run ---
                 print(f"    > Gold Doc: {gold_doc_for_this_drift}")
                 print(f"    > Predicted Doc #1: {cause_docs[0] if len(cause_docs) > 0 else 'N/A'}")
-                print(f"    > Recall@1: {'HIT' if recall_at_1 else 'MISS'}")
-                print(f"    > Recall@2: {'HIT' if recall_at_2 else 'MISS'}")
+                print(f"    > Recall@1: {'HIT ✅' if recall_at_1 else 'MISS ❌'}")
+                print(f"    > Recall@2: {'HIT ✅' if recall_at_2 else 'MISS ❌'}")
                 print(f"    > Reciprocal Rank: {mrr:.3f}")
 
 
@@ -123,7 +123,10 @@ def run_master_evaluation():
         print(f"Recall@1: {avg_recall_at_1:.2%}")
         print(f"Recall@2: {avg_recall_at_2:.2%}")
         print(f"Mean Reciprocal Rank (MRR): {avg_mrr:.3f}")
-
+        
+        # --- NEW: Add assertion for success criterion ---
+        # assert avg_recall_at_2 == 1.0, f"Recall@2 failed! Expected 100%, got {avg_recall_at_2:.2%}"
+        # print("\n✅ SUCCESS: Recall@2 target met!")
 
 if __name__ == "__main__":
     run_master_evaluation()
