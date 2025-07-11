@@ -6537,5 +6537,131 @@
       1,
       2
     ]
+  },
+  "d6c46bd68d8c94582a4633e669614c1c": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "64131f290e7db862cf60a94fe2e661d4": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "7e4b1f7e0be8b12fcc3499d5fd65197e": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "b14b4a2fec0282e5749d2b925a9213c8": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily due to the phased realignment of processes within the Travel Authorization Division, where new decentralized approval responsibilities were introduced while existing workflows were still in place. This transition period allowed for both old and new processes to coexist, facilitating a smoother shift to the new operational model.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, introduced new responsibilities for regional clusters while allowing existing workflows to remain operational until updates were completed by November 10, 2017.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of a dual-process option for reporting entities under the new Cross-Border Coordination Directive allows for both manual and digital processes to coexist during the transition, indicating a gradual shift in operational practices.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The leadership transition memo indicates a planned series of realignment initiatives, suggesting a gradual approach to process changes with no immediate procedural alterations mandated, allowing for a coexistence of old and new practices.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "82bd78d743512cd383c116fc3459c805": {
+    "summary": "The observed drift from October 2017 to January 2018 is primarily attributed to the phased realignment of processes within the Travel Authorization Division, which introduced decentralized approval responsibilities while existing workflows remained operational. This transitional phase allowed for the coexistence of old and new processes, facilitating a smoother shift to the new operational model.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, introduced new responsibilities for regional clusters while allowing existing workflows to remain operational until updates were completed by November 10, 2017.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The introduction of a dual-process option for reporting entities under the new Cross-Border Coordination Directive allows for both manual and digital processes to coexist during the transition, indicating a gradual shift in operational practices.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The leadership transition memo indicates a planned series of realignment initiatives, suggesting a gradual approach to process changes with no immediate procedural alterations mandated, allowing for a coexistence of old and new practices.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "7e8ed5b2ea3cf36f19cffef07d611af0": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "e06ef4f9a9bc80e6683a1b80210b7c81": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "91fb06414bb04df2ff87bb0b01d360e6": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "f09e6aaa9bbcc19d8819d8b0cdd78f23": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "50a2d9c887adf6f7748ef6c290b301d3": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "553d8675ef0c43a51222c0d72adc3676": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "82079128f84f2c5d050fd43ebb2c4031": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "30179467659c7ecae402b57d0f2b9206": {
+    "reranked_indices": [
+      2,
+      1,
+      3
+    ]
+  },
+  "67aaa69f7568cf3b7deaa8cfb0f9208f": {
+    "reranked_indices": [
+      2
+    ]
   }
 }

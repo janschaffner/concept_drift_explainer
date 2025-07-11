@@ -20,7 +20,8 @@ from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o-mini"
-NUM_SNIPPETS_TO_KEEP = 5 # How many snippets to keep after re-ranking
+# We ask for 4 from the LLM, plus our 1 force-kept document.
+NUM_SNIPPETS_TO_KEEP = 4
 
 # --- Pydantic Model ---
 # The LLM will now return the *indices* of the best snippets, not the full text.
@@ -61,7 +62,8 @@ def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: da
 
 def run_reranker_agent(state: GraphState) -> dict:
     """
-    Uses an LLM to re-rank the retrieved snippets and keep only the most relevant ones.
+    Force-keeps the best hit, then uses an LLM to re-rank the remaining snippets,
+    and finally splits the results into 'evidence' and 'supporting' context lists.
     """
     logging.info("--- Running Re-Ranker Agent ---")
     
@@ -81,7 +83,7 @@ def run_reranker_agent(state: GraphState) -> dict:
         if ts:
             delta = abs((datetime.fromtimestamp(ts) - start_date).days)
             if delta <= 7:
-                score += 0.10  # boost close docs
+                score += 0.15  # boost close docs (CHANGE TO 10 IF WORSE)
             elif delta >= 30:
                 score -= 0.10  # demote distant docs
         snip['score'] = score
@@ -89,13 +91,13 @@ def run_reranker_agent(state: GraphState) -> dict:
     # Re-sort candidates after applying bonus
     candidate_snippets = sorted(candidate_snippets, key=lambda x: x.get('score', 0.0), reverse=True)
 
-    # --- NEW: Force-keep the single highest-scoring context snippet ---
+    # --- Force-keep the single highest-scoring context snippet ---
     # This acts as a safety net to guarantee the best initial hit is considered.
     best_context_hit = next((s for s in candidate_snippets if s.get("source_type") == "context"), None)
     
-    final_reranked_list = []
+    reranked_list = []
     if best_context_hit:
-        final_reranked_list.append(best_context_hit)
+        reranked_list.append(best_context_hit)
 
     # The list of candidates for the LLM to rank is now everything *except* our force-kept best hit.
     other_candidates = [s for s in candidate_snippets if s != best_context_hit]
@@ -113,7 +115,7 @@ def run_reranker_agent(state: GraphState) -> dict:
         
         # We ask the LLM to choose from the remaining candidates.
         # We need 3 more to reach our budget of 4 (1 force-kept + 3 from LLM).
-        num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(final_reranked_list)
+        num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(reranked_list)
 
         prompt = PROMPT_TEMPLATE.format(
             drift_type=drift_info.get("drift_type", "N/A"),
@@ -144,12 +146,29 @@ def run_reranker_agent(state: GraphState) -> dict:
         llm_ranked_snippets = [other_candidates[i - 1] for i in indices if 0 < i <= len(other_candidates)]
         
         # Add the LLM's choices to our final list
-        final_reranked_list.extend(llm_ranked_snippets)
+        reranked_list.extend(llm_ranked_snippets)
+
+        # Split evidence vs. glossary
+        supporting = []
+        evidence   = []
+        for snip in reranked_list:
+            if snip["source_type"] == "context":
+                evidence.append(snip)
+            else:                       # "bpm-kb"
+                supporting.append(snip)
+
+        # keep at most one glossary snippet to keep prompts lean
+        supporting = supporting[:1]
+
+        # store into state
+        state["supporting_context"]        = supporting
+        state["reranked_context_snippets"] = evidence
+
 
     # --- De-duplicate the list to prevent errors ---
     seen = set()
     deduped = []
-    for snip in final_reranked_list:
+    for snip in reranked_list:
         key = (snip["source_document"], snip["snippet_text"])
         if key in seen:
             continue
@@ -167,13 +186,6 @@ def run_reranker_agent(state: GraphState) -> dict:
                  [Path(d).name for d in kept_docs],
                  "YES" if gold_doc in kept_docs else "NO")
     #'''
-
-    # --- Split glossary vs. real evidence ---
-    supporting = [s for s in reranked_list if s.get("source_type") == "bpm-kb"]
-    evidence   = [s for s in reranked_list if s.get("source_type") == "context"]
-
-    # cap to at most ONE glossary snippet to keep prompts lean
-    supporting = supporting[:1]
 
     # --- Return both lists to update the state correctly ---
     return {
