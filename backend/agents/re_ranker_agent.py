@@ -19,7 +19,7 @@ from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-MODEL_NAME = "gpt-4o-mini"
+MODEL_NAME = "gpt-4o"
 # We ask for 4 from the LLM, plus our 1 force-kept document.
 NUM_SNIPPETS_TO_KEEP = 4
 
