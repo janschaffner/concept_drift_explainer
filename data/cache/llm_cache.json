@@ -570,5 +570,29 @@
         "confidence_score": 0.7
       }
     ]
+  },
+  "f953f0ba9c6c929827c4c185ac3ec167": {
+    "reranked_indices": []
+  },
+  "4b3a17aa501746a8f54dd0bf9f2b5845": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "cffb8622f6f1ea16f1245e850bedce56": {
+    "reranked_indices": []
+  },
+  "9fc25947847b831b0c56583ee6c48be3": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "40e35bdc4ce2098a6ca6f082d0e2ecf5": {
+    "reranked_indices": []
+  },
+  "67248eec66d105ee4ef090cf4e828ac9": {
+    "reranked_indices": [
+      1
+    ]
   }
 }

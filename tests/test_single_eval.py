@@ -1,3 +1,5 @@
+# Script for testing ONE drift, located in folder data/drift_output
+
 import sys
 import pandas as pd
 import ast
@@ -13,7 +15,7 @@ from backend.graph.build_graph import build_graph
 def run_evaluation():
     """
     Runs the full pipeline for each drift in the golden dataset
-    and calculates evaluation metrics, with a presentation-mode re-ordering.
+    and calculates evaluation metrics.
     """
     print("---  EVALUATION HARNESS START ---")
     
@@ -37,60 +39,62 @@ def run_evaluation():
         gold_docs = ast.literal_eval(row['gold_source_document'])
         
         for drift_index_in_row, drift_type in enumerate(drift_types):
-            drift_id = f"drift_{row_index}_{drift_index_in_row}"
-            print(f"\nProcessing {drift_id} ({drift_type})...")
+            print(f"\nProcessing Drift: row {row_index}, index {drift_index_in_row} ({drift_type})...")
             
+            # Prepare input for the graph
             initial_input = {"selected_drift": {"row_index": row_index, "drift_index": drift_index_in_row}}
             
+            # Invoke the full pipeline
             final_state = app.invoke(initial_input)
             
             if final_state.get("error"):
-                print(f"  > ERROR: Pipeline failed. Reason: {final_state['error']}")
+                print(f"  > ERROR: Pipeline failed for this drift. Reason: {final_state['error']}")
                 continue
 
+            # Extract results for evaluation
             explanation = final_state.get("explanation", {})
             ranked_causes = explanation.get("ranked_causes", [])
-            gold_doc = gold_docs[drift_index_in_row].lower()
+            gold_doc = gold_docs[drift_index_in_row]
             
+            # Get the list of source documents from the ranked causes
             cause_docs = [cause.get("source_document", "").lower() for cause in ranked_causes]
+            gold_doc_lower = gold_doc.lower()
             
-            # --- Calculate Metrics (based on original, unaltered order) ---
-            recall_at_1 = 1 if len(cause_docs) > 0 and cause_docs[0] == gold_doc else 0
-            recall_at_2 = 1 if gold_doc in cause_docs[:2] else 0
+            # --- Calculate Metrics ---
             
+            # Recall@1
+            recall_at_1 = 1 if len(cause_docs) > 0 and cause_docs[0] == gold_doc_lower else 0
+            
+            # Recall@2
+            recall_at_2 = 1 if gold_doc_lower in cause_docs[:2] else 0
+
+            # Mean Reciprocal Rank (MRR)
             mrr = 0.0
             try:
-                rank = cause_docs.index(gold_doc) + 1
+                rank = cause_docs.index(gold_doc_lower) + 1
                 mrr = 1.0 / rank
             except ValueError:
-                mrr = 0.0
-
-            # --- NEW: Presentation Mode Re-ordering ---
-            # If Recall@1 is a miss but Recall@2 is a hit, swap the top two causes for display
-            if recall_at_1 == 0 and recall_at_2 == 1:
-                print("  > Re-ordering results for presentation...")
-                ranked_causes[0], ranked_causes[1] = ranked_causes[1], ranked_causes[0]
-                # Update cause_docs to reflect the new order for printing
-                cause_docs = [cause.get("source_document", "").lower() for cause in ranked_causes]
+                mrr = 0.0 # Gold document was not found
 
             results.append({
-                "drift_id": drift_id,
+                "row": row_index,
+                "drift_index": drift_index_in_row,
                 "drift_type": drift_type,
-                "gold_document": gold_docs[drift_index_in_row],
-                "predicted_doc_1": cause_docs[0] if len(cause_docs) > 0 else "N/A",
-                "predicted_doc_2": cause_docs[1] if len(cause_docs) > 1 else "N/A",
-                "recall@1": recall_at_1, # The metric still reflects the original ranking
+                "gold_document": gold_doc,
+                "recall@1": recall_at_1,
                 "recall@2": recall_at_2,
                 "mrr": mrr
             })
             
-            print(f"    > Gold Doc: {gold_docs[drift_index_in_row]}")
-            print(f"    > Predicted Doc #1 (after re-order): {cause_docs[0] if len(cause_docs) > 0 else 'N/A'}")
+            print(f"  > Gold Doc: {gold_doc}")
+            print(f"  > Top 2 Predicted Docs: {[cause.get('source_document') for cause in ranked_causes[:2]]}")
+            print(f"  > Recall@2: {'HIT' if recall_at_2 else 'MISS'}")
+
 
     # 4. Save the final report
     if results:
         report_df = pd.DataFrame(results)
-        report_path = project_root / "tests" / "eval_report.csv"
+        report_path = project_root / "tests" / "single_eval_report.csv"
         report_df.to_csv(report_path, index=False)
         print(f"\n--- EVALUATION COMPLETE ---")
         print(f"Evaluation report saved to {report_path}")
