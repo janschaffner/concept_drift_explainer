@@ -1,0 +1,2 @@
+,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
+Municipality,"[('3076709', '3588647'), ('4049993', '4290084'), ('6942918', '7405355'), ('3026543', '3026543')]","['incremental', 'gradual', 'gradual', 'sudden']",[0.7383 0.6935 0.5918 0.5508],"['2011-01-10_MinistryCircular_GradualOutsourcing_PermitTasks.pdf', '2011-10-24_SharedServices_MergerTransition_Notice.pdf', '2013-03-01_MunicipalityPilot_PrevalidationNotice_BuildingPermits.pdf', '2011-01-13_MinisterialDecree_ObjectionPeriodAdjustment.pdf']"
