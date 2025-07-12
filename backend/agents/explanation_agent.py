@@ -117,7 +117,6 @@ Based on the provided information, generate an explanation for the **RECURRING**
 - **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on cyclical or seasonal evidence.
 """
 
-# --- REFINE PROMPT: A single, generic prompt for refinement ---
 REFINE_PROMPT_TEMPLATE = """You are a senior editor reviewing an analysis from a junior analyst.
 Your task is to critique and refine the provided "Draft Explanation" based on the original "Evidence" and "Reference Glossary".
 Ensure the final summary is concise, the cause descriptions are logical, and that every claim is strongly supported by the cited evidence.
@@ -132,7 +131,7 @@ Ensure the final summary is concise, the cause descriptions are logical, and tha
 {draft_explanation}
 
 **## 3. Your Task**
-Generate the final, high-quality version of the explanation. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
+Generate the final, high-quality version of the explanation. **The causes in the draft are already correctly ranked; describe them in the exact order they are provided.** Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
 """
 
 
