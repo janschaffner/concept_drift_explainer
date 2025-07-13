@@ -1,9 +1,11 @@
 import os
 import sys
 import logging
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import List
+from typing import List, Dict
+from datetime import datetime, timedelta
+import json
+import re
 
 # --- Path Correction ---
 project_root = Path(__file__).resolve().parents[2]
@@ -32,32 +34,54 @@ class RerankedIndices(BaseModel):
     )
 
 # --- Prompt Template ---
-PROMPT_TEMPLATE = """You are an expert business process analyst. Your task is to identify the most relevant evidence to explain a concept drift.
-You will be given information about the drift and a numbered list of candidates.
+PROMPT_TEMPLATE = """You are an expert data analyst. Your task is to identify the most relevant evidence to explain a concept drift by analyzing a set of features for each candidate document.
 
 **## 1. Detected Concept Drift**
 - **Drift Type:** {drift_type}
-- **Drift Keywords:** {drift_keywords}
+- **Specific Entities:** {specific_entities}
 
-**## 2. Candidate Snippets (already sorted by initial similarity)**
+**## 2. Candidate Snippets with Features**
 {formatted_snippets}
 
 **## 3. Your Task**
-Read all the candidate snippets carefully. Identify and return ONLY the integer indices of the top {num_to_keep} snippets that are most likely to be the direct cause of the drift.
+Review the candidate snippets and their features (Similarity Score, Specificity Score, Δdays). A high **Specificity Score** is a very strong signal of direct relevance.
+Based on the combination of these features, identify and return ONLY the integer indices of the top {num_to_keep} snippets that are most likely to be the direct cause of the drift.
 Your output must be a valid JSON object containing a single key "reranked_indices" with a list of numbers.
 """
 
-def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: datetime) -> str:
-    """Formats snippets with score and date delta for the prompt."""
+# Helper function for Specificity Score
+def calculate_specificity_score(text: str, specific_entities: List[str]) -> float:
+    """Calculates a score based on the presence of specific, unique entities."""
+    if not specific_entities:
+        return 0.0
+    
+    score = 0
+    text_lower = text.lower()
+    for entity in specific_entities:
+        if re.search(r'\b' + re.escape(entity.lower()) + r'\b', text_lower):
+            score += 1 # Add 1 for each specific entity found
+            
+    return float(score)
+
+def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: datetime, specific_entities: List[str]) -> str:
+    """Formats snippets with all engineered features for the prompt."""
     formatted_str = ""
     for i, snippet in enumerate(snippets):
         delta_days = "N/A"
         if snippet.get("timestamp", 0):
             delta = abs((datetime.fromtimestamp(snippet['timestamp']) - start_date).days)
             delta_days = f"{delta} days"
+            
         score = snippet.get('score', 0.0)
-        formatted_str += f"### Snippet {i+1} (Source: {snippet['source_document']}, Score: {score:.3f}, Δdays: {delta_days})\n"
-        formatted_str += f"{snippet['snippet_text']}\n\n"
+        specificity_score = calculate_specificity_score(snippet['snippet_text'], specific_entities)
+        
+        formatted_str += (
+            f"### Snippet {i+1} (Source: {snippet['source_document']})\n"
+            f"- Similarity Score: {score:.3f}\n"
+            f"- Specificity Score: {specificity_score:.1f}\n"
+            f"- Δdays from Drift Start: {delta_days}\n"
+            f"Text: \"{snippet['snippet_text']}\"\n\n"
+        )
     return formatted_str
 
 def run_reranker_agent(state: GraphState) -> dict:
@@ -73,7 +97,8 @@ def run_reranker_agent(state: GraphState) -> dict:
         return {"reranked_context_snippets": [], "supporting_context": []}
 
     drift_info = state.get("drift_info", {})
-    drift_keywords = state.get("drift_keywords", [])
+    specific_entities = state.get("specific_entities", [])
+    start_date = datetime.fromisoformat(drift_info["start_timestamp"])
 
     # --- Add date bonus to scores ---
     start_date = datetime.fromisoformat(drift_info["start_timestamp"])
@@ -117,10 +142,11 @@ def run_reranker_agent(state: GraphState) -> dict:
         # We need 3 more to reach our budget of 4 (1 force-kept + 3 from LLM).
         num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(reranked_list)
 
+        # The prompt now uses the specific entities and the new formatter
         prompt = PROMPT_TEMPLATE.format(
             drift_type=drift_info.get("drift_type", "N/A"),
-            drift_keywords=", ".join(drift_keywords),
-            formatted_snippets=format_snippets_for_reranking(other_candidates, start_date),
+            specific_entities=", ".join(specific_entities),
+            formatted_snippets=format_snippets_for_reranking(other_candidates, start_date, specific_entities),
             num_to_keep=num_to_keep_from_llm
         )
         

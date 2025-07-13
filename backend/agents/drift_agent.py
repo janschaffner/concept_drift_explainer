@@ -32,32 +32,37 @@ def build_activity_to_timestamp_map(window_info: dict) -> dict:
         activity_map[activity_name] = timestamp
     return activity_map
 
-# --- Keyword Extraction to enrich VecDB Query ---
-def extract_keywords_from_trace(trace: etree._Element) -> list:
-    """Extracts relevant keywords from a single trace in an XES log."""
-    keywords = set()
-    
-    # Trace-level attributes (costCenter, region, etc.)
-    for attr in trace.findall("string"):
-        val = attr.get("value", "")
-        if val and val not in {"UNKNOWN", "MISSING"} and len(val) > 3:
-            keywords.add(val)
-
-    # Event-level roles
-    for event in trace.findall('event'):
-        role = event.find("string[@key='org:role']")
-        if role is not None and role.get('value') and role.get('value') not in ["SYSTEM", "MISSING", "UNDEFINED"]:
-            keywords.add(role.get('value'))
-            
-    # Activity stems
+# --- Keyword and Entity Extraction to enrich VecDB Query ---
+def extract_keywords_and_entities(trace: etree._Element) -> tuple[list, list]:
+    """
+    Extracts both general keywords and specific entities from a trace.
+    """
+    general_keywords = set()
+    specific_entities = set()
     st = PorterStemmer()
-    for ev in trace.findall("event"):
-        act = ev.find("string[@key='concept:name']").get("value", "")
-        for word in re.split(r"[ _]", act):
-            if word and word.isalpha() and len(word) > 3:
-                keywords.add(st.stem(word.lower()))
+    
+    # Identify specific entities (e.g., project numbers, form IDs)
+    for attr in trace.xpath(".//string | .//int | .//float"):
+        val = attr.get("value", "")
+        # A simple heuristic: if a value contains digits, it's likely an entity
+        if val and any(char.isdigit() for char in val) and len(val) > 3:
+            specific_entities.add(val.lower())
+        # Also capture non-numeric but potentially specific values
+        elif val and val not in {"UNKNOWN", "MISSING", "EMPTY"} and len(val) > 3:
+            for word in re.split(r'[\s,()-/]', val):
+                if word and len(word) > 3:
+                    general_keywords.add(st.stem(word.lower()))
 
-    return list(keywords)
+    # Extract words from event names
+    for event in trace.findall('event'):
+        for key in ["concept:name", "activityNameEN"]:
+             name_element = event.find(f"string[@key='{key}']")
+             if name_element is not None:
+                for word in re.split(r'[ _]', name_element.get("value", "")):
+                    if word and word.isalpha() and len(word) > 3:
+                        general_keywords.add(st.stem(word.lower()))
+
+    return list(general_keywords), list(specific_entities)
 
 def run_drift_agent(state: GraphState) -> dict:
     """
@@ -123,7 +128,7 @@ def run_drift_agent(state: GraphState) -> dict:
         drift_type = all_drift_types[drift_index_in_row]
         confidence = all_confidences[drift_index_in_row]
         
-        extracted_keywords = extract_keywords_from_trace(trace_to_analyze)
+        general_keywords, specific_entities = extract_keywords_and_entities(trace_to_analyze)
 
     except (ValueError, SyntaxError, IndexError) as e:
         return {"error": f"Could not parse or index drift data from CSV: {e}"}
@@ -148,15 +153,25 @@ def run_drift_agent(state: GraphState) -> dict:
     }
 
     logging.info(f"Populated drift_info: {drift_info}")
-    logging.info(f"Extracted Keywords: {extracted_keywords}")
+    logging.info(f"Extracted Keywords: {general_keywords}")
+    logging.info(f"Extracted Specific Entities: {specific_entities}")
     # '''
     # --- Diagnostic Logging (outcomment if not run) ---
     logging.debug(
-        "Keyword list (%d): %s",
-        len(extracted_keywords),
-        extracted_keywords
+    "General Keywords (%d): %s",
+    len(general_keywords),
+    general_keywords
+)
+    logging.debug(
+        "Specific Entities (%d): %s",
+        len(specific_entities),
+        specific_entities
     )
     # '''
-    # Cap the final list to max 8 items and return or send full list
-    # return {"drift_info": drift_info, "drift_keywords": extracted_keywords[:8]}
-    return {"drift_info": drift_info, "drift_keywords": extracted_keywords}
+
+    # Return all data to the state
+    return {
+        "drift_info": drift_info,
+        "drift_keywords": general_keywords,
+        "specific_entities": specific_entities
+    }

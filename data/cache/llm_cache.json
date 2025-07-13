@@ -1139,5 +1139,198 @@
     "reranked_indices": [
       2
     ]
+  },
+  "c803061f91c967510a129662ca5100a2": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "08e696b38585602f3ad9c37b44c6ec70": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "436498753233d6d5ec29788eb925f735": {
+    "reranked_indices": [
+      1,
+      2,
+      0
+    ]
+  },
+  "5b816bdb399e7169b62f35b66e6b692e": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of small, iterative changes initiated by the new CFO, Lydia Baumann, aimed at transforming financial governance and processes within the organization. These changes reflect agile practices, including the piloting of a decentralized authorization model and the phased introduction of new processing logic.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a strong background in agile finance transformation led to the initiation of a decentralized authorization model, which included several small adjustments such as local budget holder approvals and the removal of redundant compliance reviews. These changes were part of a broader strategy to enhance financial governance and were expected to roll out progressively throughout 2018.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transitional period allowing mixed processing during Q1\u2013Q3 indicates a deliberate approach to implement changes gradually while retaining legacy procedures for flagged cases. This reflects an iterative improvement strategy, ensuring that the organization could adapt to new processes without fully abandoning established methods.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "cf33969242fd6a83c2ec26acda6a33a4": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of iterative changes initiated by the new CFO, Lydia Baumann, aimed at transforming financial governance and processes within the organization. These changes reflect agile practices, including the piloting of a decentralized authorization model and a gradual transition to new processing methods.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a strong background in agile finance transformation led to the initiation of a decentralized authorization model, which included several small adjustments such as local budget holder approvals and the removal of redundant compliance reviews. These changes were part of a broader strategy to enhance financial governance and were expected to roll out progressively throughout 2018.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transitional period allowing mixed processing during Q1\u2013Q3 indicates a deliberate approach to implement changes gradually while retaining legacy procedures for flagged cases. This reflects an iterative improvement strategy, ensuring that the organization could adapt to new processes without fully abandoning established methods.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      }
+    ]
+  },
+  "4a80f5e51fe039b70c41ebb6435a8add": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "425160c9babdd319ea19c7633cf531df": {
+    "summary": "The incremental drift observed between October 2017 and June 2018 is primarily attributed to a series of small, iterative changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. These adjustments reflect agile practices in process management, leading to significant cumulative transformations over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved decentralizing approval responsibilities and establishing a new oversight unit, which collectively aimed to reduce approval cycles and improve integration with frontline teams. This represents a significant iterative adjustment in internal workflows.",
+        "evidence_snippet": "As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations introduced in October 2017 required entities to adapt their workflows to comply with new reporting standards and the gradual integration of digital processes. This transition involved multiple small adjustments, including the introduction of a dual-process option, reflecting an agile approach to regulatory compliance.",
+        "evidence_snippet": "In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Activation of the Centralized International Validation Portal (CIVP) for pre-check of eligibility and source documentation.",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "501158baee7574e06701b1c5af681f18": {
+    "summary": "The incremental drift observed between October 2017 and June 2018 is primarily due to a series of iterative changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. These adjustments reflect agile practices in process management, leading to significant cumulative transformations over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved decentralizing approval responsibilities and establishing a new oversight unit, which collectively aimed to reduce approval cycles and improve integration with frontline teams. This represents a significant iterative adjustment in internal workflows.",
+        "evidence_snippet": "As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations introduced in October 2017 required entities to adapt their workflows to comply with new reporting standards and the gradual integration of digital processes. This transition involved multiple small adjustments, including the introduction of a dual-process option, reflecting an agile approach to regulatory compliance.",
+        "evidence_snippet": "In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Activation of the Centralized International Validation Portal (CIVP) for pre-check of eligibility and source documentation.",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "7bd6162d5b4176d98d5b12659a4ae21e": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "ab6ae3b8308475d0ad1a15df31903152": {
+    "reranked_indices": []
+  },
+  "c0ff157eb3a79777205592ba7cd67569": {
+    "reranked_indices": []
+  },
+  "0d9b67a800955512f671e9fe9e079cb9": {
+    "reranked_indices": []
+  },
+  "9b8c2118d56fb290990b194d50b6b7f2": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "43a97afc214522afebb05b12b97e9d42": {
+    "summary": "The incremental drift observed between October 2017 and June 2018 is primarily attributed to a series of small, iterative changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. These changes reflect agile practices that allowed for continuous adaptation without a single identifiable change point.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, involved decentralizing approval responsibilities and establishing a new oversight unit, which collectively aimed to reduce approval cycles and improve integration with frontline teams. This represents a significant process transformation through incremental adjustments.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations effective January 2018 required entities to adapt their workflows to comply with new reporting standards, including the introduction of a centralized validation portal and gradual integration of digital processes. This transition involved multiple small adjustments to existing workflows, reflecting an agile approach to regulatory compliance.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: ... Reporting entities are expected to adapt their workflows in line with this shift.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "f6649d5ee097c63f877b7af91243f2b7": {
+    "summary": "The observed drift between October 2017 and June 2018 is primarily due to incremental changes in organizational processes aimed at enhancing operational efficiency and compliance with new regulations. These adjustments reflect a continuous adaptation strategy rather than a single identifiable change point.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, involved decentralizing approval responsibilities and establishing a new oversight unit, which collectively aimed to reduce approval cycles and improve integration with frontline teams. This transformation represents a significant process change through incremental adjustments.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations effective January 2018 required entities to adapt their workflows to comply with new reporting standards, including the introduction of a centralized validation portal and gradual integration of digital processes. This transition involved multiple small adjustments to existing workflows, reflecting an agile approach to regulatory compliance.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: ... Reporting entities are expected to adapt their workflows in line with this shift.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "74b660cde53186e1a5f1d6d0515b09ee": {
+    "reranked_indices": [
+      1,
+      0
+    ]
+  },
+  "5e875de26097d8f1fbbc7e7ba82ff02b": {
+    "summary": "The gradual drift observed is primarily due to the mandated transition to the Harmonized Permit Standard (HP-Standard) format, which allows for a coexistence of old and new processes during the rollout phase. This transition period, starting on October 5, 2017, permits mixed-format transmissions until December 20, 2017, after which legacy protocols will be fully deprecated.",
+    "ranked_causes": [
+      {
+        "cause_description": "The directive from the Border Mobility Governance Council mandates a transition to the HP-Standard format, allowing for a phased rollout where both old and new processes can operate simultaneously until the legacy protocols are fully deprecated.",
+        "evidence_snippet": "Mandatory Transition to HP-Standard Format by 01.01.2018... A transition window begins October 5, 2017. Mixed-format transmission is permitted until December 20.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      }
+    ]
+  },
+  "956dd997f2eb54a972c0b80a4ce36207": {
+    "summary": "The observed drift is primarily attributed to the mandated transition to the Harmonized Permit Standard (HP-Standard) format, which allows for a phased implementation where both legacy and new processes can coexist. This transition period, initiated on October 5, 2017, permits mixed-format transmissions until December 20, 2017, after which all legacy protocols will be deprecated.",
+    "ranked_causes": [
+      {
+        "cause_description": "The directive from the Border Mobility Governance Council mandates a transition to the HP-Standard format, allowing for a phased rollout where both old and new processes can operate simultaneously until the legacy protocols are fully deprecated.",
+        "evidence_snippet": "Mandatory Transition to HP-Standard Format by 01.01.2018... A transition window begins October 5, 2017. Mixed-format transmission is permitted until December 20.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      }
+    ]
   }
 }

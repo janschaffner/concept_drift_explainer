@@ -62,6 +62,7 @@ class GraphState(TypedDict):
     # Populated by the Drift Agent
     drift_info: Dict
     drift_keywords: Optional[List[str]]
+    specific_entities: Optional[List[str]]
 
     # This key holds the initial large list of candidates from the retrieval agent
     raw_context_snippets: List[Dict]
