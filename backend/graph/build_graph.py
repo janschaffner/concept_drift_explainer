@@ -4,10 +4,13 @@ from langgraph.graph import StateGraph, END
 from typing import Literal
 
 # --- Path Correction ---
+# Ensures that the script can correctly import modules from the 'backend' directory
+# by adding the project's root directory to the system's path.
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 # -----------------------
 
+# Import the shared state schema and all agent functions
 from backend.state.schema import GraphState
 from backend.agents.drift_agent import run_drift_agent
 from backend.agents.context_retrieval_agent import run_context_retrieval_agent
@@ -19,9 +22,18 @@ from backend.agents.chatbot_agent import run_chatbot_agent
 # --- Router function for the chatbot loop ---
 def should_continue(state: GraphState) -> Literal["chatbot_agent", "__end__"]:
     """
-    This is our router. It determines the next node to call based on the state.
-    If the user has asked a question, it routes to the chatbot.
-    Otherwise, it ends the conversation.
+    Determines the next node to call after the main explanation is generated.
+    
+    This function acts as a router for the graph's conditional logic. If the user
+    has asked a follow-up question (which is present in the state), it directs
+    the workflow to the `chatbot_agent`. Otherwise, it signals the end of the
+    execution.
+
+    Args:
+        state: The current state of the graph.
+
+    Returns:
+        A string literal indicating the next node to execute ("chatbot_agent" or END).
     """
     if state.get("user_question"):
         return "chatbot_agent"
@@ -30,12 +42,20 @@ def should_continue(state: GraphState) -> Literal["chatbot_agent", "__end__"]:
 
 def build_graph():
     """
-    Builds the LangGraph agent-based workflow.
+    Builds and compiles the complete, conditional LangGraph for the concept drift
+    explanation system.
+
+    This function defines the architecture of the agentic workflow, registering each
+    agent as a node and defining the sequence of execution through directed edges.
+
+    Returns:
+        A compiled LangGraph application that is ready to be executed.
     """
+    # Initialize a new state graph with the custom GraphState schema.
     workflow = StateGraph(GraphState)
 
-    # Add nodes for each agent
-    # Each node corresponds to a function that modifies the state
+    # Add each agent function as a node in the graph.
+    # Each node is a step in the pipeline that can read from and write to the shared state.
     workflow.add_node("drift_agent", run_drift_agent)
     workflow.add_node("context_retrieval_agent", run_context_retrieval_agent)
     workflow.add_node("re_ranker_agent", run_reranker_agent)
@@ -44,31 +64,33 @@ def build_graph():
     workflow.add_node("chatbot_agent", run_chatbot_agent)
 
 
-    # --- Define the sequence of execution ---
-    # This sets up the directed edges of the graph
+    # Define the sequence of execution
+    # This sets up the directed edges that control the main analytical pipeline.
     workflow.set_entry_point("drift_agent")
     workflow.add_edge("drift_agent", "context_retrieval_agent")
-    # The new Re-Ranker agent runs after retrieval
     workflow.add_edge("context_retrieval_agent", "re_ranker_agent")
-    # The Franzoi Mapper now runs on the re-ranked context
     workflow.add_edge("re_ranker_agent", "franzoi_mapper_agent")
     workflow.add_edge("franzoi_mapper_agent", "explanation_agent")
     
-    # --- CONDITIONAL LOGIC for the chatbot ---
-    # After the explanation, we check if the user has asked a question
+    # Define the conditional logic for the interactive chatbot loop
+    # After the main explanation is generated, the `should_continue` router is called.
     workflow.add_conditional_edges(
+        # The routing logic starts from the 'explanation_agent' node.
         "explanation_agent",
+        # The `should_continue` function determines the path.
         should_continue,
+        # This dictionary maps the function's output to the next node.
         {
             "chatbot_agent": "chatbot_agent",
             "__end__": END
         }
     )
-    # After the chatbot runs, it loops back, allowing for more questions
+    # After the chatbot answers a question, it loops back to the explanation agent,
+    # allowing for a continuous conversation.
     workflow.add_edge("chatbot_agent", "explanation_agent")
 
 
-    # Compile the graph into a runnable object
+    # Compile the graph into a runnable application object.
     app = workflow.compile()
     
     print("✅ LangGraph workflow compiled successfully!")
@@ -76,13 +98,11 @@ def build_graph():
     return app
 
 if __name__ == '__main__':
-    # This allows us to run this file directly to build and test the graph
+    # This block allows the script to be run directly for testing or visualization.
     app = build_graph()
 
-    # To visualize the graph, you can uncomment the following lines
-    # Make sure you have mermaid-cli installed (`npm install -g @mermaid-js/mermaid-cli`)
-    # and graphviz (`conda install python-graphviz`)
-    
+    # To visualize the graph, you can uncomment the following lines.
+    # This requires `mermaid-cli` and `graphviz` to be installed.
     # from IPython.display import Image, display
     # try:
     #     img_data = app.get_graph().draw_mermaid_png()

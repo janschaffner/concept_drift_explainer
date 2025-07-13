@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List
 
 # --- Path Correction ---
+# Ensures that the script can correctly import modules from the 'backend' directory.
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 # -----------------------
@@ -13,9 +14,8 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from pydantic.v1 import BaseModel, Field
 
-# Import our graph state schema
+# Import our graph state schema and caching utility.
 from backend.state.schema import GraphState, ContextSnippet, FranzoiClassification
-# Import the caching utility
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
@@ -23,8 +23,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 MODEL_NAME = "gpt-4o-mini"
 
 # --- Pydantic Models for Structured Output ---
-# This defines the structure of a single classification.
-# It's like a schema for the LLM's "tool".
+# This defines the structure of a single classification output from the LLM.
 class Classification(BaseModel):
     full_path: str = Field(description="The full hierarchical path of the category, e.g., ORGANIZATION_INTERNAL::Process_Management")
     reasoning: str = Field(description="A brief reasoning for this classification.")
@@ -34,7 +33,7 @@ class ClassificationList(BaseModel):
     """A list of all relevant classifications for the given text snippet."""
     classifications: List[Classification]
 
-# The prompt is now simpler, as the complex instructions are in the tool definition.
+# The prompt instructs the LLM to classify a snippet against the Franzoi et al. taxonomy.
 PROMPT_TEMPLATE = """You are an expert business process analyst specializing in process mining. Your task is to classify a given text snippet against the full three-level Franzoi et al. context taxonomy.
 
 The snippet may fit into one or more categories. Identify all relevant categories from the taxonomy provided below.
@@ -60,18 +59,27 @@ TEXT SNIPPET:
 
 def run_franzoi_mapper_agent(state: GraphState) -> dict:
     """
-    Classifies retrieved context snippets using the Franzoi taxonomy and
-    updates them in-place within the state.
+    Classifies a list of context snippets against the Franzoi context taxonomy.
+
+    This agent iterates through each snippet provided by the Re-Ranker Agent,
+    uses an LLM to assign one or more categories from the Franzoi et al. (2025)
+    taxonomy, and enriches the snippets with this classification data in-place.
+
+    Args:
+        state: The current graph state, which must contain `reranked_context_snippets`.
+
+    Returns:
+        An empty dictionary, as it modifies the state directly.
     """
     logging.info("--- Running Franzoi Mapper Agent ---")
 
-    # NOTE: We now get the list and modify it directly.
+    # This agent receives the curated list of snippets from the Re-Ranker Agent.
     context_snippets: List[ContextSnippet] = state.get("reranked_context_snippets", [])
     if not context_snippets:
         logging.warning("No context snippets found to classify.")
         return {} # Return empty dict as we are done
     
-    # Add enhanced logging
+    # Log the source documents being processed for better traceability.
     # This log message shows exactly which documents made it through the re-ranker.
     doc_sources = [Path(s['source_document']).name for s in context_snippets]
     logging.info(f"Received {len(doc_sources)} snippets to classify: {doc_sources}")
@@ -82,19 +90,21 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         logging.error(error_msg)
         return {"error": error_msg}
 
+    # Initialize the LangChain LLM with structured output capabilities.
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     structured_llm = llm.with_structured_output(ClassificationList)
 
-    # --- NEW: Load the cache at the start of the process ---
+    # Load the persistent cache to avoid redundant API calls.-
     llm_cache = load_cache()
     cache_updated = False
 
-    for snippet in context_snippets: # Loop through and modify each snippet
+    # Loop through and classify each snippet.
+    for snippet in context_snippets:
         logging.info(f"Classifying snippet from: {snippet['source_document']}")
 
         prompt = PROMPT_TEMPLATE.format(snippet_text=snippet["snippet_text"])
 
-        # --- NEW: Caching Logic ---
+        # Check the cache before making an expensive API call.
         cache_key = get_cache_key(prompt, MODEL_NAME)
         
         if cache_key in llm_cache:
@@ -104,10 +114,10 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
             logging.info(f"CACHE MISS. Calling API for snippet from: {snippet['source_document']}")
             try:
                 response_object = structured_llm.invoke(prompt)
-                # Convert Pydantic object to a standard dictionary to store in JSON cache
+                # Convert Pydantic object to a standard dictionary to store in JSON cache.
                 response_data = response_object.dict()
                 
-                # Save the new response to the cache
+                # Save the new response to the cache.
                 llm_cache[cache_key] = response_data
                 cache_updated = True
             except Exception as e:
@@ -115,7 +125,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
                 snippet['classifications'] = [{"full_path": "CLASSIFICATION_FAILED", "reasoning": str(e)}]
                 continue
 
-        # Process the response data (either from cache or new API call)
+        # Process the response data (from cache or API) and enrich the snippet.
         typed_classifications: List[FranzoiClassification] = [
             {"full_path": item.get("full_path", "UNKNOWN"), "reasoning": item.get("reasoning", "")}
             for item in response_data.get("classifications", [])
@@ -123,7 +133,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         snippet['classifications'] = typed_classifications
         logging.info(f"  > Classified as: {[c['full_path'] for c in typed_classifications]}")
         
-    # --- NEW: Save the cache if it has been updated ---
+    # If the cache was modified, save it back to the file.
     if cache_updated:
         save_to_cache(llm_cache)
         logging.info("LLM cache file updated.")
@@ -131,5 +141,5 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
 
     logging.info("Franzoi Mapper Agent execution successful.")
 
-    # We modified the state in-place, so we return an empty dictionary.
+    # This agent modifies the state in-place, so it returns an empty dictionary.
     return {}

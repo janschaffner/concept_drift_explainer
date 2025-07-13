@@ -1,6 +1,9 @@
 from typing import TypedDict, List, Tuple, Optional, Dict
 
 # --- Data Structures for Individual Components ---
+# These TypedDicts define the shape of the data objects that are created
+# and passed between the different agents in the pipeline. They act as
+# a formal schema for the data at each step of the process.
 
 class DriftInfo(TypedDict):
     """
@@ -15,7 +18,11 @@ class DriftInfo(TypedDict):
     end_timestamp: str
 
 class FranzoiClassification(TypedDict):
-    """Represents a single classification according to the Franzoi taxonomy."""
+    """
+    Represents a single classification according to the Process Mining Context 
+    Taxonomy by Franzoi, Hartl et al. (2025).
+    DOI: 10.1007/s44311-025-00008-6
+    """
     full_path: str  # e.g., "ORGANIZATION_INTERNAL::Process Management"
     reasoning: str  # The LLM's reasoning for this classification
 
@@ -32,14 +39,13 @@ class ContextSnippet(TypedDict):
 
 class RankedCause(TypedDict):
     """
-    Represents a single potential cause for the drift, with its evidence.
+    Represents a single potential cause for the drift, as presented in the final explanation.
     """
     cause_description: str
     evidence_snippet: str
     source_document: str
-    # ADDED: Include the classification in the final ranked cause
-    context_category: str 
-    confidence_score: float
+    context_category: str # The most relevant context category for this cause.
+    confidence_score: float # The final, calibrated confidence score.
 
 class Explanation(TypedDict):
     """
@@ -57,33 +63,42 @@ class GraphState(TypedDict):
     This dictionary is passed between all agents (nodes) in the LangGraph workflow.
     Each agent reads from this state and writes its output back to it.
     """
-    # Populated by the UI
+    # --- Core Pipeline State ---
+
+    # Populated by the UI to select which drift to analyze.
     selected_drift: Optional[Dict]
 
-    # Populated by the Drift Agent
+    # Populated by the DriftAgent with structured drift info.
     drift_info: Dict
+    # Populated by the DriftAgent with general keywords from the trace.
     drift_keywords: Optional[List[str]]
+    # Populated by the DriftAgent with specific, unique entities from the trace.
     specific_entities: Optional[List[str]]
 
-    # This key holds the initial large list of candidates from the retrieval agent
+    # Populated by the ContextRetrievalAgent with a broad list of candidates.
     raw_context_snippets: List[Dict]
-
-    # This will hold the refined list after re-ranking
+    # Populated by the ReRankerAgent with a filtered, more relevant list.
     reranked_context_snippets: List[Dict]
+    # Populated by the ReRankerAgent with glossary terms for reasoning.
+    supporting_context: List[Dict]
 
-    # Populated by the Explanation Agent
+    # Populated by the ExplanationAgent with the final, synthesized explanation.
     explanation: Explanation
     
-    # Used for the full analysis log and Chatbot context
+    # --- Application & UI State ---
+
+    # A log of all state transitions, for debugging and full-context chat.
     full_state_log: List[Dict]
+    # The summary from the DriftLinkerAgent for multi-drift analysis.
     linked_drift_summary: Optional[str]
 
-    # Used by the Chatbot
+    # The current question from the user for the chatbot.
     user_question: Optional[str]
+    # The history of the ongoing chat conversation.
     chat_history: List[Tuple[str, str]]
     
-    # Used by the UI for feedback
+    # The state of the feedback buttons in the UI.
     feedback_states: dict
     
-    # Used for error handling
+    # Used for capturing and displaying errors in the UI.
     error_message: Optional[str]

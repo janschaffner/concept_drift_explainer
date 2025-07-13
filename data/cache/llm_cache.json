@@ -1582,5 +1582,280 @@
       0,
       1
     ]
+  },
+  "79048e46cf55b862493b8ecb9282d9bd": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "967031c607d65827018c6ffe07c71a9b": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of small, iterative changes in tax processing and financial governance practices, reflecting a shift towards more agile methodologies. These changes were implemented gradually, allowing for a transitional period that facilitated the integration of new procedures alongside existing ones.",
+    "ranked_causes": [
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures, including the removal of mandatory steps and the introduction of new forms, indicates a series of small adjustments aimed at streamlining processes over time.",
+        "evidence_snippet": "\"Key changes include: \u2022 Removal of the mandatory regional routing step for declarations below \u20ac15,000. \u2022 Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation. \u2022 Expansion of automatic eligibility screening through the Central Processing Gateway.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a background in agile finance transformation and the introduction of a decentralized authorization model reflect a strategic shift towards more flexible and responsive financial governance, contributing to the incremental drift.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The transitional period allowing mixed processing during the rollout of new procedures indicates a deliberate approach to implement changes gradually, ensuring that legacy processes remain in place for flagged cases while new methods are introduced.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management, ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "4495bb990b036fa67490d0de20fd2867": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of small, iterative changes in tax processing and financial governance practices, reflecting a shift towards more agile methodologies. These changes were implemented gradually, allowing for a transitional period that facilitated the integration of new procedures alongside existing ones.",
+    "ranked_causes": [
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures, including the removal of mandatory steps and the introduction of new forms, indicates a series of small adjustments aimed at streamlining processes over time.",
+        "evidence_snippet": "\"Key changes include: \u2022 Removal of the mandatory regional routing step for declarations below \u20ac15,000. \u2022 Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation. \u2022 Expansion of automatic eligibility screening through the Central Processing Gateway.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a background in agile finance transformation and the introduction of a decentralized authorization model reflect a strategic shift towards more flexible and responsive financial governance, contributing to the incremental drift.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The transitional period allowing mixed processing during the rollout of new procedures indicates a deliberate approach to implement changes gradually, ensuring that legacy processes remain in place for flagged cases while new methods are introduced.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management, ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "b987dad9b8c305e32996d5bb8cdcd09d": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "156f02fc72684e058c62cb9108dccdf9": {
+    "summary": "The Incremental Drift observed from October 2017 to June 2018 is primarily attributed to a series of small, continuous changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes reflect an agile approach to process management, allowing for iterative improvements without a single identifiable change point.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved multiple small adjustments, such as dissolving the Central Authorization Desk and decentralizing approval responsibilities, which collectively aimed to enhance operational efficiency and integration with frontline teams.",
+        "evidence_snippet": "As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations introduced in October 2017 required organizations to adapt their workflows gradually, incorporating both manual and digital processes. This gradual integration reflects an incremental approach to compliance with updated OECD standards, allowing for iterative adjustments over time.",
+        "evidence_snippet": "In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Activation of the Centralized International Validation Portal (CIVP) for pre-check of eligibility and source documentation.",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "584b1c3b6eff726f88ff50e68e92c245": {
+    "summary": "The Incremental Drift observed from October 2017 to June 2018 is primarily due to a series of small, continuous changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes reflect an agile approach to process management, allowing for iterative improvements without a single identifiable change point.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved multiple small adjustments, such as dissolving the Central Authorization Desk and decentralizing approval responsibilities, which collectively aimed to enhance operational efficiency and integration with frontline teams.",
+        "evidence_snippet": "As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits.",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting Obligations introduced in October 2017 required organizations to adapt their workflows gradually, incorporating both manual and digital processes. This gradual integration reflects an incremental approach to compliance with updated OECD standards, allowing for iterative adjustments over time.",
+        "evidence_snippet": "In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: \u2022 Mandatory submission of Form IDR-54A for all transactions involving non-EU entities above \u20ac20,000. \u2022 Activation of the Centralized International Validation Portal (CIVP) for pre-check of eligibility and source documentation.",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "b77df5abcaeab2f0916c305d19c35ece": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "c39f9fef89dd48ec7009bcdd634e196e": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily attributed to a phased realignment initiative within the Travel Authorization Division, where new processes were introduced while existing workflows continued to operate. This transition period allowed for the coexistence of old and new processes, facilitating a smoother shift towards operational efficiency.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, indicating a transition to a new operational model while existing processes were still in place.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... All affected units are to update internal workflows by November 10.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The leadership transition memo indicated that while no immediate procedural changes were mandated, unit leads were expected to begin reviewing internal SOPs in anticipation of progressive refinements, suggesting a gradual shift towards new processes.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The directive from the Federal Authority for International Taxation outlined a gradual integration of new reporting obligations, allowing for a dual-process option during the initial phases, which supports the coexistence of old and new processes during the transition.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "c2ba06bff8c14a700ba97b4709e7f8bf": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily attributed to a phased realignment initiative within the Travel Authorization Division, where new processes were introduced while existing workflows continued to operate. This transition period allowed for the coexistence of old and new processes, facilitating a smoother shift towards operational efficiency.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated on October 23, 2017, involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, indicating a transition to a new operational model while existing processes were still in place.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... All affected units are to update internal workflows by November 10.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The leadership transition memo indicated that while no immediate procedural changes were mandated, unit leads were expected to begin reviewing internal SOPs in anticipation of progressive refinements, suggesting a gradual shift towards new processes.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "The directive from the Federal Authority for International Taxation outlined a gradual integration of new reporting obligations, allowing for a dual-process option during the initial phases, which supports the coexistence of old and new processes during the transition.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "153ed885b61869a8d12bcb8310c5006c": {
+    "reranked_indices": []
+  },
+  "0ac0c062e402369cb090ff578b1df7e7": {
+    "reranked_indices": []
+  },
+  "a39f57948c6b21fe64d2157dceb10e85": {
+    "reranked_indices": []
+  },
+  "7c71ed1308efce52b42ac6d9e23faad9": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "4bd2e2d4520961b7e4bf625d2905cde3": {
+    "summary": "The Incremental Drift observed from October 2017 to June 2018 is primarily attributed to a series of small, continuous changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes reflect an agile approach to process management, characterized by iterative adjustments and realignments within the Travel Authorization Division and reporting obligations.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, which reflects a series of small adjustments aimed at improving operational efficiency and integration with frontline teams.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting obligations, effective January 2018, required organizations to adapt their workflows to comply with new regulations, including the introduction of a Centralized International Validation Portal and gradual integration of digital processes, indicating a continuous evolution in compliance practices.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: ... Reporting entities are expected to adapt their workflows in line with this shift.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The provision of training sessions and updated FAQs to support the transition to new reporting processes further illustrates the incremental adjustments being made to ensure compliance and operational readiness, highlighting the iterative nature of the changes.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "a0ab13a4d0da7e756de140d57ee491d3": {
+    "summary": "The Incremental Drift observed from October 2017 to June 2018 is primarily due to a series of small, continuous changes in organizational processes aimed at enhancing operational efficiency and compliance with updated regulations. These changes reflect an agile approach to process management, characterized by iterative adjustments within the Travel Authorization Division and evolving reporting obligations.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division initiated in October 2017 involved dissolving the Central Authorization Desk and decentralizing approval responsibilities, reflecting a series of small adjustments aimed at improving operational efficiency and integration with frontline teams.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: ... This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The expansion of Country-by-Country Reporting obligations, effective January 2018, required organizations to adapt their workflows to comply with new regulations, including the introduction of a Centralized International Validation Portal and gradual integration of digital processes, indicating a continuous evolution in compliance practices.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018. Key transitional provisions include: ... Reporting entities are expected to adapt their workflows in line with this shift.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The provision of training sessions and updated FAQs to support the transition to new reporting processes further illustrates the incremental adjustments being made to ensure compliance and operational readiness, highlighting the iterative nature of the changes.",
+        "evidence_snippet": "\"Training sessions and updated FAQs will be circulated by November 10.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "144785a45e32aedf59a6720effd0da9e": {
+    "reranked_indices": [
+      0,
+      1
+    ]
+  },
+  "453725e13b74ee21093d38b16d51c4ee": {
+    "summary": "The gradual drift observed from October 5, 2017, to January 1, 2018, is primarily due to the mandated transition to the Harmonized Permit Standard (HP-Standard) format, which allowed for a coexistence of old and new processes during the rollout phase. This transition period permitted mixed-format transmissions, indicating a phased approach to the adoption of the new standard.",
+    "ranked_causes": [
+      {
+        "cause_description": "The Border Mobility Governance Council mandated a transition to the HP-Standard format for travel data submission, allowing for a coexistence of old and new processes during the transition period.",
+        "evidence_snippet": "Mandatory Transition to HP-Standard Format by 01.01.2018... A transition window begins October 5, 2017. Mixed-format transmission is permitted until December 20.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The directive specifies that all legacy protocols will be deprecated after December 20, 2017, indicating a phased rollout where the old processes will eventually be completely replaced by the new standard.",
+        "evidence_snippet": "All legacy protocols are deprecated after that date.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "966dc6651f3188aa95d897b4a10526a8": {
+    "summary": "The gradual drift observed from October 5, 2017, to January 1, 2018, is primarily due to the mandated transition to the Harmonized Permit Standard (HP-Standard) format. This transition allowed for a coexistence of old and new processes during the rollout phase, with mixed-format transmissions permitted until December 20, 2017, indicating a phased approach to the adoption of the new standard.",
+    "ranked_causes": [
+      {
+        "cause_description": "The Border Mobility Governance Council mandated a transition to the HP-Standard format for travel data submission, allowing for a coexistence of old and new processes during the transition period.",
+        "evidence_snippet": "Mandatory Transition to HP-Standard Format by 01.01.2018... A transition window begins October 5, 2017. Mixed-format transmission is permitted until December 20.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The directive specifies that all legacy protocols will be deprecated after December 20, 2017, indicating a phased rollout where the old processes will eventually be completely replaced by the new standard.",
+        "evidence_snippet": "All legacy protocols are deprecated after that date.",
+        "source_document": "2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal",
+        "confidence_score": 0.85
+      }
+    ]
   }
 }

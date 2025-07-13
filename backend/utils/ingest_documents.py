@@ -7,6 +7,8 @@ import io
 import pandas as pd
 
 # --- Path Correction ---
+# This ensures that the script can correctly import modules from the 'backend' directory
+# by adding the project's root directory to the system's path.
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 # -----------------------
@@ -14,7 +16,7 @@ sys.path.append(str(project_root))
 from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-# keep this even though it may be old
+# Keep this even though it may be old
 from langchain_community.document_loaders import UnstructuredFileLoader, PyPDFLoader
 from langchain_openai import OpenAIEmbeddings
 # Imports for multimodal processing
@@ -24,10 +26,10 @@ from pptx import Presentation
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# --- Pinecone setup ---
+# Pinecone setup
 PINECONE_DIMENSION = 1536
 EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has a 1536 dimension
-# --- NEW: Define Namespace Constants ---
+# Define Namespace Constants
 CONTEXT_NS = "context"
 KB_NS      = "bpm-kb"
 
@@ -51,7 +53,25 @@ def get_timestamp_from_filename(filename: str) -> int:
 
 # process_and_embed now accepts a namespace parameter
 def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, source_document_name: str, doc_timestamp: int, namespace: str):
-    """Helper function to chunk, embed, and upsert a list of texts into a specific namespace."""
+    """
+    Helper function to chunk, embed, and upsert a list of texts into a specific Pinecone namespace.
+
+    This function takes a list of raw text strings, splits them into manageable chunks,
+    creates vector embeddings for each chunk, and then uploads them to the specified
+    namespace in the Pinecone index.
+
+    Args:
+        index: The initialized Pinecone index object.
+        text_splitter: An initialized LangChain TextSplitter.
+        embedder: An initialized LangChain embedding model.
+        texts_to_embed: A list of raw text strings to be processed.
+        source_document_name: The filename of the source document for metadata.
+        doc_timestamp: The timestamp of the source document for metadata.
+        namespace: The target Pinecone namespace (e.g., "context" or "bpm-kb").
+
+    Returns:
+        The number of vectors successfully ingested.
+    """
     if not texts_to_embed:
         return 0
     
@@ -67,7 +87,7 @@ def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, sour
     
     vectors_to_upsert = []
     for i, chunk in enumerate(documents):
-        # Create a more unique ID to avoid collisions
+        # Create a more unique ID to avoid collisions between different documents
         vector_id = f"{Path(source_document_name).stem}_{hash(chunk.page_content)}_{i}"
         metadata = {
             "text": chunk.page_content,
@@ -91,8 +111,9 @@ def process_glossary_file(index, embedder):
 
     logging.info(f"--- Processing BPM Glossary ---")
     try:
+        # Load the glossary from the CSV file.
         df = pd.read_csv(glossary_path)
-        # Combine term and definition into a single text for embedding
+        # Combine term and definition into a single text field for richer embeddings.
         df['text_to_embed'] = df['term'] + ": " + df['definition']
         
         texts = df['text_to_embed'].tolist()
@@ -115,10 +136,11 @@ def process_glossary_file(index, embedder):
     except Exception as e:
         logging.error(f"Error processing glossary file: {e}")
 
-# Main function to process context documents
+# --- Main function to process context documents ---
 def process_context_files(files_to_process: list, index, embedder, text_splitter):
     """
-    Processes a list of context documents (PDF, PPTX, images, etc.).
+    Processes a list of context documents, handling different file types
+    including text documents, presentations, and images.
     """
     logging.info(f"--- Processing {len(files_to_process)} Context Documents ---")
     
@@ -131,37 +153,45 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
             logging.warning(f"Could not parse timestamp from '{doc_path.name}'. Skipping file.")
             continue
         
+        # This list will aggregate all text extracted from a single file.
         texts_to_embed = []
         file_suffix = doc_path.suffix.lower()
 
+        # Handle standalone image files.
         if file_suffix in [".png", ".jpg", ".jpeg"]:
             description = analyze_image_content(doc_path)
             if "Error" not in description:
                 texts_to_embed.append(description)
 
+        # Handle PowerPoint files
         elif file_suffix == ".pptx":
             try:
                 prs = Presentation(doc_path)
                 for i, slide in enumerate(prs.slides):
+                    # First, extract all text from shapes on the slide.
                     for shape in slide.shapes:
                         if hasattr(shape, "text"):
                             texts_to_embed.append(shape.text)
+                    # Second, extract and analyze all images on the slide.
                     for shape in slide.shapes:
                         if hasattr(shape, "image"):
                             image = shape.image
+                            # Save image to a temporary file to be analyzed.
                             temp_image_path = CACHE_DIR / f"temp_{image.sha1}.{image.ext}"
                             with open(temp_image_path, "wb") as f:
                                 f.write(image.blob)
                             
                             image_description = analyze_image_content(temp_image_path)
                             if "Error" not in image_description:
+                                # Add context to the description for better understanding.
                                 full_description = f"Description of an image from slide {i+1} of '{doc_path.name}': {image_description}"
                                 texts_to_embed.append(full_description)
-                            os.remove(temp_image_path)
+                            os.remove(temp_image_path) # Clean up temp file.
             except Exception as e:
                 logging.error(f"Error processing PowerPoint file {doc_path.name}: {e}")
                 continue
         
+        # Handle PDF files with a dedicated, stable loader
         elif file_suffix == ".pdf":
             try:
                 loader = PyPDFLoader(str(doc_path))
@@ -171,7 +201,8 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
                 logging.error(f"Error processing PDF file with PyPDFLoader {doc_path.name}: {e}")
                 continue
         
-        else: # Default for .txt, .docx, etc.
+        # Use a general loader as default for other text-based files like .docx and .txt
+        else:
             try:
                 loader = UnstructuredFileLoader(str(doc_path))
                 documents = loader.load()
@@ -180,6 +211,7 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
                 logging.error(f"Error processing document with UnstructuredFileLoader {doc_path.name}: {e}")
                 continue
 
+        # After extracting all text from the document, embed and upsert it.            
         if texts_to_embed:
             # Call process_and_embed with the "context" namespace using the constant
             count = process_and_embed(index, text_splitter, embedder, texts_to_embed, doc_path.name, doc_timestamp, namespace=CONTEXT_NS)
@@ -227,6 +259,7 @@ if __name__ == "__main__":
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     
     # 5. Process Context Documents
+    # Discover all supported files in the documents directory.
     all_files_to_process = (
         list(DOCUMENTS_PATH.glob("*.pdf")) +
         list(DOCUMENTS_PATH.glob("*.pptx")) +

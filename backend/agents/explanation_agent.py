@@ -7,6 +7,7 @@ from typing import List, Dict
 from datetime import datetime
 
 # --- Path Correction ---
+# Ensures that the script can correctly import modules from the 'backend' directory.
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 # -----------------------
@@ -23,7 +24,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 MODEL_NAME = "gpt-4o-mini"
 
 # --- Pydantic Models for Structured Output ---
+# These models define the expected JSON structure for the LLM's output,
+# enabling reliable, structured data generation
 class Cause(BaseModel):
+    """Defines the data structure for a single, ranked cause of a drift."""
     cause_description: str = Field(description="The detailed analysis of what caused the drift, citing the evidence.")
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
@@ -31,11 +35,14 @@ class Cause(BaseModel):
     confidence_score: float = Field(description="Confidence in this cause, from 0.0 to 1.0.")
 
 class ExplanationOutput(BaseModel):
+    """Defines the top-level object the LLM should produce for an explanation."""
     summary: str = Field(description="A 1-3 sentence executive summary of the most likely cause.")
     ranked_causes: List[Cause] = Field(description="A list of potential causes, ordered from most to least likely.")
 
 
 # --- DRIFT PROMPTS: Specialized Prompt Templates for 4 Drift Types ---
+# These prompts guide the LLM to generate explanations tailored to the specific
+# characteristics of the detected concept drift.
 
 SUDDEN_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Sudden Drift**.
 A Sudden Drift involves an abrupt substitution of one process with another. From one point onward, the old process no longer occurs, and all new instances follow the updated version. This type of drift is often triggered by crises, emergencies, or immediate regulatory changes (Bose et al., 2011).
@@ -147,7 +154,7 @@ def format_context_for_prompt(classified_context: list) -> str:
     return formatted_str
 
 
-# --- Confidence Score Calibration Logic ---
+# Confidence Score Calibration Logic
 def get_timestamp_from_filename(filename: str) -> int:
     """Parses YYYY-MM-DD from the start of a filename and returns a Unix timestamp."""
     try:
@@ -159,13 +166,13 @@ def get_timestamp_from_filename(filename: str) -> int:
 
 def calibrate_scores(ranked_causes: List[Dict], drift_info: Dict) -> List[Dict]:
     """
-    Adjusts confidence scores based on custom rules.
-    Rule 1: Penalize evidence that is temporally distant from the drift.
+    Adjusts confidence scores based on a business rule.
+    Rule 1: Penalize evidence that is temporally distant from the drift's start.
     """
     logging.info("Step 3: Calibrating confidence scores...")
     
-    TIME_THRESHOLD_DAYS = 60  # Evidence older than this will be penalized
-    PENALTY_FACTOR = 0.75     # Score will be multiplied by this factor (25% reduction)
+    TIME_THRESHOLD_DAYS = 60  # Evidence older than this will be penalized.
+    PENALTY_FACTOR = 0.75     # Score will be multiplied by this factor (25% reduction).
 
     drift_start_dt = datetime.fromisoformat(drift_info["start_timestamp"])
     
@@ -197,9 +204,9 @@ def run_explanation_agent(state: GraphState) -> dict:
     logging.info("--- Running Explanation Agent ---")
     
     drift_info = state.get("drift_info")
-    # Use the refined list from the re-ranker
+    # The agent receives the curated evidence from the re-ranker...
     evidence_context = state.get("reranked_context_snippets", [])
-    # Get the supporting glossary terms
+    # ...and the supporting glossary terms.
     glossary_context = state.get("supporting_context", [])
 
     # Log the exact evidence the agent is starting with.
@@ -208,8 +215,9 @@ def run_explanation_agent(state: GraphState) -> dict:
     logging.info(f"Agent received {len(evidence_sources)} evidence snippets: {evidence_sources}")
     logging.info(f"Agent received {len(glossary_sources)} support snippets: {glossary_sources}")
 
-    # Filter out any glossary items from the main evidence list
+    # Filter out any glossary items from the main evidence list.
     # This acts as a guard-rail to enforce the prompt's instructions.
+    # This guard-rail ensures glossary items are never used as citable evidence.
     usable_evidence = [
         s for s in evidence_context
         if not s.get("support_only") and s.get("source_type") != "bpm-kb"
@@ -227,12 +235,11 @@ def run_explanation_agent(state: GraphState) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # Format two separate context strings
-    # Use the filtered 'usable_evidence' list
+    # Format both context lists for use in the prompts.
     formatted_evidence = format_context_for_prompt(usable_evidence)
     formatted_glossary = format_context_for_prompt(glossary_context)
 
-    # Dynamic Prompt Selection logic remains the same...
+    # Dynamically select the appropriate prompt based on the drift type.
     drift_type = drift_info.get('drift_type', '').lower()
     if 'sudden' in drift_type:
         draft_prompt_template = SUDDEN_DRIFT_PROMPT
@@ -249,7 +256,7 @@ def run_explanation_agent(state: GraphState) -> dict:
     cache_updated = False
     
     try:
-        # === STEP 1: Generate the Draft ===
+        # --- STEP 1: Generate the Draft ---
         draft_prompt = draft_prompt_template.format(
             drift_type=drift_info['drift_type'],
             start_timestamp=drift_info['start_timestamp'],
@@ -270,7 +277,7 @@ def run_explanation_agent(state: GraphState) -> dict:
             cache_updated = True
             logging.info("Draft generated and cached successfully.")
 
-        # === STEP 2: Critique and Refine the Draft ===
+        # --- STEP 2: Critique and Refine the Draft ---
         refine_prompt = REFINE_PROMPT_TEMPLATE.format(
             formatted_glossary=formatted_glossary,
             formatted_evidence=formatted_evidence,
@@ -292,7 +299,7 @@ def run_explanation_agent(state: GraphState) -> dict:
         # Log the summary from the LLM before calibration
         logging.info(f"  > Generated Summary: {final_explanation_dict.get('summary')}")
 
-        # === STEP 3: Calibrate Confidence Scores ===
+        # --- STEP 3: Calibrate Confidence Scores ---
         calibrated_causes = calibrate_scores(final_explanation_dict.get("ranked_causes", []), drift_info)
 
         final_explanation: Explanation = {
