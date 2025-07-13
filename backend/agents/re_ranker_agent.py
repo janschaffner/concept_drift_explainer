@@ -83,7 +83,7 @@ def run_reranker_agent(state: GraphState) -> dict:
         if ts:
             delta = abs((datetime.fromtimestamp(ts) - start_date).days)
             if delta <= 7:
-                score += 0.15  # boost close docs (CHANGE TO 10 IF WORSE)
+                score += 0.10  # boost close docs (CHANGE TO 10 IF WORSE)
             elif delta >= 30:
                 score -= 0.10  # demote distant docs
         snip['score'] = score

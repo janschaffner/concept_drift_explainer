@@ -54,7 +54,7 @@ Prioritize evidence that points to a single, discrete event with a specific date
 **## 4. Your Task**
 Based on the provided information, generate an explanation for the **SUDDEN** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on singular events.
+- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
 
 GRADUAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Gradual Drift**.
@@ -74,7 +74,7 @@ Prioritize evidence suggesting a transition, coexistence of old/new processes, o
 **## 4. Your Task**
 Based on the provided information, generate an explanation for the **GRADUAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on transition periods.
+- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
 
 INCREMENTAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain an **Incremental Drift**.
@@ -94,7 +94,7 @@ Prioritize evidence of multiple small adjustments, iterative improvements, or ag
 **## 4. Your Task**
 Based on the provided information, generate an explanation for the **INCREMENTAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on a series of small changes.
+- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
 
 RECURRING_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Recurring Drift**.
@@ -114,7 +114,7 @@ Prioritize evidence of seasonal activities, cyclical patterns, or temporary proc
 **## 4. Your Task**
 Based on the provided information, generate an explanation for the **RECURRING** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes, ordered from most likely to least likely. Focus on cyclical or seasonal evidence.
+- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
 
 REFINE_PROMPT_TEMPLATE = """You are a senior editor reviewing an analysis from a junior analyst.
