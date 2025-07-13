@@ -1857,5 +1857,164 @@
         "confidence_score": 0.85
       }
     ]
+  },
+  "0ded31e5a9c13d9fdea688326af0dd5a": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "d80e8abc7974e423f19aa69237816021": {
+    "summary": "The Incremental Drift observed from December 2017 to October 2018 is primarily driven by a series of small, iterative changes in financial and tax processing procedures, reflecting agile practices aimed at streamlining operations and enhancing efficiency.",
+    "ranked_causes": [
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures by the Federal Ministry of Finance introduced several small adjustments, such as the removal of mandatory routing steps and the introduction of digital confirmation forms, which collectively contributed to a significant transformation in tax processing.",
+        "evidence_snippet": "\"Key changes include: Removal of the mandatory regional routing step for declarations below \u20ac15,000. Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation initiated a series of incremental changes, including the piloting of a decentralized authorization model and the removal of redundant compliance reviews, which are indicative of a broader shift towards more agile and efficient financial governance.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: Local budget holder approval for payments up to \u20ac10,000.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "f74afcef66301cf3da8525a98c486159": {
+    "summary": "The Incremental Drift observed from December 2017 to October 2018 is primarily driven by a series of small, iterative changes in financial and tax processing procedures, reflecting agile practices aimed at streamlining operations and enhancing efficiency.",
+    "ranked_causes": [
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures by the Federal Ministry of Finance introduced several small adjustments, such as the removal of mandatory routing steps and the introduction of digital confirmation forms, which collectively contributed to a significant transformation in tax processing.",
+        "evidence_snippet": "\"Key changes include: Removal of the mandatory regional routing step for declarations below \u20ac15,000. Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation initiated a series of incremental changes, including the piloting of a decentralized authorization model and the removal of redundant compliance reviews, which are indicative of a broader shift towards more agile and efficient financial governance.",
+        "evidence_snippet": "\"As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: Local budget holder approval for payments up to \u20ac10,000.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      }
+    ]
+  },
+  "b5ed9f8d2d261f14e42dd177f71fbc61": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "07902d8f754d6cfe62b81c41d7862e30": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "92c54ab4cd8ed04ed86388b7c795f90a": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily attributed to a phased realignment of processes within the organization, as indicated by the strategic initiatives and procedural updates communicated in internal memos. This transition involved the coexistence of old and new processes, allowing for a gradual adaptation to new workflows.",
+    "ranked_causes": [
+      {
+        "cause_description": "The leadership transition memo outlines a strategic realignment initiative that anticipates progressive refinements to internal SOPs, indicating a planned phase-out of older processes in favor of new ones.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The internal notice regarding the phased realignment of the Travel Authorization Division details a shift in responsibilities and the dissolution of the Central Authorization Desk, suggesting a transition to a decentralized model that coexists with existing processes until full implementation.",
+        "evidence_snippet": "\"This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The directive on cross-border reporting obligations outlines a gradual integration of new reporting processes, allowing for a dual-process option that supports both manual and digital workflows during the transition period.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "45625d7381f9aad6cf4c9e5ab6947bfd": {
+    "summary": "The gradual drift observed from October 2017 to January 2018 is primarily attributed to a phased realignment of processes within the organization, as indicated by strategic initiatives and procedural updates communicated in internal memos. This transition involved the coexistence of old and new processes, facilitating adaptation to new workflows.",
+    "ranked_causes": [
+      {
+        "cause_description": "The leadership transition memo outlines a strategic realignment initiative that anticipates progressive refinements to internal SOPs, indicating a planned phase-out of older processes in favor of new ones.",
+        "evidence_snippet": "\"While no immediate procedural changes are mandated, unit leads should begin reviewing internal SOPs and anticipate progressive refinements starting November.\"",
+        "source_document": "2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The internal notice regarding the phased realignment of the Travel Authorization Division details a shift in responsibilities and the dissolution of the Central Authorization Desk, suggesting a transition to a decentralized model that coexists with existing processes until full implementation.",
+        "evidence_snippet": "\"This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The directive on cross-border reporting obligations outlines a gradual integration of new reporting processes, allowing for a dual-process option that supports both manual and digital workflows during the transition period.",
+        "evidence_snippet": "\"A dual-process option (manual + digital) will remain valid during Q1 and Q2.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "c52d88886029c722d2389206fad84336": {
+    "reranked_indices": []
+  },
+  "4e2765160ab685368f00e9381e7e7288": {
+    "reranked_indices": []
+  },
+  "5fa45ee6edba672c8446b62050753ac3": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "6fc8e543dd956e5dd221f772d8310566": {
+    "summary": "The sudden drift in the payment approval process on January 8, 2018, was triggered by an emergency directive issued by the Public Finance Authority in response to misuse of delegated payment authority. This directive mandated immediate changes to the payment request process, replacing the old auto-approval system with a manual review process.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued by the Public Finance Authority mandated an immediate suspension of the auto-approval process for payment requests due to confirmed misuse of delegated payment authority. This directive required all payment requests to undergo a full manual review, effectively replacing the previous process with a new one.",
+        "evidence_snippet": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 \nDate: 08.01.2018 \nSubject: Immediate Suspension of Auto-Approval for Payment Requests \nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      }
+    ]
+  },
+  "a8c32c059d0580718b5c97e4d5ce97a2": {
+    "summary": "The sudden drift in the payment approval process on January 8, 2018, was triggered by an emergency directive from the Public Finance Authority, which mandated the immediate suspension of the auto-approval system due to misuse of delegated payment authority. This directive replaced the old process with a new manual review requirement for all payment requests.",
+    "ranked_causes": [
+      {
+        "cause_description": "The emergency directive issued by the Public Finance Authority mandated an immediate suspension of the auto-approval process for payment requests due to confirmed misuse of delegated payment authority. This directive required all payment requests to undergo a full manual review, effectively replacing the previous process with a new one.",
+        "evidence_snippet": "\u26a0 EMERGENCY DIRECTIVE \u2013 MANDATORY COMPLIANCE UPDATE \u26a0 \nDate: 08.01.2018 \nSubject: Immediate Suspension of Auto-Approval for Payment Requests \nIn response to the confirmed misuse of delegated payment authority in multiple federal agencies, the Public Finance Authority is enacting Directive 1/2018 with immediate effect.",
+        "source_document": "2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf",
+        "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      }
+    ]
+  },
+  "05643e83a8b26ce94774cf234e35c1eb": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "7f7fa748928e087270e5cfd6afcd0f45": {
+    "reranked_indices": [
+      0,
+      1
+    ]
   }
 }
