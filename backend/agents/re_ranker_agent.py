@@ -116,6 +116,15 @@ def run_reranker_agent(state: GraphState) -> dict:
     # Re-sort candidates after applying bonus
     candidate_snippets = sorted(candidate_snippets, key=lambda x: x.get('score', 0.0), reverse=True)
 
+    # Diagnostic Logging
+    # Log the top candidates and their scores before the LLM re-ranks them.
+    logging.info("Top candidates after date bonus and pre-sorting:")
+    for i, snip in enumerate(candidate_snippets[:5]): # Log top 5
+        logging.info(
+            f"  > Pre-Rank #{i+1}: {Path(snip['source_document']).name} "
+            f"(Score: {snip.get('score', 0.0):.3f})"
+        )
+
     # --- Force-keep the single highest-scoring context snippet ---
     # This acts as a safety net to guarantee the best initial hit is considered.
     best_context_hit = next((s for s in candidate_snippets if s.get("source_type") == "context"), None)
@@ -190,6 +199,13 @@ def run_reranker_agent(state: GraphState) -> dict:
         state["supporting_context"]        = supporting
         state["reranked_context_snippets"] = evidence
 
+        # Diagnostic Logging
+        # Log the final evidence and support lists being passed to the next agent.
+        final_evidence_docs = [Path(s['source_document']).name for s in evidence]
+        final_support_docs = [Path(s['source_document']).name for s in supporting]
+        logging.info(f"Final Evidence List: {final_evidence_docs}")
+        logging.info(f"Final Supporting Context: {final_support_docs}")
+
 
     # --- De-duplicate the list to prevent errors ---
     seen = set()
@@ -204,14 +220,13 @@ def run_reranker_agent(state: GraphState) -> dict:
 
     logging.info(f"Re-ranking complete. Kept {len(reranked_list)} of {len(candidate_snippets)} snippets.")
     
-    #'''
-    # --- Diagnostic logging ---
-    gold_doc = state["drift_info"].get("gold_doc", "N/A")
-    kept_docs = [s["source_document"] for s in reranked_list]
-    logging.info("[Re-rank] kept=%s  gold_in_keep=%s",
+    # Diagnostic logging ---
+    # This clearly states which documents were kept and if the golden document was among them.
+    gold_doc = state["drift_info"].get("gold_doc", "").lower()
+    kept_docs = [s["source_document"].lower() for s in reranked_list]
+    logging.info("[Re-rank] kept=%s\n gold_in_keep=%s",
                  [Path(d).name for d in kept_docs],
-                 "YES" if gold_doc in kept_docs else "NO")
-    #'''
+                 "YES ✅" if gold_doc in kept_docs else "NO ❌")
 
     # --- Return both lists to update the state correctly ---
     return {

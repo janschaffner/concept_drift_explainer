@@ -114,7 +114,7 @@ def run_drift_agent(state: GraphState) -> dict:
     trace_to_analyze = traces[row_index]
     gold_docs = ast.literal_eval(selected_row['gold_source_document'])
     
-    logging.info(f"Processing drift #{drift_index_in_row + 1} from CSV row #{row_index + 1}")
+    logging.info(f"Processing drift #{drift_index_in_row + 1} from CSV row #{row_index + 1} ℹ️")
     
     # The CSV contains strings like "[('a', 'b')]", we use ast.literal_eval to parse them safely.
     try:
@@ -153,21 +153,22 @@ def run_drift_agent(state: GraphState) -> dict:
     }
 
     logging.info(f"Populated drift_info: {drift_info}")
-    logging.info(f"Extracted Keywords: {general_keywords}")
-    logging.info(f"Extracted Specific Entities: {specific_entities}")
-    # '''
-    # --- Diagnostic Logging (outcomment if not run) ---
+    # This provides a clear summary of the keywords and entities extracted.
+    logging.info(f"Extracted {len(general_keywords)} general keywords: {general_keywords[:10]}...") # Log first 10
+    logging.info(f"Extracted {len(specific_entities)} specific entities: {specific_entities[:10]}...") # Log first 1
+    
+    # Diagnostic Logging
+    # This provides a more detailed view for debugging if needed.
     logging.debug(
-    "General Keywords (%d): %s",
-    len(general_keywords),
-    general_keywords
-)
+        "Keyword list (%d): %s",
+        len(general_keywords),
+        general_keywords
+    )
     logging.debug(
         "Specific Entities (%d): %s",
         len(specific_entities),
         specific_entities
     )
-    # '''
 
     # Return all data to the state
     return {

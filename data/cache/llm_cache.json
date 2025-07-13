@@ -1332,5 +1332,106 @@
         "confidence_score": 0.95
       }
     ]
+  },
+  "086c8394a02f866bb546c6b4ca49b28e": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "aac1701215cee6f0a65190c939fe3074": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of small, iterative changes in financial governance and tax processing procedures, reflecting agile practices aimed at enhancing efficiency and responsiveness within the organization.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation initiated a series of pilot programs, including a decentralized authorization model and streamlined processes, which exemplify incremental changes in financial governance.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transitional period for tax processing modernization allowed for mixed processing, indicating a gradual shift from legacy procedures to new streamlined processes, which aligns with the incremental drift concept.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      },
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures introduced several incremental changes, such as the removal of mandatory steps and the introduction of digital alternatives, reflecting a continuous improvement approach in tax processing.",
+        "evidence_snippet": "\"As part of the legislative reform agenda for 2018, the Ministry intends to introduce a new streamlined handling procedure for domestic declarations effective January 2018. Key changes include: Removal of the mandatory regional routing step for declarations below \u20ac15,000.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "d1535a6217bed7517df271045fcd89cf": {
+    "summary": "The incremental drift observed between December 2017 and October 2018 is primarily driven by a series of iterative changes in financial governance and tax processing procedures, reflecting agile practices aimed at enhancing efficiency and responsiveness within the organization.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of a new CFO with a focus on agile finance transformation initiated a series of pilot programs, including a decentralized authorization model and streamlined processes, exemplifying incremental changes in financial governance.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The transitional period for tax processing modernization allowed for mixed processing, indicating a gradual shift from legacy procedures to new streamlined processes, which aligns with the incremental drift concept.",
+        "evidence_snippet": "\"The transitional period will allow mixed processing during Q1\u2013Q3, with legacy procedures retained for flagged cases.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.7
+      },
+      {
+        "cause_description": "The planned simplification of domestic declaration procedures introduced several incremental changes, such as the removal of mandatory steps and the introduction of digital alternatives, reflecting a continuous improvement approach in tax processing.",
+        "evidence_snippet": "\"As part of the legislative reform agenda for 2018, the Ministry intends to introduce a new streamlined handling procedure for domestic declarations effective January 2018. Key changes include: Removal of the mandatory regional routing step for declarations below \u20ac15,000.\"",
+        "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "186ff90a41713d4c5cec1c20d6416a70": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "4ece99c5ff17008deb95dfc4088e43e4": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "6ba2bdbf5e0247dbba45ee2783bd7efc": {
+    "reranked_indices": []
+  },
+  "7786ef607e62496fade09bfbc87add93": {
+    "reranked_indices": []
+  },
+  "6f350716d153919c60984948dce98506": {
+    "reranked_indices": []
+  },
+  "c7e557ec41688eb5f1703b6837a2a7d3": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "c9300f532cda40b65a1bdcf774988169": {
+    "reranked_indices": [
+      0,
+      1
+    ]
+  },
+  "17daf592dd928598943e3f1684ef08ff": {
+    "reranked_indices": []
+  },
+  "fd53eeaf0ff668f9baf822e24f209fed": {
+    "reranked_indices": []
   }
 }

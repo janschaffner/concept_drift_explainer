@@ -172,6 +172,12 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
             }
             retrieved_snippets.append(snippet)
         logging.info(f"Successfully retrieved and merged {len(retrieved_snippets)} candidate context snippets.")
+        # This provides a clear summary of what was retrieved before re-ranking.
+        for i, snip in enumerate(retrieved_snippets[:5]): # Log top 5 candidates
+            logging.info(
+                f"  > Candidate #{i+1}: {Path(snip['source_document']).name} "
+                f"(Score: {snip.get('score', 0.0):.3f}, Source: {snip.get('source_type')})"
+            )
     else:
         logging.warning("No context snippets found matching the criteria.")
 

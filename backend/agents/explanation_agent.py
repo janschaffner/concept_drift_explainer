@@ -194,7 +194,7 @@ def run_explanation_agent(state: GraphState) -> dict:
     """
     Generates and then calibrates a final explanation using a two-step "draft and refine" chain.
     """
-    logging.info("--- Running Explanation Agent (Self-Correction Chain) ---")
+    logging.info("--- Running Explanation Agent ---")
     
     drift_info = state.get("drift_info")
     # Use the refined list from the re-ranker
@@ -202,7 +202,13 @@ def run_explanation_agent(state: GraphState) -> dict:
     # Get the supporting glossary terms
     glossary_context = state.get("supporting_context", [])
 
-    # --- Filter out any glossary items from the main evidence list ---
+    # Log the exact evidence the agent is starting with.
+    evidence_sources = [Path(s['source_document']).name for s in evidence_context]
+    glossary_sources = [s['source_document'] for s in glossary_context]
+    logging.info(f"Agent received {len(evidence_sources)} evidence snippets: {evidence_sources}")
+    logging.info(f"Agent received {len(glossary_sources)} support snippets: {glossary_sources}")
+
+    # Filter out any glossary items from the main evidence list
     # This acts as a guard-rail to enforce the prompt's instructions.
     usable_evidence = [
         s for s in evidence_context
@@ -221,8 +227,8 @@ def run_explanation_agent(state: GraphState) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # --- Format two separate context strings ---
-    # UPDATED: Use the filtered 'usable_evidence' list
+    # Format two separate context strings
+    # Use the filtered 'usable_evidence' list
     formatted_evidence = format_context_for_prompt(usable_evidence)
     formatted_glossary = format_context_for_prompt(glossary_context)
 
@@ -265,7 +271,6 @@ def run_explanation_agent(state: GraphState) -> dict:
             logging.info("Draft generated and cached successfully.")
 
         # === STEP 2: Critique and Refine the Draft ===
-        # CORRECTED: The .format() call now uses the correct variable names
         refine_prompt = REFINE_PROMPT_TEMPLATE.format(
             formatted_glossary=formatted_glossary,
             formatted_evidence=formatted_evidence,
@@ -283,6 +288,9 @@ def run_explanation_agent(state: GraphState) -> dict:
             llm_cache[refine_cache_key] = final_explanation_dict
             cache_updated = True
             logging.info("Successfully synthesized and cached final explanation.")
+        
+        # Log the summary from the LLM before calibration
+        logging.info(f"  > Generated Summary: {final_explanation_dict.get('summary')}")
 
         # === STEP 3: Calibrate Confidence Scores ===
         calibrated_causes = calibrate_scores(final_explanation_dict.get("ranked_causes", []), drift_info)

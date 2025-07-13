@@ -63,13 +63,18 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
     Classifies retrieved context snippets using the Franzoi taxonomy and
     updates them in-place within the state.
     """
-    logging.info("--- Running Franzoi Mapper Agent (Tool-Calling Version) ---")
+    logging.info("--- Running Franzoi Mapper Agent ---")
 
     # NOTE: We now get the list and modify it directly.
     context_snippets: List[ContextSnippet] = state.get("reranked_context_snippets", [])
     if not context_snippets:
         logging.warning("No context snippets found to classify.")
         return {} # Return empty dict as we are done
+    
+    # Add enhanced logging
+    # This log message shows exactly which documents made it through the re-ranker.
+    doc_sources = [Path(s['source_document']).name for s in context_snippets]
+    logging.info(f"Received {len(doc_sources)} snippets to classify: {doc_sources}")
 
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):

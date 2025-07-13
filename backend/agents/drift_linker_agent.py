@@ -11,7 +11,7 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from pydantic.v1 import BaseModel, Field # Using pydantic.v1 for compatibility
+from pydantic.v1 import BaseModel, Field
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
@@ -103,8 +103,10 @@ def run_drift_linker_agent(all_explanations: List[Dict]) -> dict:
 
     # Only return the summary if a connection was explicitly found
     if response_data.get("connection_found"):
-        logging.info("Connection between drifts found.")
-        return {"linked_drift_summary": response_data.get("summary")}
+        summary = response_data.get("summary")
+        # This log message shows the exact summary that will be displayed to the user.
+        logging.info(f"Connection between drifts found. Summary: '{summary}'")
+        return {"linked_drift_summary": summary}
     else:
         logging.info("No significant connection found between drifts.")
         return {"linked_drift_summary": None}

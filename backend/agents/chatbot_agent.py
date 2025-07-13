@@ -66,6 +66,9 @@ Use the provided "Original Analysis Context" and "Previous Conversation" to answ
 """
     prompt = prompt_template.format(context=full_context, question=user_question)
 
+    # This log message shows the exact prompt being sent to the LLM.
+    logging.info(f"Chatbot prompt created:\n{prompt}")
+
     llm = ChatOpenAI(model=MODEL_NAME, temperature=0.3)
     
     # --- Caching Logic ---
@@ -90,7 +93,7 @@ Use the provided "Original Analysis Context" and "Previous Conversation" to answ
             return {"error": str(e)}
 
     # Append the new interaction to the history
-    chat_history = state.get('chat_history', [])
+    # The previous history is already in the state, so we just append the latest interaction
     new_history = chat_history + [(user_question, ai_answer)]
     
     return {"chat_history": new_history}
