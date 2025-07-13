@@ -71,9 +71,11 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
     # 2. Formulate Semantic Query
     # We create a descriptive sentence and enhance it with specific keywords.
     start_activity, end_activity = drift_info["changepoints"]
+    process_name = drift_info.get("process_name", "a business process") # Get the process name
+    # The query now includes the process name
     base_query = (
         f"A concept drift of type '{drift_info['drift_type']}' was detected. "
-        f"It occurred in the process involving the activities '{start_activity}' and '{end_activity}'."
+        f"It occurred in the '{process_name}' process involving the activities '{start_activity}' and '{end_activity}'."
     )
     
     # Append the specific keywords to the query if they exist

@@ -144,6 +144,7 @@ def run_drift_agent(state: GraphState) -> dict:
     
     # --- 4. Create DriftInfo Object and Update State ---
     drift_info: DriftInfo = {
+        "process_name": xes_path.stem, # the .xes file is always named after the process
         "changepoints": changepoint_pair,
         "drift_type": drift_type,
         "confidence": confidence,

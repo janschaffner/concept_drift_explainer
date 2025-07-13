@@ -7,6 +7,7 @@ class DriftInfo(TypedDict):
     Holds the structured information about a single detected concept drift,
     parsed by the DriftAgent.
     """
+    process_name: str
     changepoints: Tuple[str, str]
     drift_type: str
     confidence: float
