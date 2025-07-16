@@ -24,16 +24,14 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 MODEL_NAME = "gpt-4o-mini"
 
 # --- Pydantic Models for Structured Output ---
-# These models define the expected JSON structure for the LLM's output,
-# enabling reliable, structured data generation
+# This model defines the expected JSON structure for the LLM's output.
 class Cause(BaseModel):
     """Defines the data structure for a single, ranked cause of a drift."""
     cause_description: str = Field(description="The detailed analysis of what caused the drift, citing the evidence.")
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
     context_category: str = Field(description="The most relevant Franzoi context category path.")
-    confidence_score: float = Field(description="Confidence in this cause, from 0.0 to 1.0.")
-
+ 
 class ExplanationOutput(BaseModel):
     """Defines the top-level object the LLM should produce for an explanation."""
     summary: str = Field(description="A 1-3 sentence executive summary of the most likely cause.")
@@ -141,7 +139,6 @@ Ensure the final summary is concise, the cause descriptions are logical, and tha
 Generate the final, high-quality version of the explanation. **The causes in the draft are already correctly ranked; describe them in the exact order they are provided.** Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
 """
 
-
 def format_context_for_prompt(classified_context: list) -> str:
     """Formats the list of classified snippets into a string for the LLM prompt."""
     formatted_str = ""
@@ -153,48 +150,55 @@ def format_context_for_prompt(classified_context: list) -> str:
         formatted_str += f"- **Snippet Text:** \"{snippet['snippet_text']}\"\n\n"
     return formatted_str
 
+def calculate_confidence_score(snippet: Dict, drift_info: Dict, rank: int) -> float:
+    """Calculates a data-driven confidence score for a given evidence snippet.
 
-# Confidence Score Calibration Logic
-def get_timestamp_from_filename(filename: str) -> int:
-    """Parses YYYY-MM-DD from the start of a filename and returns a Unix timestamp."""
-    try:
-        date_str = filename.split('_')[0]
-        dt_obj = datetime.strptime(date_str, '%Y-%m-%d')
-        return int(dt_obj.timestamp())
-    except (ValueError, IndexError):
-        return 0
+    It first checks if a snippet meets a minimum semantic similarity threshold.
+    If it passes, the snippet starts with a high baseline confidence, to which
+    bonuses for specificity (entity matches) and temporal proximity are added.
+    The score is then capped at 100% and a final penalty is applied based on
+    the snippet's rank in the final list.
 
-def calibrate_scores(ranked_causes: List[Dict], drift_info: Dict) -> List[Dict]:
+    Args:
+        snippet (Dict): The evidence snippet object, which must contain the
+            'score' (similarity), 'specificity_score', and 'timestamp' keys.
+        drift_info (Dict): The dictionary containing information about the drift,
+            used here to get the 'start_timestamp'.
+        rank (int): The 0-indexed rank of the snippet, used to apply a
+            rank-based penalty.
+
+    Returns:
+        float: The final, calculated confidence score between 0.0 and 1.0.
     """
-    Adjusts confidence scores based on a business rule.
-    Rule 1: Penalize evidence that is temporally distant from the drift's start.
-    """
-    logging.info("Step 3: Calibrating confidence scores...")
+    similarity_score = snippet.get("score", 0.0)
     
-    TIME_THRESHOLD_DAYS = 60  # Evidence older than this will be penalized.
-    PENALTY_FACTOR = 0.75     # Score will be multiplied by this factor (25% reduction).
+    # 1. First, check if the document meets a minimum similarity threshold.
+    # If not, it's not relevant enough to score highly.
+    if similarity_score < 0.20:
+        return round(similarity_score * 0.5, 2) # Return a very low score
 
+    # 2. Start with a baseline confidence since it passed the re-ranker and threshold.
+    score = 0.85
+
+    # 3. Add a significant bonus for specificity (up to 20%).
+    specificity_score = snippet.get("specificity_score", 0.0)
+    normalized_specificity = min(1.0, specificity_score / 3.0)
+    score += 0.20 * normalized_specificity
+ 
+    # 4. Add a bonus for temporal proximity (up to 15%).
     drift_start_dt = datetime.fromisoformat(drift_info["start_timestamp"])
-    
-    calibrated_causes = []
-    for cause in ranked_causes:
-        evidence_ts = get_timestamp_from_filename(cause["source_document"])
-        if evidence_ts > 0:
-            evidence_dt = datetime.fromtimestamp(evidence_ts)
-            delta_days = abs((drift_start_dt - evidence_dt).days)
-            
-            if delta_days > TIME_THRESHOLD_DAYS:
-                original_score = cause["confidence_score"]
-                new_score = original_score * PENALTY_FACTOR
-                cause["confidence_score"] = round(new_score, 2)
-                logging.info(
-                    f"  > Penalizing cause from '{cause['source_document']}'. "
-                    f"Temporal distance: {delta_days} days. "
-                    f"Score reduced from {original_score:.2f} to {new_score:.2f}."
-                )
-        calibrated_causes.append(cause)
-        
-    return calibrated_causes
+    evidence_ts = snippet.get("timestamp", 0)
+    if evidence_ts > 0:
+         evidence_dt = datetime.fromtimestamp(evidence_ts)
+         delta_days = abs((drift_start_dt - evidence_dt).days)
+    temporal_bonus = 0.15 * max(0.0, 1.0 - (delta_days / 60.0))
+    score += temporal_bonus
+ 
+    # 5. Cap the score at 1.0 and apply the final rank penalty.
+    capped_score = min(1.0, score)
+    rank_bonus = 1.0 if rank == 0 else 0.95 if rank == 1 else 0.90
+    final_score = capped_score * rank_bonus
+    return round(final_score, 2)
 
 
 def run_explanation_agent(state: GraphState) -> dict:
@@ -208,6 +212,9 @@ def run_explanation_agent(state: GraphState) -> dict:
     evidence_context = state.get("reranked_context_snippets", [])
     # ...and the supporting glossary terms.
     glossary_context = state.get("supporting_context", [])
+
+    # Information for debugging
+    # logging.info(f"DEBUG: Explanation agent received {len(evidence_context)} snippets to process.")
 
     # Log the exact evidence the agent is starting with.
     evidence_sources = [Path(s['source_document']).name for s in evidence_context]
@@ -300,11 +307,23 @@ def run_explanation_agent(state: GraphState) -> dict:
         logging.info(f"  > Generated Summary: {final_explanation_dict.get('summary')}")
 
         # --- STEP 3: Calibrate Confidence Scores ---
-        calibrated_causes = calibrate_scores(final_explanation_dict.get("ranked_causes", []), drift_info)
+        # Calculate data-driven confidence score before calibration
+        ranked_causes = final_explanation_dict.get("ranked_causes", [])
+        # Use the index `i` to reliably match the cause to its original evidence snippet,
+        # as we instruct the LLM to process them in order.
+        for i, cause in enumerate(ranked_causes):
+            if i < len(usable_evidence):
+                original_snippet = usable_evidence[i]
+                cause['confidence_score'] = calculate_confidence_score(original_snippet, drift_info, rank=i)
+                logging.info(f"Confidence score for '{original_snippet['source_document']}: {cause['confidence_score']:.2f}")
+            else:
+                # Fallback if the LLM hallucinates an extra cause.
+                cause['confidence_score'] = 0.0
+  
 
         final_explanation: Explanation = {
             "summary": final_explanation_dict.get("summary"),
-            "ranked_causes": calibrated_causes
+            "ranked_causes": ranked_causes
         }
         
         if cache_updated:

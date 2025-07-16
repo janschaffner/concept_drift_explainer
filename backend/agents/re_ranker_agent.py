@@ -120,6 +120,12 @@ def run_reranker_agent(state: GraphState) -> dict:
             elif delta >= 30:
                 score -= 0.10  # demote distant docs
         snip['score'] = score
+
+    # Calculate and attach specificity score to each snippet (needed for confidence score)
+    for snip in candidate_snippets:
+        snip['specificity_score'] = calculate_specificity_score(
+            snip['snippet_text'], specific_entities
+        )
             
     # Re-sort candidates after applying the date-based score bonus.
     candidate_snippets = sorted(candidate_snippets, key=lambda x: x.get('score', 0.0), reverse=True)

@@ -1,3 +1,3 @@
 row,drift_index,drift_type,gold_document,recall@1,recall@2,mrr
-0,0,incremental,2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf,1,1,1.0
-0,1,sudden,2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf,1,1,1.0
+0,0,incremental,2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf,1,1,1.0
+0,1,gradual,2017-09-26_BorderCouncil_Directive_09-2017_HP-Standard.pdf,1,1,1.0
