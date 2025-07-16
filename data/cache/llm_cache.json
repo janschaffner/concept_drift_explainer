@@ -2016,5 +2016,103 @@
       0,
       1
     ]
+  },
+  "58b57d5601f20035fce3f50e154b6c0f": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "19a9c25230725ef8cd10c633c663c9d2": {
+    "summary": "The Incremental Drift observed from December 2017 to October 2018 is primarily attributed to a series of small, iterative changes initiated by the new CFO, aimed at transforming financial governance through agile practices. These changes included the introduction of a decentralized authorization model and the phased implementation of new processes, which collectively contributed to significant process transformation over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of Ms. Lydia Baumann as CFO marked the beginning of a strategic shift in financial governance, emphasizing agile finance transformation. This leadership change initiated a series of small adjustments in financial processes, including the pilot of a Decentralized Authorization Model.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The pilot program introduced by the CFO Office included several iterative improvements such as local budget holder approvals and the removal of redundant compliance reviews, which are indicative of agile practices aimed at enhancing efficiency and responsiveness in financial operations.",
+        "evidence_snippet": "\"The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The phased introduction of 'auto-clear' logic in the RP submission system represents another incremental change that aligns with agile methodologies, allowing for continuous improvement in the financial processes over the specified drift period.",
+        "evidence_snippet": "\"\u2022 Phased introduction of 'auto-clear' logic in the RP submission system\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "a7edde5588aa82bd3df6fdb309eb48ba": {
+    "summary": "The Incremental Drift observed from December 2017 to October 2018 is primarily due to a series of small, iterative changes initiated by the new CFO, aimed at transforming financial governance through agile practices. These changes included the introduction of a decentralized authorization model and the phased implementation of new processes, collectively leading to significant transformation over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The appointment of Ms. Lydia Baumann as CFO marked the beginning of a strategic shift in financial governance, emphasizing agile finance transformation. This leadership change initiated a series of small adjustments in financial processes, including the pilot of a Decentralized Authorization Model.",
+        "evidence_snippet": "\"We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group.\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.9
+      },
+      {
+        "cause_description": "The pilot program introduced by the CFO Office included several iterative improvements such as local budget holder approvals and the removal of redundant compliance reviews, which are indicative of agile practices aimed at enhancing efficiency and responsiveness in financial operations.",
+        "evidence_snippet": "\"The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.85
+      },
+      {
+        "cause_description": "The phased introduction of 'auto-clear' logic in the RP submission system represents another incremental change that aligns with agile methodologies, allowing for continuous improvement in the financial processes over the specified drift period.",
+        "evidence_snippet": "\"\u2022 Phased introduction of 'auto-clear' logic in the RP submission system\"",
+        "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational, ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      }
+    ]
+  },
+  "89e8b2d97d9f3dfe13894685007edf3f": {
+    "reranked_indices": []
+  },
+  "c739f7d266eaed7b260131d04882a55e": {
+    "connection_found": false,
+    "summary": "No significant connection was identified between the drifts. Drift #1 is related to a strategic shift initiated by the new CFO focusing on agile practices, while Drift #2 is a response to an emergency directive addressing misuse of delegated authority. They stem from different causes and contexts."
+  },
+  "88a64d4e71da1e2d7446afabc7b234ca": {
+    "reranked_indices": []
+  },
+  "220800ed02d7b22fcec1bdcb86509cf3": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "232bc7d3b872ec5213e85fff02c059f2": {
+    "connection_found": false,
+    "summary": "No significant connection was identified between the drifts. Drift #1 is driven by internal changes initiated by the new CFO aimed at transforming financial governance, while Drift #2 is a response to an external emergency directive from the Public Finance Authority addressing misuse of delegated authority. The causes and contexts of these drifts are distinct and do not overlap."
+  },
+  "ac2f6ef2ce6c8c8051cddefa05044e5f": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "d92a36328811827a337fe16b3f44206a": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "ec5e6689df8aae79686b51070ed46b63": {
+    "connection_found": false,
+    "summary": "No significant connection was identified between the drifts. Drift #1 is related to a strategic shift initiated by the new CFO focusing on agile practices, while Drift #2 is a response to an emergency directive from the Public Finance Authority addressing misuse of delegated authority. They stem from different causes and contexts."
+  },
+  "dad386ced4b1fe4ac34e060341904e1e": {
+    "reranked_indices": []
+  },
+  "119852efe30189949b66a6e720b1ecf0": {
+    "reranked_indices": [
+      1
+    ]
   }
 }
