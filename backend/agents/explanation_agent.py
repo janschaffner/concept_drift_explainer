@@ -14,6 +14,7 @@ sys.path.append(str(project_root))
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from pinecone import Pinecone
 from pydantic.v1 import BaseModel, Field
 
 from backend.state.schema import GraphState, Explanation
@@ -27,17 +28,11 @@ MODEL_NAME = "gpt-4o-mini"
 # This model defines the expected JSON structure for the LLM's output.
 class Cause(BaseModel):
     """Defines the data structure for a single, potential cause of a drift."""
-    cause_description: str = Field(description="A cautious analysis of how the evidence could potentially explain the concept drift. Frame this as a hypothesis, not a definitive conclusion.")
+    cause_description: str = Field(description="A cautious, hypothetical analysis of how the evidence could explain the concept drift, citing the source. Frame this as a hypothesis, not a definitive conclusion.")
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
     context_category: str = Field(description="The most relevant Franzoi context category path.")
  
-class ExplanationOutput(BaseModel):
-    """Defines the top-level object the LLM should produce for an explanation."""
-    summary: str = Field(description="A 1-3 sentence executive summary of the most likely cause.")
-    ranked_causes: List[Cause] = Field(description="A list of potential causes, ordered from most to least likely.")
-
-
 # --- DRIFT PROMPTS: Specialized Prompt Templates for 4 Drift Types ---
 # These prompts guide the LLM to generate explanations tailored to the specific
 # characteristics of the detected concept drift.
@@ -57,9 +52,7 @@ Prioritize evidence that points to a single, discrete event with a specific date
 {formatted_evidence}
 
 **## 4. Your Task**
-Your task is to hypothesize potential reasons for the **SUDDEN** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
-- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
+Based on the single block of evidence provided, generate one potential cause for the **SUDDEN** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
 """
 
 GRADUAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Gradual Drift**.
@@ -77,10 +70,8 @@ Prioritize evidence suggesting a transition, coexistence of old/new processes, o
 {formatted_evidence}
 
 **## 4. Your Task**
-Your task is to hypothesize potential reasons for the **GRADUAL** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
-- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
-"""
+Based on the single block of evidence provided, generate one potential cause for the **GRADUAL** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
+ """
 
 INCREMENTAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain an **Incremental Drift**.
 An Incremental Drift consists of a sequence of small, continuous changes that cumulatively result in significant process transformation. It is often associated with agile BPM practices, where iterative adjustments are made without a single, identifiable change point (Bose et al., 2011; Kraus und van der Aa, 2025).
@@ -97,10 +88,8 @@ Prioritize evidence of multiple small adjustments, iterative improvements, or ag
 {formatted_evidence}
 
 **## 4. Your Task**
-Your task is to hypothesize potential reasons for the **INCREMENTAL** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
-- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
-"""
+Based on the single block of evidence provided, generate one potential cause for the **INCREMENTAL** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
+ """
 
 RECURRING_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Recurring Drift**.
 A Recurring Drift occurs when previously observed process versions reappear over time, often in a cyclical pattern. These drifts may follow seasonal cycles or non-periodic triggers (e.g., market-specific promotional workflows) (Bose et al., 2011; Kraus und van der Aa, 2025).
@@ -117,12 +106,16 @@ Prioritize evidence of seasonal activities, cyclical patterns, or temporary proc
 {formatted_evidence}
 
 **## 4. Your Task**
-Your task is to hypothesize potential reasons for the **RECURRING** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
-- **"summary"**: A 1-3 sentence executive summary of the most likely cause.
-- **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
+Based on the single block of evidence provided, generate one potential cause for the **RECURRING** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
+ """
+
+SUMMARY_PROMPT_TEMPLATE = """You are a senior business process analyst. Based on the following list of potential causes for a concept drift, write a concise, 1-3 sentence executive summary that synthesizes the main findings.
+
+**## Potential Causes**
+{formatted_causes}
 """
 
-REFINE_PROMPT_TEMPLATE = """You are a senior editor reviewing an analysis from a junior analyst.
+REFINE_PROMPT_TEMPLATE = """You are a senior editor reviewing an analysis from a junior analyst. 
 Your task is to critique and refine the provided "Draft Explanation" based on the original "Evidence" and "Reference Glossary".
 Ensure the final summary is concise, the cause descriptions are logical, and that every claim is strongly supported by the cited evidence.
 
@@ -136,7 +129,7 @@ Ensure the final summary is concise, the cause descriptions are logical, and tha
 {draft_explanation}
 
 **## 3. Your Task**
-Critique and refine the draft explanation, ensuring the final wording is cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. **The causes in the draft are already correctly ranked; describe them in the exact order they are provided.** Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
+Critique and refine the draft explanation, ensuring the final wording is cautious and hypothetical. Your output must be a single, valid JSON object matching the requested schema.
 """
 
 def format_context_for_prompt(classified_context: list) -> str:
@@ -150,9 +143,62 @@ def format_context_for_prompt(classified_context: list) -> str:
         formatted_str += f"- **Snippet Text:** \"{snippet['snippet_text']}\"\n\n"
     return formatted_str
 
+def expand_context(snippets: List[Dict], index: Pinecone.Index) -> List[Dict]:
+    """For each unique source document, fetches all its chunks from Pinecone.
+
+    This function takes the curated list of snippets, identifies the unique
+    source documents, and then queries Pinecone with a metadata filter to
+    retrieve the full text of each document. This provides the LLM with the
+    complete context rather than just an isolated chunk.
+
+    Args:
+        snippets (List[Dict]): The curated list of snippets from the re-ranker.
+        index (Pinecone.Index): The initialized Pinecone index connection.
+
+    Returns:
+        List[Dict]: A new list of snippet-like objects, where each object
+            represents a full document's merged text.
+    """
+    logging.info("--- Expanding context for final explanation ---")
+    # Get a de-duplicated list of source document names to process.
+    unique_sources = sorted(list(set(s['source_document'] for s in snippets)))
+    
+    expanded_docs = []
+    for source in unique_sources:
+        try:
+            # Use a metadata filter to get all chunks for this source document.
+            # A dummy vector is passed because we are filtering on metadata only.
+            response = index.query(
+                vector=[0]*1536, # Dummy vector for metadata-only query.
+                filter={"source": source},
+                top_k=100, # Assume no single doc has more than 100 chunks.
+                namespace="context",
+                include_metadata=True
+                )
+            
+            # For debugging, log how many chunks were found for this source.
+            logging.debug(f"Found {len(response.matches)} chunks for source '{source}'.")
+            
+            full_text = " ".join([m.metadata['text'] for m in response.matches])
+
+            # Find the first original snippet that came from this source to copy its metadata.
+            original_snippet = next(s for s in snippets if s['source_document'] == source)
+            
+            # Create a new, expanded document object with the full text.
+            expanded_doc = original_snippet.copy()
+            expanded_doc["snippet_text"] = full_text
+            expanded_docs.append(expanded_doc)
+            logging.info(f"  > Expanded '{source}' into a single context block.")
+        except Exception as e:
+            logging.error(f"Failed to expand context for '{source}': {e}")
+
+    # Return the new list of expanded documents, preserving the original rank order.
+    return sorted(expanded_docs, key=lambda x: x.get('score', 0.0), reverse=True)
+
 def calculate_confidence_score(snippet: Dict, drift_info: Dict, rank: int) -> float:
     """Calculates a data-driven confidence score for a given evidence snippet.
 
+    This function uses a multi-stage heuristic model to determine a score.
     It first checks if a snippet meets a minimum semantic similarity threshold.
     If it passes, the snippet starts with a high baseline confidence, to which
     bonuses for specificity (entity matches) and temporal proximity are added.
@@ -191,6 +237,7 @@ def calculate_confidence_score(snippet: Dict, drift_info: Dict, rank: int) -> fl
     if evidence_ts > 0:
          evidence_dt = datetime.fromtimestamp(evidence_ts)
          delta_days = abs((drift_start_dt - evidence_dt).days)
+    # The bonus decays linearly over 60 days.
     temporal_bonus = 0.15 * max(0.0, 1.0 - (delta_days / 60.0))
     score += temporal_bonus
  
@@ -198,12 +245,20 @@ def calculate_confidence_score(snippet: Dict, drift_info: Dict, rank: int) -> fl
     capped_score = min(1.0, score)
     rank_bonus = 1.0 if rank == 0 else 0.95 if rank == 1 else 0.90
     final_score = capped_score * rank_bonus
+
+    # Log the detailed breakdown of the score calculation for debugging.
+    logging.debug(f"Score breakdown for '{snippet.get('source_document')}':")
+    logging.debug(f"  - Baseline: 0.85")
+    logging.debug(f"  - Specificity Bonus (score={specificity_score}): +{0.20 * normalized_specificity:.2f}")
+    logging.debug(f"  - Temporal Bonus (days_delta={delta_days if evidence_ts > 0 else 'N/A'}): +{temporal_bonus:.2f}")
+    logging.debug(f"  - Subtotal (capped): {capped_score:.2f}")
+    logging.debug(f"  - Final Score (after rank {rank} penalty of {rank_bonus:.2f}): {final_score:.2f}")
+
     return round(final_score, 2)
 
-
-def run_explanation_agent(state: GraphState) -> dict:
+def run_explanation_agent(state: GraphState, index: Pinecone.Index) -> dict:
     """
-    Generates and then calibrates a final explanation using a two-step "draft and refine" chain.
+    Generates a final explanation by individually analyzing each evidence document and then creating a summary.
     """
     logging.info("--- Running Explanation Agent ---")
     
@@ -213,9 +268,6 @@ def run_explanation_agent(state: GraphState) -> dict:
     # ...and the supporting glossary terms.
     glossary_context = state.get("supporting_context", [])
 
-    # Information for debugging
-    # logging.info(f"DEBUG: Explanation agent received {len(evidence_context)} snippets to process.")
-
     # Log the exact evidence the agent is starting with.
     evidence_sources = [Path(s['source_document']).name for s in evidence_context]
     glossary_sources = [s['source_document'] for s in glossary_context]
@@ -223,12 +275,14 @@ def run_explanation_agent(state: GraphState) -> dict:
     logging.info(f"Agent received {len(glossary_sources)} support snippets: {glossary_sources}")
 
     # Filter out any glossary items from the main evidence list.
-    # This acts as a guard-rail to enforce the prompt's instructions.
-    # This guard-rail ensures glossary items are never used as citable evidence.
+    # This acts as a guard-rail to ensure glossary items are never used as citable evidence.
     usable_evidence = [
         s for s in evidence_context
         if not s.get("support_only") and s.get("source_type") != "bpm-kb"
     ]
+
+    # Use the Context Expansion feature to fetch the full text for each document.
+    usable_evidence = expand_context(usable_evidence, index)
 
     if not usable_evidence:
         logging.warning("No relevant evidence snippets found after re-ranking. Cannot generate an explanation.")
@@ -242,88 +296,74 @@ def run_explanation_agent(state: GraphState) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # Format both context lists for use in the prompts.
-    formatted_evidence = format_context_for_prompt(usable_evidence)
-    formatted_glossary = format_context_for_prompt(glossary_context)
-
-    # Dynamically select the appropriate prompt based on the drift type.
-    drift_type = drift_info.get('drift_type', '').lower()
-    if 'sudden' in drift_type:
-        draft_prompt_template = SUDDEN_DRIFT_PROMPT
-    elif 'gradual' in drift_type:
-        draft_prompt_template = GRADUAL_DRIFT_PROMPT
-    elif 'recurring' in drift_type:
-        draft_prompt_template = RECURRING_DRIFT_PROMPT
-    else:
-        draft_prompt_template = INCREMENTAL_DRIFT_PROMPT
-    
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    structured_llm = llm.with_structured_output(ExplanationOutput)
+    structured_llm = llm.with_structured_output(Cause)
     llm_cache = load_cache()
     cache_updated = False
+    final_causes = []
     
     try:
-        # --- STEP 1: Generate the Draft ---
-        draft_prompt = draft_prompt_template.format(
-            drift_type=drift_info['drift_type'],
-            start_timestamp=drift_info['start_timestamp'],
-            end_timestamp=drift_info['end_timestamp'],
-            formatted_glossary=formatted_glossary,
-            formatted_evidence=formatted_evidence
-        )
-        draft_cache_key = get_cache_key(draft_prompt, MODEL_NAME)
-        
-        if draft_cache_key in llm_cache:
-            logging.info("Step 1: CACHE HIT for draft explanation.")
-            draft_explanation_dict = llm_cache[draft_cache_key]
-        else:
-            logging.info(f"Step 1: CACHE MISS. Generating draft with {drift_type.upper()} prompt...")
-            draft_explanation_obj = structured_llm.invoke(draft_prompt)
-            draft_explanation_dict = draft_explanation_obj.dict()
-            llm_cache[draft_cache_key] = draft_explanation_dict
-            cache_updated = True
-            logging.info("Draft generated and cached successfully.")
+        # --- STEP 1: Loop through each evidence doc and generate a cause ---
+        for i, evidence_doc in enumerate(usable_evidence):
+            # Format the context for this specific document.
+            formatted_glossary = format_context_for_prompt(glossary_context)
+            formatted_evidence = format_context_for_prompt([evidence_doc])
 
-        # --- STEP 2: Critique and Refine the Draft ---
-        refine_prompt = REFINE_PROMPT_TEMPLATE.format(
-            formatted_glossary=formatted_glossary,
-            formatted_evidence=formatted_evidence,
-            draft_explanation=json.dumps(draft_explanation_dict, indent=2)
-        )
-        refine_cache_key = get_cache_key(refine_prompt, MODEL_NAME)
-        
-        if refine_cache_key in llm_cache:
-            logging.info("Step 2: CACHE HIT for refined explanation.")
-            final_explanation_dict = llm_cache[refine_cache_key]
-        else:
-            logging.info("Step 2: CACHE MISS. Refining draft...")
-            final_explanation_obj = structured_llm.invoke(refine_prompt)
-            final_explanation_dict = final_explanation_obj.dict()
-            llm_cache[refine_cache_key] = final_explanation_dict
-            cache_updated = True
-            logging.info("Successfully synthesized and cached final explanation.")
-        
-        # Log the summary from the LLM before calibration
-        logging.info(f"  > Generated Summary: {final_explanation_dict.get('summary')}")
+            # Dynamically select the prompt based on the type of drift.
+            drift_type = drift_info.get('drift_type', '').lower()
+            prompt_template = INCREMENTAL_DRIFT_PROMPT
+            prompt_name = "INCREMENTAL"
+            if 'sudden' in drift_type: 
+                prompt_template = SUDDEN_DRIFT_PROMPT
+                prompt_name = "SUDDEN"
+            elif 'gradual' in drift_type: 
+                prompt_template = GRADUAL_DRIFT_PROMPT
+                prompt_name = "GRADUAL"
+            elif 'recurring' in drift_type: 
+                prompt_template = RECURRING_DRIFT_PROMPT
+                prompt_name = "RECURRING"
+            logging.debug(f"Using {prompt_name}_DRIFT_PROMPT for cause #{i+1}.")
 
-        # --- STEP 3: Calibrate Confidence Scores ---
-        # Calculate data-driven confidence score before calibration
-        ranked_causes = final_explanation_dict.get("ranked_causes", [])
-        # Use the index `i` to reliably match the cause to its original evidence snippet,
-        # as we instruct the LLM to process them in order.
-        for i, cause in enumerate(ranked_causes):
-            if i < len(usable_evidence):
-                original_snippet = usable_evidence[i]
-                cause['confidence_score'] = calculate_confidence_score(original_snippet, drift_info, rank=i)
-                logging.info(f"Confidence score for '{original_snippet['source_document']}: {cause['confidence_score']:.2f}")
+            prompt = prompt_template.format(
+                drift_type=drift_info['drift_type'],
+                start_timestamp=drift_info['start_timestamp'],
+                end_timestamp=drift_info['end_timestamp'],
+                formatted_glossary=formatted_glossary,
+                formatted_evidence=formatted_evidence
+            )
+            
+            # Check cache before making an expensive API call.
+            cache_key = get_cache_key(prompt, MODEL_NAME)
+            if cache_key in llm_cache:
+                cause_dict = llm_cache[cache_key]
             else:
-                # Fallback if the LLM hallucinates an extra cause.
-                cause['confidence_score'] = 0.0
-  
+                response_obj = structured_llm.invoke(prompt)
+                cause_dict = response_obj.dict()
+                llm_cache[cache_key] = cause_dict
+                cache_updated = True
+            
+            # Calculate the data-driven confidence score and add it to the cause object.
+            cause_dict['confidence_score'] = calculate_confidence_score(evidence_doc, drift_info, rank=i)
+            final_causes.append(cause_dict)
+            logging.info(f"Generated cause for '{evidence_doc['source_document']}' with confidence score {cause_dict['confidence_score']:.2f}")
 
+        # --- STEP 2: Generate a summary from all the generated causes ---
+        formatted_causes = "\n".join([f"- {c['cause_description']}" for c in final_causes])
+        summary_prompt = SUMMARY_PROMPT_TEMPLATE.format(formatted_causes=formatted_causes)
+        
+        summary_cache_key = get_cache_key(summary_prompt, MODEL_NAME)
+        if summary_cache_key in llm_cache:
+            summary_text = llm_cache[summary_cache_key]
+        else:
+            summary_response = llm.invoke(summary_prompt)
+            summary_text = summary_response.content
+            llm_cache[summary_cache_key] = summary_text
+            cache_updated = True
+        logging.info(f"  > Generated Summary: {summary_text}")
+  
         final_explanation: Explanation = {
-            "summary": final_explanation_dict.get("summary"),
-            "ranked_causes": ranked_causes
+            "summary": summary_text,
+            "ranked_causes": final_causes
         }
         
         if cache_updated:

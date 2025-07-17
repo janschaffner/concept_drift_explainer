@@ -2,6 +2,9 @@ import sys
 from pathlib import Path
 from langgraph.graph import StateGraph, END
 from typing import Literal
+import os
+from functools import partial
+from pinecone import Pinecone
 
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory
@@ -9,6 +12,8 @@ from typing import Literal
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 # -----------------------
+
+from dotenv import load_dotenv
 
 # Import the shared state schema and all agent functions
 from backend.state.schema import GraphState
@@ -51,16 +56,30 @@ def build_graph():
     Returns:
         A compiled LangGraph application that is ready to be executed.
     """
+    # --- Centralized Pinecone Initialization ---
+    load_dotenv()
+    api_key = os.getenv("PINECONE_API_KEY")
+    pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
+    if not all([api_key, pinecone_index_name]):
+        raise ValueError("Pinecone API key or index name not found in .env file.")
+    pc = Pinecone(api_key=api_key)
+    index = pc.Index(pinecone_index_name)
+    # -----------------------------------------
+
+    # Bind the index object to the agents that need it
+    retrieval_agent_with_index = partial(run_context_retrieval_agent, index=index)
+    explanation_agent_with_index = partial(run_explanation_agent, index=index)
+
     # Initialize a new state graph with the custom GraphState schema.
     workflow = StateGraph(GraphState)
 
     # Add each agent function as a node in the graph.
     # Each node is a step in the pipeline that can read from and write to the shared state.
     workflow.add_node("drift_agent", run_drift_agent)
-    workflow.add_node("context_retrieval_agent", run_context_retrieval_agent)
+    workflow.add_node("context_retrieval_agent", retrieval_agent_with_index)
     workflow.add_node("re_ranker_agent", run_reranker_agent)
     workflow.add_node("franzoi_mapper_agent", run_franzoi_mapper_agent)
-    workflow.add_node("explanation_agent", run_explanation_agent)
+    workflow.add_node("explanation_agent", explanation_agent_with_index)
     workflow.add_node("chatbot_agent", run_chatbot_agent)
 
 

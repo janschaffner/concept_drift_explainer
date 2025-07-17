@@ -28,7 +28,7 @@ WINDOW_BEFORE = 14
 WINDOW_AFTER  = 3 # days *after* start
 
 
-def run_context_retrieval_agent(state: GraphState) -> dict:
+def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dict:
     """
     Retrieves and merges context snippets from both the 'context' and 'bpm-kb' namespaces.
 
@@ -39,7 +39,8 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
 
     Args:
         state: The current graph state, which must contain `drift_info` and `drift_keywords`.
-
+        index: An initialized Pinecone index object.
+        
     Returns:
         A dictionary with the `raw_context_snippets` field populated with a merged and
         sorted list of candidate snippets for the Re-Ranker Agent.
@@ -55,32 +56,7 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
         logging.error(error_msg)
         return {"error": error_msg}
 
-    # --- 1. Initialize Pinecone & Embedder ---
-    load_dotenv()
-
-    # --- BLOCK FOR API DEBUGGING ---
-    '''Search for "System Environment Variables" in the Windows Start Menu, click the 
-    "Environment Variables..." button, and look for OPENAI_API_KEY in both the "User variables" 
-    and "System variables" lists. Delete the incorrect entry. This will result in loading the 
-    correct API from the .env file'''
-    # loaded_api_key = os.getenv("OPENAI_API_KEY")
-    # if loaded_api_key:
-    #    logging.info(f"DEBUG: Loaded OpenAI Key starts with '{loaded_api_key[:5]}' and ends with '{loaded_api_key[-4:]}'.")
-    #else:
-    #    logging.info("DEBUG: OPENAI_API_KEY environment variable not found at runtime.")
-    # ------------------------------------
-
-    api_key = os.getenv("PINECONE_API_KEY")
-    # Load index name from .env
-    pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
-    
-    if not all([api_key, pinecone_index_name]):
-        error_msg = "PINECONE_API_KEY or PINECONE_INDEX_NAME not found in .env file."
-        logging.error(error_msg)
-        return {"error": error_msg}
-
-    pc = Pinecone(api_key=api_key)
-    index = pc.Index(pinecone_index_name) # Use the variable for the index name.
+    # --- 1. Initialize Embedder ---
     # Use OpenAIEmbeddings
     embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 
@@ -151,10 +127,10 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
             )
 
         # Add context hits to the result dictionary, handling potential duplicates.
-        for match in context_response.get('matches', []):
-            text_key = match['metadata']['text']
+        for match in context_response.matches:
+            text_key = match.metadata['text']
             if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
-                all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': CONTEXT_NS}
+                all_hits[text_key] = {'score': match.score, 'metadata': match.metadata, 'source_type': CONTEXT_NS}
     except Exception as e:
         logging.error(f"Error querying '{CONTEXT_NS}' namespace: {e}")
 
@@ -167,12 +143,12 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
             namespace=KB_NS,
             include_metadata=True
         )
-        for match in kb_response.get('matches', []):
-            text_key = match['metadata']['text']
+        for match in kb_response.matches:
+            text_key = match.metadata['text']
             # Mark glossary snippets as support-only for downstream agents.
-            match['metadata']['support_only'] = True
+            match.metadata['support_only'] = True
             if text_key not in all_hits or match['score'] > all_hits[text_key]['score']:
-                all_hits[text_key] = {'score': match['score'], 'metadata': match['metadata'], 'source_type': KB_NS}
+                all_hits[text_key] = {'score': match.score, 'metadata': match.metadata, 'source_type': KB_NS}
     except Exception as e:
         logging.error(f"Error querying '{KB_NS}' namespace: {e}")
 
