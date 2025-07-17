@@ -14,8 +14,20 @@ sys.path.append(str(project_root))
 from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
 from backend.agents.drift_linker_agent import run_drift_linker_agent
-# --- NEW: Import the ingestion function ---
 from backend.utils.ingest_documents import process_context_files
+
+# --- UI Helper Function ---
+def get_date_from_filename(filename: str) -> str:
+    """Parses a YYYY-MM-DD date from the start of a filename."""
+    try:
+        # Handle potential path objects
+        filename = Path(filename).name
+        date_str = filename.split('_')[0]
+        # Parse and reformat the date
+        dt_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        return dt_obj.strftime('%d.%m.%Y')
+    except (ValueError, IndexError):
+        return "N/A"
 
 # --- Helper Function to Load and Unpack Drifts ---
 @st.cache_data
@@ -68,7 +80,7 @@ def init_session_state():
 if 'all_explanations' not in st.session_state:
     init_session_state()
 
-st.title("🤖 Concept Drift Explanation Prototype")
+st.title("🤖 Concept Drift Explainer")
 st.markdown("Welcome! Press the button in the sidebar to begin the analysis of all detected drifts.")
 
 # --- Hallucination Warning ---
@@ -208,9 +220,25 @@ elif st.session_state.all_explanations:
     
     # Loop through each explanation object in the list
     for explanation_idx, explanation in enumerate(st.session_state.all_explanations):
-        # Use the drift_options list we generated earlier to get the display name
-        drift_display_name = drift_options[explanation_idx]['display']
-        st.subheader(f"Explanation for {drift_display_name}")
+        # Dynamically construct a more informative title
+        drift_state = st.session_state.full_state_log[explanation_idx]
+        drift_info = drift_state.get("drift_info", {})
+        drift_type = drift_info.get("drift_type", "Unknown").capitalize()
+        # Parse and reformat dates for the title from YYYY-MM-DD to DD.MM.YYYY
+        try:
+            start_date_str = drift_info.get("start_timestamp", "N/A").split(" ")[0]
+            end_date_str = drift_info.get("end_timestamp", "N/A").split(" ")[0]
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d').strftime('%d.%m.%Y')
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d').strftime('%d.%m.%Y')
+        except (ValueError, IndexError):
+            start_date, end_date = "N/A", "N/A"
+        # Create a two-line header for clarity
+        st.subheader(f"Explanation for Drift #{explanation_idx + 1}: {drift_type}")
+        st.markdown(f"<h4 style='margin-top: -0.75rem; '>Timeframe: {start_date} – {end_date}</h4>", unsafe_allow_html=True)
+        changepoints = drift_info.get("changepoints", ("N/A", "N/A"))
+        activity_str = f"{changepoints[0]} → {changepoints[1]}"
+        st.write(f"##### Activities: {activity_str}")
+
         st.info(explanation.get('summary', 'No summary available.'))
         
         ranked_causes = explanation.get('ranked_causes', [])
@@ -220,18 +248,26 @@ elif st.session_state.all_explanations:
             # Loop through each cause within an explanation
             for cause_idx, cause in enumerate(ranked_causes):
                 # Add a one-line guard-rail that prevents that glossary entries are displayed
-                if cause.get("source_document") == "BPM Glossary":
+                if "bpm glossary" in cause.get("source_document", "").lower():
                     continue   # hide glossary citations
 
-                with st.expander(f"**Cause #{cause_idx+1}:** {cause.get('context_category', 'N/A')}", expanded=cause_idx==0):
-                    st.markdown(f"**Description:** {cause.get('cause_description', 'N/A')}")
+                # Structured Cause Layout
+                with st.container(border=True):
+                    trigger_date = get_date_from_filename(cause.get("source_document", ""))
+                    st.metric(label="**Drift Trigger Date**", value=trigger_date, help="The date parsed from the source document filename, indicating a potential trigger for the drift.")
                     st.markdown(f"**Confidence:** `{cause.get('confidence_score', 0.0)*100:.1f}%`")
-                    st.markdown("---")
-                    st.markdown("**Evidence:**")
-                    st.code(cause.get('evidence_snippet', 'N/A'), language='text')
-                    st.caption(f"Source: `{cause.get('source_document', 'N/A')}`")
+                    st.markdown(f"**Source Document:** `{cause.get('source_document', 'N/A')}`")
+                    
+                    expander_title = f"**Cause #{cause_idx+1}:** {cause.get('context_category', 'N/A')}"
+                    with st.expander(expander_title, expanded=False):
+                        st.markdown(f"**Description:** {cause.get('cause_description', 'N/A')}")
+                        st.markdown(f"**Confidence:** `{cause.get('confidence_score', 0.0)*100:.1f}%`")
+                        #st.markdown("---")
+                        st.markdown("**Evidence:**")
+                        st.code(cause.get('evidence_snippet', 'N/A'), language='text')
+                        st.caption(f"Source Document: `{cause.get('source_document', 'N/A')}`")
 
-                    # CORRECTED: Granular Feedback Mechanism with a unique key
+                    # Granular Feedback Mechanism
                     st.markdown("---")
                     feedback_key = (explanation_idx, cause_idx)
                     if st.session_state.feedback_states.get(feedback_key):
