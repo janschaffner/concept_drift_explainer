@@ -3,6 +3,7 @@ import sys
 import logging
 from pathlib import Path
 from typing import List, Dict
+from enum import Enum
 
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory.
@@ -19,47 +20,55 @@ from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o-mini"
 
+class ConnectionType(str, Enum):
+    """Enum for the different types of connections between drifts."""
+    STRONG_CAUSAL = "Strong Causal Link"
+    SHARED_EVIDENCE = "Shared Evidence / Root Cause"
+    THEMATIC_OVERLAP = "Thematic Overlap"
+    NONE = "No Significant Connection"
+
 # --- Pydantic Model for Structured Output ---
 # This model forces the LLM to make a boolean decision before generating text,
 # which prevents it from hallucinating connections where none exist.
 class DriftLinkAnalysis(BaseModel):
     """Data model for the drift relationship analysis."""
-    connection_found: bool = Field(description="Set to true ONLY if there is a clear, evidence-based connection between the drifts. Otherwise, set to false.")
-    summary: str = Field(description="If connection_found is true, describe the connection here. Otherwise, state that no significant connection was identified.")
+    connection_type: ConnectionType = Field(description="The classification of the relationship between the drifts.")
+    summary: str = Field(description="Your detailed analysis and reasoning for the chosen connection type. If no connection is found, briefly state that.")
 
-def format_explanations_for_prompt(all_explanations: List[Dict]) -> str:
+def format_states_for_prompt(full_states: List[Dict]) -> str:
     """
-    Formats the list of full explanation objects into a string for the LLM prompt.
+    Formats a list of full state objects into a structured string for the LLM prompt.
     
-    This function creates a concise summary of each drift's explanation to be used
-    as context for the meta-analysis LLM call.
+    This function creates a detailed profile of each drift, including its timeframe,
+    summary, all evidence sources, and specific entities to be used for meta-analysis.
 
     Args:
-        all_explanations: A list of explanation dictionaries from the graph state.
+        full_states: A list of full state dictionaries from each pipeline run.
 
     Returns:
-        A formatted string detailing each drift's summary and top cause.
+        A formatted string detailing the structured data for each drift.
     """
     formatted_str = ""
-    for i, explanation in enumerate(all_explanations):
-        if not explanation: continue
+    for i, state in enumerate(full_states):
+        if not state: continue
         
-        summary = explanation.get('summary', 'N/A')
+        drift_info = state.get('drift_info', {})
+        explanation = state.get('explanation', {})
+        specific_entities = state.get('specific_entities', [])
         ranked_causes = explanation.get('ranked_causes', [])
+        evidence_sources = sorted(list(set(c.get('source_document', 'N/A') for c in ranked_causes)))
         
-        formatted_str += f"### Explanation for Drift #{i+1}\n"
-        formatted_str += f"- **Summary:** {summary}\n"
-        
-        # Include the top cause for additional context.
-        if ranked_causes:
-            top_cause = ranked_causes[0]
-            formatted_str += f"- **Top Cause:** {top_cause.get('cause_description', 'N/A')}\n"
-            formatted_str += f"- **Top Evidence Source:** {top_cause.get('source_document', 'N/A')}\n"
+        formatted_str += f"### Drift #{i+1} Profile\n"
+        formatted_str += f"- **Type:** {drift_info.get('drift_type', 'N/A')}\n"
+        formatted_str += f"- **Timeframe:** {drift_info.get('start_timestamp')} to {drift_info.get('end_timestamp')}\n"
+        formatted_str += f"- **Summary:** {explanation.get('summary', 'N/A')}\n"
+        formatted_str += f"- **Evidence Sources:** {evidence_sources}\n"
+        formatted_str += f"- **Specific Entities:** {specific_entities[:5]}\n" # Show top 5 entities
         formatted_str += "\n"
-        
+
     return formatted_str
 
-def run_drift_linker_agent(all_explanations: List[Dict]) -> dict:
+def run_drift_linker_agent(full_states: List[Dict]) -> dict:
     """
     Analyzes a list of drift explanations to find potential relationships between them.
 
@@ -70,40 +79,40 @@ def run_drift_linker_agent(all_explanations: List[Dict]) -> dict:
     Note: This agent is called directly by the UI and does not use the GraphState.
 
     Args:
-        all_explanations: A list of all explanation objects generated during the batch run.
+        full_states: A list of all final state objects from each pipeline run.
 
     Returns:
         A dictionary containing the `linked_drift_summary`.
     """
     logging.info("--- Running Drift Linker Agent ---")
     
-    if not all_explanations or len(all_explanations) < 2:
+    if not full_states or len(full_states) < 2:
         logging.warning("Not enough explanations to run relationship analysis.")
-        return {"linked_drift_summary": ""}
+        return {"linked_drift_summary": None}
 
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
         
     # Format the inputs for the prompt.
-    formatted_explanations = format_explanations_for_prompt(all_explanations)
+    formatted_context = format_states_for_prompt(full_states)
     
     # --- Prompt Template ---
     # This prompt asks the LLM to act as a senior analyst and find connections.
     prompt_template = """You are a senior business process analyst conducting a meta-analysis. Your goal is to find high-level insights by identifying potential relationships between several independently explained concept drifts.
 
-    You will be provided with a list of explanations for multiple concept drifts that occurred in the same process log.
+    You will be provided with structured data profiles for multiple concept drifts that occurred in the same process log.
 
-    **## Explained Drifts**
-    {formatted_explanations}
+    **## Drift Profiles**
+    {formatted_context}
 
     **## Your Task**
-    Carefully review all the provided drift explanations. First, decide if there is a clear, evidence-based connection between any of the drifts. A connection exists if they share a common root cause, cite the same source document, or one directly causes another.
-    
-    Then, provide your analysis using the following structured format.
+    Carefully review the structured data for all drift profiles. Analyze their timeframes, summaries, evidence sources, and specific entities to identify potential connections.
+    First, classify the connection type by choosing one of the following options: 'Strong Causal Link', 'Shared Evidence / Root Cause', 'Thematic Overlap', or 'No Significant Connection'.    
+    Then, provide a detailed summary explaining your reasoning for the chosen connection type.
     """
     
-    prompt = prompt_template.format(formatted_explanations=formatted_explanations)
+    prompt = prompt_template.format(formatted_context=formatted_context)
     
     # Use the structured output method to force a yes/no decision.
     llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
@@ -129,11 +138,12 @@ def run_drift_linker_agent(all_explanations: List[Dict]) -> dict:
             return {"error": str(e)}
 
     # Only return the summary if the LLM explicitly found a connection.
-    if response_data.get("connection_found"):
+    connection_type = response_data.get("connection_type")
+    if connection_type and connection_type != ConnectionType.NONE.value:
         summary = response_data.get("summary")
         # This log message shows the exact summary that will be displayed to the user.
-        logging.info(f"Connection between drifts found. Summary: '{summary}'")
-        return {"linked_drift_summary": summary}
+        logging.info(f"Connection between drifts found. Type: '{connection_type}'.")
+        return {"linked_drift_summary": summary, "connection_type": connection_type}
     else:
         logging.info("No significant connection found between drifts.")
         return {"linked_drift_summary": None}

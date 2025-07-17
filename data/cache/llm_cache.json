@@ -192,5 +192,71 @@
       0,
       1
     ]
+  },
+  "6792e02cf24838701c1629681ccdda83": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "21f812f3e64fc91e5572544a9ab6805f": {
+    "reranked_indices": [
+      0,
+      1
+    ]
+  },
+  "5ba8304c61c969d644bc286057fd41d9": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both Drift #1 and Drift #2 share specific entities, such as 'declaration number 76458', 'st_step 76459_0', 'budget 922', 'st_step 76461_0', and 'fd_declaration 76457_17'. This indicates that they are likely addressing similar processes or components within the organizational framework. Additionally, both drifts occur within a similar timeframe, with Drift #1 starting shortly after Drift #2's initiation. The incremental changes in Drift #1, which involve the realignment of the Travel Authorization Division and the integration of digital processes, may be influenced by the gradual shift to the Harmonized Permit Standard outlined in Drift #2. The shared evidence suggests that both drifts are part of a broader organizational change initiative, indicating a common root cause related to the evolution of compliance and operational workflows."
+  },
+  "a54c613baa93d817808b3f08e88feab4": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "b6d29583acc1e8744d75036069d29bce": {
+    "reranked_indices": [
+      0,
+      1
+    ]
+  },
+  "7cbff7445b90a911ba123c0d43354dc2": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both Drift #1 and Drift #2 share specific entities and evidence sources, indicating a common context in their operational changes. The presence of overlapping entities such as 'st_step 76460_0', 'st_step 76461_0', 'activity 46005', and 'rv_travel permit 76455_7' suggests that these drifts are part of a broader transformation within the same organizational framework. Additionally, the evidence sources for both drifts point to directives and notices that are likely related to the same overarching changes in processes and compliance. This shared foundation implies that the incremental changes in Drift #1 and the gradual transition in Drift #2 are interconnected, stemming from a common root cause related to the reorganization and standardization of travel authorization processes."
+  },
+  "0ec3b94ecdb167afd4ac906e99472f0b": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "70d803326010df0b7ca9e9307ddf16f6": {
+    "cause_description": "The evidence may indicate that the phased realignment of the Travel Authorization Division (TAD) involved multiple small adjustments to the approval processes, which collectively contributed to an incremental drift in the overall operational efficiency. The establishment of a decentralized model and the dissolution of the Central Authorization Desk suggest a series of iterative improvements aimed at reducing approval cycles and enhancing integration with frontline teams. This aligns with agile BPM practices, where continuous adjustments are made to adapt to changing needs.",
+    "evidence_snippet": "As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD). Effective October 23, the following changes apply: \u2022 The Central Authorization Desk (CAD) will be dissolved. \u2022 Each Regional Review Cluster (North, Central, South) will assume local approval responsibilities for Category A and B travel permits. \u2022 A newly established Policy Coordination Unit (PCU) will oversee inter-regional consistency and escalate Category C risk cases only. This decentralized model is expected to reduce approval cycles and foster closer integration with frontline processing teams.",
+    "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.98
+  },
+  "b941f29354e1586763c4bbd39c015a5b": {
+    "cause_description": "The evidence may indicate that the gradual integration of digital clearance certificates and the dual-process option for reporting entities suggest a series of incremental adjustments to the reporting process. These changes, implemented over time, align with agile practices that focus on iterative improvements and adaptations to evolving regulatory requirements. This could reflect a broader trend of continuous process transformation within the organization, as stakeholders adapt to new compliance standards and technologies.",
+    "evidence_snippet": "Training sessions and updated FAQs will be circulated by November 10. ... Gradual integration of digital clearance certificates (Form IDR-e) replacing manual endorsements by Q2 2018. Reporting entities are expected to adapt their workflows in line with this shift.",
+    "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.93
+  },
+  "ca781e363a6b478c344d1e2bc39c1324": "The analysis reveals that the phased realignment of the Travel Authorization Division (TAD) and the gradual integration of digital clearance certificates have led to incremental adjustments in operational processes, contributing to a drift in overall efficiency. These changes, characterized by a decentralized model and iterative improvements, reflect the organization's commitment to agile business process management, enabling adaptation to evolving regulatory requirements and enhancing integration with frontline teams. This trend underscores the importance of continuous process transformation in maintaining compliance and operational effectiveness.",
+  "c9607397a53b658ffc586da76bf77593": {
+    "reranked_indices": [
+      0,
+      1
+    ]
+  },
+  "e934968cae6a826e7b92288676bb4cdb": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both Drift #1 and Drift #2 share specific entities and evidence sources, indicating a common context in their operational changes. The 'rv_travel permit 76455_7', '41.613444658859', 'organizational unit 65458', 'st_step 76461_0', and 'travel permit 76455' are present in both drifts, suggesting that they are part of the same overarching process involving travel authorizations. Additionally, the evidence sources for both drifts relate to directives and notices that pertain to changes in travel authorization processes, indicating that the changes in Drift #1 (incremental adjustments in operational processes) and Drift #2 (gradual shift to the Harmonized Permit Standard) are likely influenced by the same regulatory and organizational factors. This shared context points to a root cause that affects both drifts, thus classifying the connection as 'Shared Evidence / Root Cause'."
   }
 }

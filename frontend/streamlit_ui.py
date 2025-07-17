@@ -5,16 +5,28 @@ import ast
 from pathlib import Path
 from datetime import datetime
 import streamlit as st
+import warnings
 
 # --- Path Correction ---
 project_root = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_root))
 # -----------------------
 
+# Suppress the specific Pydantic V1 deprecation warning from LangChain
+warnings.filterwarnings("ignore", message=".*Pydantic BaseModel V1.*")
+
 from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
 from backend.agents.drift_linker_agent import run_drift_linker_agent
 from backend.utils.ingest_documents import process_context_files
+from backend.agents.drift_linker_agent import ConnectionType
+
+# --- Descriptions for Drift Linker Categories ---
+CONNECTION_TYPE_DESCRIPTIONS = {
+    ConnectionType.STRONG_CAUSAL.value: "One drift appears to be a direct cause of another subsequent drift.",
+    ConnectionType.SHARED_EVIDENCE.value: "The drifts are linked by common evidence or appear to share the same underlying root cause.",
+    ConnectionType.THEMATIC_OVERLAP.value: "The drifts are not directly linked but share a similar theme or occur in related business areas.",
+}
 
 # --- UI Helper Function ---
 def get_date_from_filename(filename: str) -> str:
@@ -74,6 +86,7 @@ def init_session_state():
     st.session_state.chat_history = []
     st.session_state.full_state_log = []
     st.session_state.linked_drift_summary = None
+    st.session_state.connection_type = None
 
 # --- Main Application ---
 # Initialize state on first load if it doesn't exist
@@ -158,8 +171,9 @@ with st.sidebar:
 
                     if not st.session_state.error_message and len(all_explanations) > 1:
                         st.toast("🔗 Analyzing relationships between drifts...")
-                        linker_result = run_drift_linker_agent(all_explanations)
+                        linker_result = run_drift_linker_agent(full_state_log) # Use the local variable with current results
                         st.session_state.linked_drift_summary = linker_result.get("linked_drift_summary")
+                        st.session_state.connection_type = linker_result.get("connection_type")
 
                     if not st.session_state.error_message:
                         st.session_state.all_explanations = all_explanations
@@ -214,8 +228,13 @@ elif st.session_state.all_explanations:
     
     # --- Display the linked drift analysis summary ---
     if st.session_state.linked_drift_summary:
+        connection_type = st.session_state.connection_type
+        description = CONNECTION_TYPE_DESCRIPTIONS.get(connection_type, "A potential link was identified between the drifts.")
         with st.container(border=True):
             st.subheader("🔗 Cross-Drift Analysis")
+            st.markdown(f"**Connection Type:** {connection_type}")
+            st.caption(description)
+            st.markdown("---")
             st.markdown(st.session_state.linked_drift_summary)
     
     # Loop through each explanation object in the list
