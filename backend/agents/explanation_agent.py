@@ -26,8 +26,8 @@ MODEL_NAME = "gpt-4o-mini"
 # --- Pydantic Models for Structured Output ---
 # This model defines the expected JSON structure for the LLM's output.
 class Cause(BaseModel):
-    """Defines the data structure for a single, ranked cause of a drift."""
-    cause_description: str = Field(description="The detailed analysis of what caused the drift, citing the evidence.")
+    """Defines the data structure for a single, potential cause of a drift."""
+    cause_description: str = Field(description="A cautious analysis of how the evidence could potentially explain the concept drift. Frame this as a hypothesis, not a definitive conclusion.")
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
     context_category: str = Field(description="The most relevant Franzoi context category path.")
@@ -57,7 +57,7 @@ Prioritize evidence that points to a single, discrete event with a specific date
 {formatted_evidence}
 
 **## 4. Your Task**
-Based on the provided information, generate an explanation for the **SUDDEN** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+Your task is to hypothesize potential reasons for the **SUDDEN** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
@@ -77,7 +77,7 @@ Prioritize evidence suggesting a transition, coexistence of old/new processes, o
 {formatted_evidence}
 
 **## 4. Your Task**
-Based on the provided information, generate an explanation for the **GRADUAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+Your task is to hypothesize potential reasons for the **GRADUAL** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
@@ -97,7 +97,7 @@ Prioritize evidence of multiple small adjustments, iterative improvements, or ag
 {formatted_evidence}
 
 **## 4. Your Task**
-Based on the provided information, generate an explanation for the **INCREMENTAL** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+Your task is to hypothesize potential reasons for the **INCREMENTAL** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
@@ -117,7 +117,7 @@ Prioritize evidence of seasonal activities, cyclical patterns, or temporary proc
 {formatted_evidence}
 
 **## 4. Your Task**
-Based on the provided information, generate an explanation for the **RECURRING** drift. Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
+Your task is to hypothesize potential reasons for the **RECURRING** drift based only on the provided evidence. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Cite only documents from the Evidence section. Structure your response as a valid JSON object with "summary" and "ranked_causes" keys.
 - **"summary"**: A 1-3 sentence executive summary of the most likely cause.
 - **"ranked_causes"**: A list of potential causes. **The evidence is already correctly ranked; describe each cause in the order the evidence is provided.**
 """
@@ -136,7 +136,7 @@ Ensure the final summary is concise, the cause descriptions are logical, and tha
 {draft_explanation}
 
 **## 3. Your Task**
-Generate the final, high-quality version of the explanation. **The causes in the draft are already correctly ranked; describe them in the exact order they are provided.** Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
+Critique and refine the draft explanation, ensuring the final wording is cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. **The causes in the draft are already correctly ranked; describe them in the exact order they are provided.** Cite only documents listed in the Evidence section; do NOT cite glossary items as formal evidence. Your output MUST be a valid JSON object in the same format as the draft, with "summary" and "ranked_causes" keys.
 """
 
 def format_context_for_prompt(classified_context: list) -> str:

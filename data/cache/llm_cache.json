@@ -1591,5 +1591,106 @@
       0,
       1
     ]
+  },
+  "dc2dcb3f8d525ab7bc07d7a5cd8a5d30": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "bfa39f22f88a3af089b911ca132a3d25": {
+    "summary": "The incremental drift observed may be attributed to a series of small, continuous changes initiated by internal realignment efforts and regulatory updates, which collectively contribute to significant process transformation. This could suggest a strategic approach to enhance operational efficiency and compliance over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division, as outlined in the internal notice, indicates a series of small adjustments aimed at decentralizing approval processes and improving operational efficiency. This could suggest that the organization is adopting an agile approach to process management, allowing for iterative improvements over time.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management"
+      },
+      {
+        "cause_description": "The expansion of reporting obligations and the introduction of a centralized validation portal reflect incremental changes in compliance processes that require organizations to adapt their workflows gradually. This may indicate a trend towards continuous improvement in response to evolving regulatory standards, aligning with agile BPM practices.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management"
+      }
+    ]
+  },
+  "cd28943276377343c53e923efb9c7729": {
+    "summary": "The incremental drift observed may be attributed to a series of small, continuous changes initiated by internal realignment efforts and regulatory updates, which collectively could contribute to significant process transformation. This may suggest a strategic approach to enhance operational efficiency and compliance over time.",
+    "ranked_causes": [
+      {
+        "cause_description": "The phased realignment of the Travel Authorization Division, as outlined in the internal notice, could indicate a series of small adjustments aimed at decentralizing approval processes and improving operational efficiency. This may suggest that the organization is adopting an agile approach to process management, allowing for iterative improvements over time.",
+        "evidence_snippet": "\"As part of the operational efficiency initiative approved by the Board in September, we are initiating a phased realignment of the Travel Authorization Division (TAD).\"",
+        "source_document": "2017-10-16_Internal_Realignment_Notice_TAD_ReorgPhase1.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.98
+      },
+      {
+        "cause_description": "The expansion of reporting obligations and the introduction of a centralized validation portal may reflect incremental changes in compliance processes that require organizations to adapt their workflows gradually. This could indicate a trend towards continuous improvement in response to evolving regulatory standards, aligning with agile BPM practices.",
+        "evidence_snippet": "\"In alignment with updated OECD standards, Article 42A of the International Reporting Act will be amended effective January 2018.\"",
+        "source_document": "2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.93
+      }
+    ]
+  },
+  "e16b9a2a0c31577c2f1e47c825360ef7": {
+    "reranked_indices": [
+      1,
+      0
+    ]
+  },
+  "b3b0de5a764ac994d4965c672ccdd557": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The memorandum outlines a new centralized payment request approval protocol, which indicates a redesign of the payment approval process and establishes new procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of delegated approval being restricted to Director-level personnel suggests a change in roles and responsibilities within the organization."
+      }
+    ]
+  },
+  "d831182d43c74d05eb2fd22f9b4eb435": {
+    "summary": "The gradual drift observed may suggest a transition phase where the new payment authorization standards are being implemented while the old processes remain in effect. This could indicate a phased rollout of the new protocol, allowing for both old and new processes to coexist temporarily.",
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence may indicate that the Finance Department is in the process of transitioning to a new centralized payment request approval protocol, which could suggest a gradual implementation where both the old and new processes are operational during the rollout period.",
+        "evidence_snippet": "\"All payment requests are to be reviewed and signed off by the central Financial Control Unit (FCU) prior to execution.\"",
+        "source_document": "2017-09-30_Finance_Approval_Protocol_Ref_G17.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management"
+      },
+      {
+        "cause_description": "This could suggest that the Finance Department is maintaining oversight of all outflows while gradually phasing out the old approval processes, allowing for a smoother transition to the new standards without immediate disruption.",
+        "evidence_snippet": "\"The FCU continues to maintain oversight of all outflows, with weekly reconciliation audits in place.\"",
+        "source_document": "2017-09-30_Finance_Approval_Protocol_Ref_G17.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational"
+      }
+    ]
+  },
+  "e5f4326c8df6bc442168097e32e5b72d": {
+    "summary": "The gradual drift observed may suggest a transition phase where the new payment authorization standards are being implemented while the old processes remain in effect. This could indicate a phased rollout of the new protocol, allowing for both old and new processes to coexist temporarily.",
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence may indicate that the Finance Department is in the process of transitioning to a new centralized payment request approval protocol, which could suggest a gradual implementation where both the old and new processes are operational during the rollout period.",
+        "evidence_snippet": "\"All payment requests are to be reviewed and signed off by the central Financial Control Unit (FCU) prior to execution.\"",
+        "source_document": "2017-09-30_Finance_Approval_Protocol_Ref_G17.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "This could suggest that the Finance Department is maintaining oversight of all outflows while gradually phasing out the old approval processes, allowing for a smoother transition to the new standards without immediate disruption.",
+        "evidence_snippet": "\"The FCU continues to maintain oversight of all outflows, with weekly reconciliation audits in place.\"",
+        "source_document": "2017-09-30_Finance_Approval_Protocol_Ref_G17.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Organizational",
+        "confidence_score": 0.0
+      }
+    ]
+  },
+  "b830da0467374d876f8170cc54ecc5ab": {
+    "connection_found": true,
+    "summary": "Both drifts are related to organizational changes aimed at improving operational efficiency and compliance. Drift #1 discusses the internal realignment efforts within the Travel Authorization Division, while Drift #2 focuses on the transition to new payment authorization standards in the Finance Department. The common theme is a strategic approach to process management that involves phased implementations and adjustments to enhance overall efficiency. The evidence from the internal realignment notice and the finance approval protocol suggests that these changes are part of a broader organizational strategy."
   }
 }

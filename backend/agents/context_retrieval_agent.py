@@ -57,6 +57,19 @@ def run_context_retrieval_agent(state: GraphState) -> dict:
 
     # --- 1. Initialize Pinecone & Embedder ---
     load_dotenv()
+
+    # --- BLOCK FOR API DEBUGGING ---
+    '''Search for "System Environment Variables" in the Windows Start Menu, click the 
+    "Environment Variables..." button, and look for OPENAI_API_KEY in both the "User variables" 
+    and "System variables" lists. Delete the incorrect entry. This will result in loading the 
+    correct API from the .env file'''
+    # loaded_api_key = os.getenv("OPENAI_API_KEY")
+    # if loaded_api_key:
+    #    logging.info(f"DEBUG: Loaded OpenAI Key starts with '{loaded_api_key[:5]}' and ends with '{loaded_api_key[-4:]}'.")
+    #else:
+    #    logging.info("DEBUG: OPENAI_API_KEY environment variable not found at runtime.")
+    # ------------------------------------
+
     api_key = os.getenv("PINECONE_API_KEY")
     # Load index name from .env
     pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
