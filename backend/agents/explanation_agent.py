@@ -347,6 +347,38 @@ def run_explanation_agent(state: GraphState, index: Pinecone.Index) -> dict:
             final_causes.append(cause_dict)
             logging.info(f"Generated cause for '{evidence_doc['source_document']}' with confidence score {cause_dict['confidence_score']:.2f}")
 
+        # --- STEP 1b: Refine drafts via editor LLM ---
+        draft_causes = final_causes.copy()
+        refined_causes: list[Dict] = []
+        for i, draft in enumerate(draft_causes):
+            # prepare the same context pieces
+            formatted_glossary = format_context_for_prompt(glossary_context)
+            formatted_evidence = format_context_for_prompt([usable_evidence[i]])
+
+            # build and cache the refine prompt
+            refine_prompt = REFINE_PROMPT_TEMPLATE.format(
+                formatted_glossary=formatted_glossary,
+                formatted_evidence=formatted_evidence,
+                draft_explanation=json.dumps(draft)
+            )
+            refine_key = get_cache_key(refine_prompt, MODEL_NAME)
+            if refine_key in llm_cache:
+                refined = llm_cache[refine_key]
+            else:
+                logging.info(f"Refining draft cause #{i+1} via LLM…")
+                response = structured_llm.invoke(refine_prompt)
+                refined = response.dict()
+                llm_cache[refine_key] = refined
+                cache_updated = True
+
+            # preserve the original confidence_score
+            refined['confidence_score'] = draft['confidence_score']
+            refined_causes.append(refined)
+            logging.info(f"Refined cause #{i+1} for '{draft['source_document']}'")
+
+        # swap in refined causes for the summary
+        final_causes = refined_causes
+
         # --- STEP 2: Generate a summary from all the generated causes ---
         formatted_causes = "\n".join([f"- {c['cause_description']}" for c in final_causes])
         summary_prompt = SUMMARY_PROMPT_TEMPLATE.format(formatted_causes=formatted_causes)
