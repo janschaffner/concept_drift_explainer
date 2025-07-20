@@ -35,6 +35,7 @@ class ContextSnippet(TypedDict):
     timestamp: int # Stored as Unix timestamp
     source_type: str # "context" or "bpm-kb"
     specificity_score: float # The calculated specificity score
+    support_only: bool # True if this came from the glossary ("bpm-kb")
     classifications: List[FranzoiClassification] # list of detailed classifications
 
 class RankedCause(TypedDict):

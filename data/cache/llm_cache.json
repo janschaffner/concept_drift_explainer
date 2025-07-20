@@ -456,14 +456,14 @@
     "evidence_snippet": "We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices \u2022 Phased introduction of \u201cauto-clear\u201d logic in the RP submission system",
     "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.99
+    "confidence_score": 0.94
   },
   "3eecd8e97fb3a652a2e73c230275182e": {
     "cause_description": "The evidence may indicate that the planned simplification of domestic declaration procedures, as outlined in the notice from the Federal Ministry of Finance, represents a series of small, incremental changes aimed at streamlining processes. These adjustments, such as the removal of mandatory steps and the introduction of new forms, could cumulatively lead to a significant transformation in tax processing practices over time, aligning with the concept of incremental drift.",
     "evidence_snippet": "\"Key changes include: \u2022 Removal of the mandatory regional routing step for declarations below \u20ac15,000. \u2022 Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation. \u2022 Expansion of automatic eligibility screening through the Central Processing Gateway.\"",
     "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
     "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.92
+    "confidence_score": 0.97
   },
   "8739d3acfb8d13a04d9b7166b355efa0": {
     "cause_description": "The evidence suggests that the appointment of a new CFO with expertise in agile finance transformation may have triggered a series of small, iterative changes in financial governance practices. The pilot of a Decentralized Authorization Model, along with the gradual introduction of new processes, implies a strategic approach to incremental improvements rather than a singular, large-scale overhaul. This aligns with the concept of Incremental Drift, where continuous adjustments can accumulate to result in significant transformation over time.",
@@ -607,5 +607,65 @@
   "cd770c4fcc750983e99f5f1c50f0c3f0": {
     "connection_type": "Shared Evidence / Root Cause",
     "summary": "Both Drift #1 and Drift #2 share specific entities, such as 'budget 922', 'fd_declaration 76457_18', 'rv_travel permit 76455_7', 'fd_declaration 76457_17', and 'st_step 76459_0'. This commonality suggests that they are likely influenced by the same underlying processes or changes within the organization. Additionally, both drifts occurred within a similar timeframe, with Drift #1 starting shortly after Drift #2, indicating that the changes in the Travel Authorization Division and the transition to the Harmonized Permit Standard may be interconnected. The incremental changes in Drift #1 could be seen as a response to the gradual changes initiated by Drift #2, highlighting a shared context that may have contributed to both drifts."
+  },
+  "d72159a483ee69daed01b913a5c6bcc7": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "d5c8d2887784113848b901da9fd3afb0": {
+    "cause_description": "The evidence suggests that the planned simplification of domestic declaration procedures, as detailed in the notice from the Federal Ministry of Finance, could represent a series of small, incremental changes aimed at streamlining tax processing. These adjustments, including the removal of mandatory steps and the introduction of new forms, might cumulatively lead to a significant transformation in tax processing practices over time, which aligns with the concept of incremental drift.",
+    "evidence_snippet": "\"Key changes include: \u2022 Removal of the mandatory regional routing step for declarations below \u20ac15,000. \u2022 Introduction of Form 92-C (Digital Confirmation) as an acceptable alternative to physical audit documentation. \u2022 Expansion of automatic eligibility screening through the Central Processing Gateway.\"",
+    "source_document": "2017-12-04_Tax_Processing_Modernization_Notice_01_2018.pdf",
+    "context_category": "ORGANIZATION_EXTERNAL::Legal, ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.97
+  },
+  "b0ad75e37ff900b510c69edac358fe01": {
+    "cause_description": "The evidence suggests that the appointment of a new CFO with expertise in agile finance transformation may have triggered a series of small, iterative changes in financial governance practices. The pilot of a Decentralized Authorization Model, along with the phased introduction of new processes, indicates a strategic approach to incremental improvements rather than a singular, large-scale change. This aligns with the concept of Incremental Drift, where continuous adjustments can accumulate to result in significant transformation over time.",
+    "evidence_snippet": "We are pleased to announce that Ms. Lydia Baumann will assume the role of Chief Financial Officer effective December 15, 2017. Ms. Baumann brings a strong background in agile finance transformation from her prior role at Elston Group. As part of the 2018 transition roadmap, the CFO Office will pilot a Decentralized Authorization Model in selected business units. The pilot includes: \u2022 Local budget holder approval for payments up to \u20ac10,000 \u2022 Removal of redundant compliance reviews for standard invoices \u2022 Phased introduction of \u201cauto-clear\u201d logic in the RP submission system",
+    "source_document": "2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.94
+  },
+  "03f678fc2540d979e82e8e92cb97b4f3": "The analysis indicates that both the planned simplification of domestic declaration procedures by the Federal Ministry of Finance and the appointment of a new CFO focused on agile finance transformation are driving incremental changes in tax processing and financial governance practices. These small, iterative adjustments, such as the removal of mandatory steps and the introduction of new models, exemplify the concept of Incremental Drift, suggesting that cumulative modifications may lead to significant transformations in these areas over time.",
+  "651a3212675af24a014c2760ed369ab3": {
+    "reranked_indices": [
+      0,
+      1,
+      2
+    ]
+  },
+  "f9215499fb9086a2bde6c965a2a8ed2b": {
+    "reranked_indices": [
+      2,
+      3,
+      1
+    ]
+  },
+  "549f30fddd9631ac4589183b3ae95189": {
+    "reranked_indices": []
+  },
+  "333e0a7c0f09e2c3e43a4d96a572d415": {
+    "reranked_indices": [
+      1
+    ]
+  },
+  "30e61d0837b7c6da230fba7473e2a66b": {
+    "reranked_indices": []
+  },
+  "4de2ca5e8cd6125cf920fc13a29a7872": {
+    "reranked_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "258f46857baf153dcb76f05afa36c0d2": {
+    "reranked_indices": [
+      0,
+      1
+    ]
   }
 }
