@@ -98,6 +98,7 @@ def run_reranker_agent(state: GraphState) -> dict:
     """
     logging.info("--- Running Re-Ranker Agent ---")
     
+    # 1) pull in the raw candidates
     candidate_snippets = state.get("raw_context_snippets", [])
     if not candidate_snippets:
         logging.warning("No candidate snippets to re-rank.")
@@ -107,6 +108,20 @@ def run_reranker_agent(state: GraphState) -> dict:
     specific_entities = state.get("specific_entities", [])
     start_date = datetime.fromisoformat(drift_info["start_timestamp"])
 
+    # 2) DEDUPE ON DOCUMENT LEVEL: keep only the highest-scoring snippet per file
+    logging.info(f"Raw candidates before dedupe: {len(candidate_snippets)}")
+    unique_by_doc = {}
+    for snip in candidate_snippets:
+        doc = snip["source_document"]
+        # if we haven’t seen this doc yet—or this snippet has a higher score—store it
+        if doc not in unique_by_doc or snip["score"] > unique_by_doc[doc]["score"]:
+            unique_by_doc[doc] = snip
+    
+    # now replace candidate_snippets with one-per-document
+    candidate_snippets = list(unique_by_doc.values())
+    logging.info(f"Candidates after doc-level dedupe: {len(candidate_snippets)}")
+
+    # 3) now apply the date bonus on unique snippets
     # Add date bonus to scores
     # This heuristic boosts the relevance of documents published close to the drift start date.
     start_date = datetime.fromisoformat(drift_info["start_timestamp"])
@@ -116,7 +131,7 @@ def run_reranker_agent(state: GraphState) -> dict:
         if ts:
             delta = abs((datetime.fromtimestamp(ts) - start_date).days)
             if delta <= 7:
-                score += 0.10  # boost close docs (CHANGE TO 10 IF WORSE)
+                score += 0.20  # boost close docs (CHANGE TO 10 IF WORSE)
             elif delta >= 30:
                 score -= 0.10  # demote distant docs
         snip['score'] = score
@@ -161,7 +176,7 @@ def run_reranker_agent(state: GraphState) -> dict:
         llm_cache = load_cache()
         
         # # Ask the LLM to choose N-1 snippets, since there was already one force-kept.
-        # 3 more are needed to reach the budget of 4 (1 force-kept + 3 from LLM).
+        # 3 more are needed to reach the budget of 3 from LLM.
         num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(reranked_list)
 
         # The prompt uses the specific entities and the feature-rich formatter.
@@ -171,7 +186,7 @@ def run_reranker_agent(state: GraphState) -> dict:
             formatted_snippets=format_snippets_for_reranking(other_candidates, start_date, specific_entities),
             num_to_keep=num_to_keep_from_llm
         )
-        
+            
         cache_key = get_cache_key(prompt, MODEL_NAME)
         
         if cache_key in llm_cache:
@@ -196,17 +211,6 @@ def run_reranker_agent(state: GraphState) -> dict:
         
         # Add the LLM's choices to our final list.
         reranked_list.extend(llm_ranked_snippets)
-
-    # De-duplicate the list to prevent errors.
-    seen = set()
-    deduped = []
-    for snip in reranked_list:
-        key = (snip["source_document"], snip["snippet_text"])
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped.append(snip)
-    reranked_list = deduped
 
     logging.info(f"Re-ranking complete. Kept {len(reranked_list)} of {len(candidate_snippets)} snippets.")
     
