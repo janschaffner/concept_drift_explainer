@@ -79,6 +79,7 @@ def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: da
             delta_days = f"{delta} days"
             
         score = snippet.get('score', 0.0)
+        # Use the pre-calculated specificity score
         specificity_score = calculate_specificity_score(snippet['snippet_text'], specific_entities)
         
         # Present all features clearly to the LLM for each snippet.
@@ -97,75 +98,66 @@ def run_reranker_agent(state: GraphState) -> dict:
     and finally splits the results into 'evidence' and 'supporting' context lists.
     """
     logging.info("--- Running Re-Ranker Agent ---")
+
+    raw_snippets = state.get("raw_context_snippets", [])
     
-    # 1) pull in the raw candidates
-    candidate_snippets = state.get("raw_context_snippets", [])
+    # --- Step 0: Segregate the KB hit into supporting_context immediately ---
+    supporting_context = []
+    candidate_snippets = []
+    for snip in raw_snippets:
+        if snip.get("source_type") == "bpm-kb":
+            supporting_context.append(snip)
+        else:
+            candidate_snippets.append(snip)
+    
     if not candidate_snippets:
-        logging.warning("No candidate snippets to re-rank.")
-        return {"reranked_context_snippets": [], "supporting_context": []}
+        logging.warning("No candidate evidence snippets to re-rank.")
+        return {"reranked_context_snippets": [], "supporting_context": supporting_context}
 
     drift_info = state.get("drift_info", {})
     specific_entities = state.get("specific_entities", [])
     start_date = datetime.fromisoformat(drift_info["start_timestamp"])
 
-    # 2) DEDUPE ON DOCUMENT LEVEL: keep only the highest-scoring snippet per file
-    logging.info(f"Raw candidates before dedupe: {len(candidate_snippets)}")
-    unique_by_doc = {}
-    for snip in candidate_snippets:
-        doc = snip["source_document"]
-        # if we haven’t seen this doc yet—or this snippet has a higher score—store it
-        if doc not in unique_by_doc or snip["score"] > unique_by_doc[doc]["score"]:
-            unique_by_doc[doc] = snip
-    
-    # now replace candidate_snippets with one-per-document
-    candidate_snippets = list(unique_by_doc.values())
-    logging.info(f"Candidates after doc-level dedupe: {len(candidate_snippets)}")
-
-    # 3) now apply the date bonus on unique snippets
-    # Add date bonus to scores
-    # This heuristic boosts the relevance of documents published close to the drift start date.
-    start_date = datetime.fromisoformat(drift_info["start_timestamp"])
-    for snip in candidate_snippets:
-        ts = snip.get('timestamp', 0)
-        score = snip.get('score', 0.0)
-        if ts:
-            delta = abs((datetime.fromtimestamp(ts) - start_date).days)
-            if delta <= 7:
-                score += 0.20  # boost close docs (CHANGE TO 10 IF WORSE)
-            elif delta >= 30:
-                score -= 0.10  # demote distant docs
-        snip['score'] = score
-
-    # Calculate and attach specificity score to each snippet (needed for confidence score)
+    # --- Step 1: Calculate specificity score for all candidates first ---
     for snip in candidate_snippets:
         snip['specificity_score'] = calculate_specificity_score(
             snip['snippet_text'], specific_entities
         )
-            
-    # Re-sort candidates after applying the date-based score bonus.
-    candidate_snippets = sorted(candidate_snippets, key=lambda x: x.get('score', 0.0), reverse=True)
 
-    # Log the top candidates and their scores before the LLM re-ranks them.
-    logging.info("Top candidates after date bonus and pre-sorting:")
-    for i, snip in enumerate(candidate_snippets[:5]): # Log top 5
+    # --- Step 2: Deduplicate evidence candidates, prioritizing specificity ---
+    logging.info(f"Evidence candidates before dedupe: {len(candidate_snippets)}")
+    unique_by_doc = {}
+    for snip in candidate_snippets:
+        doc = snip["source_document"]
+        current = unique_by_doc.get(doc)
+        # Prefer the snippet with higher (specificity, then similarity)
+        if not current or (
+            (snip["specificity_score"], snip["score"])
+            > (current["specificity_score"], current["score"])
+        ):
+            unique_by_doc[doc] = snip
+    
+    candidate_snippets = list(unique_by_doc.values())
+    logging.info(f"Evidence candidates after doc-level dedupe: {len(candidate_snippets)}")
+            
+    # --- Step 3: Sort candidates for logging purposes ---
+    # Note: This sorting is for human-readable logs; the LLM gets an unsorted view of features.
+    display_sorted_candidates = sorted(candidate_snippets, key=lambda x: (x.get('specificity_score', 0.0), x.get('score', 0.0)), reverse=True)
+
+    logging.info("Top candidates after pre-sorting (by specificity, then similarity):")
+    for i, snip in enumerate(display_sorted_candidates[:5]):
         logging.info(
             f"  > Pre-Rank #{i+1}: {Path(snip['source_document']).name} "
-            f"(Score: {snip.get('score', 0.0):.3f})"
+            f"(Specificity: {snip.get('specificity_score', 0.0):.1f}, Score: {snip.get('score', 0.0):.3f})"
         )
-
-    # Force-keep the single highest-scoring context snippet.
-    # This acts as a safety net to guarantee the best initial hit is always considered.
-    best_context_hit = next((s for s in candidate_snippets if s.get("source_type") == "context"), None)
-    
+    # --- Step 4: Let the LLM pick the top snippets ---
     reranked_list = []
-    if best_context_hit:
-        reranked_list.append(best_context_hit)
-
-    ## The list of candidates for the LLM to rank is now everything *except* the force-kept best hit.
-    other_candidates = [s for s in candidate_snippets if s != best_context_hit]
-    
-    # We only call the LLM if there are other candidates left to rank.
-    if other_candidates:
+    # Short-circuit is triggered only when there is exactly one candidate.
+    if len(candidate_snippets) == 1:
+        logging.info("Only one candidate found. Skipping LLM re-ranking and keeping it.")
+        reranked_list = candidate_snippets
+    elif candidate_snippets:
+        logging.info("Multiple candidates found. Invoking LLM to select the best.")
         load_dotenv()
         if not os.getenv("OPENAI_API_KEY"):
             return {"error": "OPENAI_API_KEY not found."}
@@ -175,20 +167,16 @@ def run_reranker_agent(state: GraphState) -> dict:
         
         llm_cache = load_cache()
         
-        # # Ask the LLM to choose N-1 snippets, since there was already one force-kept.
-        # 3 more are needed to reach the budget of 3 from LLM.
-        num_to_keep_from_llm = NUM_SNIPPETS_TO_KEEP - len(reranked_list)
-
-        # The prompt uses the specific entities and the feature-rich formatter.
         prompt = PROMPT_TEMPLATE.format(
-            drift_type=drift_info.get("drift_type", "N/A"),
+            drift_type=drift_info["drift_type"],
             specific_entities=", ".join(specific_entities),
-            formatted_snippets=format_snippets_for_reranking(other_candidates, start_date, specific_entities),
-            num_to_keep=num_to_keep_from_llm
+            formatted_snippets=format_snippets_for_reranking(candidate_snippets, start_date, specific_entities),
+            num_to_keep=NUM_SNIPPETS_TO_KEEP
         )
-            
+        
         cache_key = get_cache_key(prompt, MODEL_NAME)
         
+        response_data = {}
         if cache_key in llm_cache:
             logging.info("CACHE HIT for re-ranking.")
             response_data = llm_cache[cache_key]
@@ -204,16 +192,30 @@ def run_reranker_agent(state: GraphState) -> dict:
                 logging.error(f"Error during re-ranking: {e}")
                 return {"error": str(e)}
 
-        # Reconstruct the list of full snippets using the returned indices.
+        # Reconstruct exactly what the LLM picked, in order:
         indices = response_data.get("reranked_indices", [])
-        # The LLM returns 1-based indices, so subtract 1 for 0-based list access.
-        llm_ranked_snippets = [other_candidates[i - 1] for i in indices if 0 < i <= len(other_candidates)]
+        llm_picks = [
+            candidate_snippets[i - 1]
+            for i in indices
+            if 1 <= i <= len(candidate_snippets)
+        ]
+
+        # Dedupe by document and clamp to NUM_SNIPPETS_TO_KEEP
+        seen_docs = set()
+        final_evidence = []
+        for snip in llm_picks:
+            doc = snip["source_document"]
+            if doc not in seen_docs:
+                seen_docs.add(doc)
+                final_evidence.append(snip)
+                if len(final_evidence) == NUM_SNIPPETS_TO_KEEP:
+                    break
         
-        # Add the LLM's choices to our final list.
-        reranked_list.extend(llm_ranked_snippets)
+        reranked_list = final_evidence
 
     logging.info(f"Re-ranking complete. Kept {len(reranked_list)} of {len(candidate_snippets)} snippets.")
     
+    # ------------------------------------------------
     # Diagnostic logging
     # This clearly states which documents were kept and if the golden document was among them.
     gold_doc = state["drift_info"].get("gold_doc", "").lower()
@@ -221,23 +223,15 @@ def run_reranker_agent(state: GraphState) -> dict:
     logging.info("[Re-rank] kept=%s  gold_in_keep=%s",
                  [Path(d).name for d in kept_docs],
                  "YES ✅" if gold_doc in kept_docs else "NO ❌")
-
-    # Split glossary vs. real evidence
-    supporting = [s for s in reranked_list if s.get("source_type") == "bpm-kb"]
-    evidence   = [s for s in reranked_list if s.get("source_type") == "context"]
-
-    # Cap to at most ONE glossary snippet to keep prompts lean
-    supporting = supporting[:1]
+    # ------------------------------------------------
     
-    # Log the final evidence and support lists being passed to the next agent.
-    final_evidence_docs = [Path(s['source_document']).name for s in evidence]
-    final_support_docs = [Path(s['source_document']).name for s in supporting]
+    # --- Step 5: Assemble final output ---
+    final_evidence_docs = [Path(s['source_document']).name for s in reranked_list]
+    final_support_docs = [Path(s['source_document']).name for s in supporting_context]
     logging.info(f"Final Evidence List: {final_evidence_docs}")
     logging.info(f"Final Supporting Context: {final_support_docs}")
 
-
-    # Return both lists to update the state correctly.
     return {
-        "supporting_context": supporting,
-        "reranked_context_snippets": evidence
+        "supporting_context": supporting_context[:1], # Cap to at most ONE glossary snippet
+        "reranked_context_snippets": reranked_list
     }
