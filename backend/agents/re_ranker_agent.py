@@ -2,9 +2,11 @@ import os
 import sys
 import logging
 from pathlib import Path
-from typing import List
-from datetime import datetime
+from typing import List, Dict
+from datetime import datetime, timedelta
+import json
 import re
+from nltk.stem import PorterStemmer
 
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory.
@@ -23,10 +25,8 @@ from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o" # Using a more powerful model for this critical reasoning step.
-# Keep 1 best hit automatically (force keep mechanism) and ask the LLM to select 3 more.
-NUM_SNIPPETS_TO_KEEP = 4
-# Set a hard limit on the number of candidates sent to the LLM
-MAX_CANDIDATES_FOR_LLM = 20
+NUM_SNIPPETS_TO_KEEP = 4 # Number of snippets that the reranking process keeps at max
+MAX_CANDIDATES_FOR_LLM = 20 # Set a hard limit on the number of candidates sent to the LLM
 
 # --- Pydantic Model ---
 # Defines the expected output structure for the LLM call.
@@ -55,18 +55,21 @@ Based on the combination of these features, identify and return ONLY the integer
 Your output must be a valid JSON object containing a single key "reranked_indices" with a list of numbers.
 """
 
-# Helper function for Specificity Score.
+# Helper function for stem-based Specificity Score.
 def calculate_specificity_score(text: str, specific_entities: List[str]) -> float:
     """Calculates a score based on the presence of specific, unique entities."""
     if not specific_entities:
         return 0.0
     
+    ps = PorterStemmer()
+    text_tokens = set(ps.stem(w) for w in re.findall(r'\w+', text.lower()))
+    
     score = 0
-    text_lower = text.lower()
-    for entity in specific_entities:
-        # Use regex for whole word matching to avoid matching substrings.
-        if re.search(r'\b' + re.escape(entity.lower()) + r'\b', text_lower):
-            score += 1 # Add 1 for each specific entity found.
+    for ent in specific_entities:
+        ent_tokens = [ps.stem(w) for w in re.findall(r'\w+', ent.lower())]
+        # if *all* the stem tokens of the entity appear in the snippet…
+        if ent_tokens and all(tok in text_tokens for tok in ent_tokens):
+            score += 1
             
     return float(score)
 

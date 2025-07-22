@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd
 import ast
 import json
-import pm4py
 from lxml import etree
 import re
 from nltk.stem import PorterStemmer
@@ -57,24 +56,25 @@ def extract_keywords_and_entities(trace: etree._Element) -> tuple[list, list]:
     # We iterate through all string, int, and float attributes in the trace.
     for attr in trace.xpath(".//string | .//int | .//float"):
         val = attr.get("value", "")
-        # A simple heuristic: # A value containing digits is likely a unique ID or code, treated as a specific entity.
-        if val and any(char.isdigit() for char in val) and len(val) > 3:
-            specific_entities.add(val.lower())
-        # Other longer, non-numeric values are treated as sources for general keywords.
-        elif val and val not in {"UNKNOWN", "MISSING", "EMPTY"} and len(val) > 3:
+        # A simple heuristic: Long non-numeric values are sources for *general* keywords.
+        if val and val not in {"UNKNOWN", "MISSING", "EMPTY"} and not any(char.isdigit() for char in val) and len(val) > 3:
             for word in re.split(r'[\s,()-/]', val):
                 if word and len(word) > 3:
                     general_keywords.add(st.stem(word.lower()))
 
-    # Extract keywords from the names of the events themselves.
+    # Extract human-readable activity labels as *specific* entities
     for event in trace.findall('event'):
-        # Check multiple common keys for an event's name to support different schemas.
         for key in ["concept:name", "activityNameEN"]:
-             name_element = event.find(f"string[@key='{key}']")
-             if name_element is not None:
-                for word in re.split(r'[ _]', name_element.get("value", "")):
-                    if word and word.isalpha() and len(word) > 3:
-                        general_keywords.add(st.stem(word.lower()))
+            name_element = event.find(f"string[@key='{key}']")
+            if name_element is not None:
+                label = name_element.get("value", "").strip().lower()
+                if label:
+                    # Capture the full label as a specific entity
+                    specific_entities.add(label)
+                    # Also pull its stemmed tokens into the general pool
+                    for word in re.split(r'[\s_]', label):
+                        if word and word.isalpha() and len(word) > 3:
+                            general_keywords.add(st.stem(word))
 
     return list(general_keywords), list(specific_entities)
 
@@ -128,7 +128,8 @@ def run_drift_agent(state: GraphState) -> dict:
         
     selected_row = drift_df.iloc[row_index]
     trace_to_analyze = traces[row_index]
-    gold_docs = ast.literal_eval(selected_row['gold_source_document'])
+    # outcomment and delete lines 172-175 if not working as intended
+    # gold_docs = ast.literal_eval(selected_row['gold_source_document'])
     
     logging.info(f"ℹ️ Processing drift #{drift_index_in_row + 1} from CSV row #{row_index + 1} ℹ️")
     
@@ -166,8 +167,13 @@ def run_drift_agent(state: GraphState) -> dict:
         "confidence": confidence,
         "start_timestamp": start_timestamp,
         "end_timestamp": end_timestamp,
-        "gold_doc": gold_docs[drift_index_in_row] # Pass gold doc for logging for testing
     }
+
+    # Delete if not working as intended
+    # Add gold doc to drift_info if present in selection for testing.
+    # Maked the agent more independent from the testing script.
+    if "gold_doc" in selection:
+        drift_info["gold_doc"] = selection["gold_doc"]
 
     logging.info(f"Populated drift_info: {drift_info}")
     # This provides a clear summary of the keywords and entities extracted.
