@@ -3,10 +3,11 @@ import sys
 import logging
 from pathlib import Path
 from typing import List, Dict
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import re
-from nltk.stem import PorterStemmer
+import numpy as np
+from numpy.linalg import norm
 
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory.
@@ -21,88 +22,95 @@ from pydantic.v1 import BaseModel, Field
 # Import graph state schema and caching utility
 from backend.state.schema import GraphState, ContextSnippet
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
+from backend.utils.embeddings import get_embedding
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o" # Using a more powerful model for this critical reasoning step.
 NUM_SNIPPETS_TO_KEEP = 4 # Number of snippets that the reranking process keeps at max
 MAX_CANDIDATES_FOR_LLM = 20 # Set a hard limit on the number of candidates sent to the LLM
+ALPHA = 0.4 # Weight for blending specificity and similarity scores
 
 # --- Pydantic Model ---
 # Defines the expected output structure for the LLM call.
 # The LLM will return the integer indices of the snippets it selects.
 class RerankedIndices(BaseModel):
-    """A list of the integer indices of the most relevant snippets."""
+    """A list of the 1-based integer indices of the most relevant snippets."""
     reranked_indices: List[int] = Field(
-        description="A list of the integer indices of the top snippets, ordered by relevance."
+        description="A list of the 1-based integer indices of the top snippets, ordered by relevance."
     )
 
 # --- Prompt Template ---
 # This prompt instructs the LLM to act as a data analyst and use engineered features
 # to make a more analytical ranking decision.
-PROMPT_TEMPLATE = """You are an expert data analyst. Your task is to identify the most relevant evidence to explain a concept drift by analyzing a set of features for each candidate document.
+PROMPT_TEMPLATE = """You are an expert ranking assistant. Your task is to rank a list of candidate documents that may explain a concept drift. Each candidate has been pre-scored with a `priority_score`.
 
-**## 1. Detected Concept Drift**
-- **Drift Type:** {drift_type}
-- **Specific Entities:** {specific_entities}
+You will receive:
 
-**## 2. Candidate Snippets with Features**
+1. A detected concept drift:
+   - Drift Type: {drift_type}
+   - Drift Phrase: "{drift_phrase}"
+
+2. A list of candidate snippets, each with:
+   - index (1-based)
+   - document identifier
+   - priority_score
+   - similarity_score
+   - snippet text
+
+Format:
 {formatted_snippets}
 
-**## 3. Your Task**
-Review the candidate snippets and their features (Similarity Score, Specificity Score, Δdays). A high **Specificity Score** is a very strong signal of direct relevance.
-Based on the combination of these features, identify and return ONLY the integer indices of the top {num_to_keep} snippets that are most likely to be the direct cause of the drift.
-Your output must be a valid JSON object containing a single key "reranked_indices" with a list of numbers.
+Your task is to sort all candidates by relevance using these pairwise rules:
+
+1. **Priority**  
+   - If |priority_score_A - priority_score_B| > 0.025, the higher priority_score wins.
+
+2. **Similarity**  
+   - Otherwise (|Δpriority| ≤ 0.025):  
+     - If |similarity_score_A - similarity_score_B| > 0.01, the higher similarity_score wins.
+
+3. **Semantic Judgment**  
+   - Otherwise (both differences within thresholds):  
+     - Use your semantic understanding of the snippet texts to decide which is more relevant.
+
+**Output**  
+Return **only** a JSON object with a single key `"reranked_indices"`, whose value is the list of the top {num_to_keep} 1-based indices, in descending order of relevance.  
+Example:  
+ ```json
+{{ "reranked_indices": [3, 1, 4, 2] }}
 """
 
-# Helper function for stem-based Specificity Score.
-def calculate_specificity_score(text: str, specific_entities: List[str]) -> float:
-    """Calculates a score based on the presence of specific, unique entities."""
-    if not specific_entities:
-        return 0.0
-    
-    ps = PorterStemmer()
-    text_tokens = set(ps.stem(w) for w in re.findall(r'\w+', text.lower()))
-    
-    score = 0
-    for ent in specific_entities:
-        ent_tokens = [ps.stem(w) for w in re.findall(r'\w+', ent.lower())]
-        # if *all* the stem tokens of the entity appear in the snippet…
-        if ent_tokens and all(tok in text_tokens for tok in ent_tokens):
-            score += 1
-            
-    return float(score)
-
 def format_snippets_for_reranking(snippets: List[ContextSnippet], start_date: datetime) -> str:
-    """Formats snippets with all engineered features for the LLM prompt."""
+    """Formats snippets into a compact, YAML-like block for the LLM prompt."""
     formatted_str = ""
-    for i, snippet in enumerate(snippets):
+    # Use 1-based indexing for the candidate labels shown to the LLM
+    for i, snippet in enumerate(snippets, 1):
         delta_days = "N/A"
         if snippet.get("timestamp", 0):
             delta = abs((datetime.fromtimestamp(snippet['timestamp']) - start_date).days)
             delta_days = f"{delta} days"
             
-        score = snippet.get('score', 0.0)
-        # Use the pre-calculated specificity score
-        specificity_score = snippet.get('specificity_score', 0.0)
+        sim_score = snippet.get('score', 0.0)
+        sem_spec = snippet.get('semantic_specificity', 0.0)
         
         # Sanitize the snippet text to prevent breaking the prompt format
         text = snippet["snippet_text"].replace('\n', ' ').replace('"', '\\"')
 
         # Present all features clearly to the LLM for each snippet.
         formatted_str += (
-            f"### Snippet {i+1} (Source: {snippet['source_document']})\n"
-            f"- Similarity Score: {score:.3f}\n"
-            f"- Specificity Score: {specificity_score:.1f}\n"
-            f"- Δdays from Drift Start: {delta_days}\n"
-            f"Text: \"{text}\"\n\n"
+            f"Candidate {i}:\n"
+            f"  doc_id: \"{snippet['source_document']}\"\n"
+            f"  priority_score: {snippet.get('priority_score', 0.0):.3f}\n"
+            f"  similarity_score: {snippet.get('score', 0.0):.3f}\n"
+            f"  semantic_specificity: {snippet.get('semantic_specificity', 0.0):.3f}\n"
+            f"  snippet: \"{text}\"\n"
         )
     return formatted_str
 
 def run_reranker_agent(state: GraphState) -> dict:
     """
-    Force-keeps the best hit, then uses an LLM to re-rank the remaining snippets,
-    and finally splits the results into 'evidence' and 'supporting' context lists.
+    Ranks candidates using a blended score and a final LLM review step.
     """
     logging.info("--- Running Re-Ranker Agent ---")
 
@@ -122,42 +130,40 @@ def run_reranker_agent(state: GraphState) -> dict:
         return {"reranked_context_snippets": [], "supporting_context": supporting_context}
 
     drift_info = state.get("drift_info", {})
-    specific_entities = state.get("specific_entities", [])
+    drift_phrase = state.get("drift_phrase", "")
     start_date = datetime.fromisoformat(drift_info["start_timestamp"])
 
-    # Step 1: Calculate specificity score first
+    # Step 1: Calculate semantic specificity and blended priority score
+    logging.info("Generating embeddings to calculate semantic specificity...")
+    drift_emb = get_embedding(drift_phrase)
     for snip in candidate_snippets:
-        snip['specificity_score'] = calculate_specificity_score(
-            snip['snippet_text'], specific_entities
-        )
+        snippet_emb = get_embedding(snip["snippet_text"])
+        sem_spec = float(np.dot(drift_emb, snippet_emb) / (norm(drift_emb) * norm(snippet_emb)))
+        snip["semantic_specificity"] = sem_spec
 
-    # Step 2: Deduplicate, prioritizing specificity
-    logging.info(f"Evidence candidates before dedupe: {len(candidate_snippets)}")
+        similarity = snip.get('score', 0.0)
+        # Blend the scores using ALPHA
+        priority_score = (ALPHA * sem_spec) + ((1 - ALPHA) * similarity)
+        snip['priority_score'] = priority_score
+
+    # Step 2: Deduplicate using the new priority score
     unique_by_doc = {}
     for snip in candidate_snippets:
         doc = snip["source_document"]
-        current = unique_by_doc.get(doc)
-        # Prefer the snippet with higher (specificity, then similarity)
-        if not current or (
-            (snip["specificity_score"], snip["score"])
-            > (current["specificity_score"], current["score"])
-        ):
+        if doc not in unique_by_doc or snip["priority_score"] > unique_by_doc[doc]["priority_score"]:
             unique_by_doc[doc] = snip
-    
     candidate_snippets = list(unique_by_doc.values())
-    logging.info(f"Evidence candidates after doc-level dedupe: {len(candidate_snippets)}")
             
-    # Step 3: Sort candidates for logging
-    # Note: This sorting is for human-readable logs; the LLM gets an unsorted view of features.
-    sorted_candidates = sorted(candidate_snippets, key=lambda x: (x.get('specificity_score', 0.0), x.get('score', 0.0)), reverse=True)
+    # Step 3: Sort candidates by the new priority score
+    sorted_candidates = sorted(candidate_snippets, key=lambda x: x.get('priority_score', 0.0), reverse=True)
 
-    # Update log message to be accurate
-    logging.info("Top candidates after pre-sorting (by specificity, then similarity):")
+    logging.info("Top candidates after pre-sorting (by blended priority score):")
     for i, snip in enumerate(sorted_candidates[:5]):
         logging.info(
             f"  > Pre-Rank #{i+1}: {Path(snip['source_document']).name} "
-            f"(Specificity: {snip.get('specificity_score', 0.0):.1f}, Score: {snip.get('score', 0.0):.3f})"
+            f"(Priority: {snip.get('priority_score', 0.0):.3f}, SemSpec: {snip.get('semantic_specificity', 0.0):.3f}, Sim: {snip.get('score', 0.0):.3f})"
         )
+
     # Step 4: Let the LLM pick the top snippets
     reranked_list = []
     # Short-circuit is triggered only when there is exactly one candidate.
@@ -175,23 +181,20 @@ def run_reranker_agent(state: GraphState) -> dict:
             
         llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
         structured_llm = llm.with_structured_output(RerankedIndices)
-        
+
         llm_cache = load_cache()
         
         prompt = PROMPT_TEMPLATE.format(
             drift_type=drift_info["drift_type"],
-            specific_entities=", ".join(specific_entities),
+            drift_phrase=drift_phrase,
             formatted_snippets=format_snippets_for_reranking(candidates_for_llm, start_date),
             num_to_keep=NUM_SNIPPETS_TO_KEEP
         )
         
         cache_key = get_cache_key(prompt, MODEL_NAME)
         
-        response_data = {}
-        if cache_key in llm_cache:
-            logging.info("CACHE HIT for re-ranking.")
-            response_data = llm_cache[cache_key]
-        else:
+        response_data = llm_cache.get(cache_key)
+        if not response_data:
             logging.info("CACHE MISS. Calling API for re-ranking...")
             try:
                 response_object = structured_llm.invoke(prompt)
@@ -200,15 +203,16 @@ def run_reranker_agent(state: GraphState) -> dict:
                 save_to_cache(llm_cache)
                 logging.info("Re-ranking response cached successfully.")
             except Exception as e:
-                logging.error(f"Error during re-ranking: {e}")
-                return {"error": str(e)}
+                return {"error": f"Error during re-ranking: {e}"}
+        else:
+            logging.info("CACHE HIT for re-ranking.")
 
         # Reconstruct exactly what the LLM picked, in order:
         indices = response_data.get("reranked_indices", [])
         llm_picks = [
-            candidate_snippets[i - 1]
+            candidates_for_llm[i - 1]
             for i in indices
-            if 1 <= i <= len(candidate_snippets)
+            if 1 <= i <= len(candidates_for_llm)
         ]
 
         # Dedupe by document and clamp to NUM_SNIPPETS_TO_KEEP
@@ -221,7 +225,6 @@ def run_reranker_agent(state: GraphState) -> dict:
                 final_evidence.append(snip)
                 if len(final_evidence) == NUM_SNIPPETS_TO_KEEP:
                     break
-        
         reranked_list = final_evidence
 
     logging.info(f"Re-ranking complete. Kept {len(reranked_list)} of {len(candidate_snippets)} snippets.")
@@ -230,18 +233,18 @@ def run_reranker_agent(state: GraphState) -> dict:
     # Diagnostic logging
     # This clearly states which documents were kept and if the golden document was among them.
     # Normalize filenames using Path().stem for a more robust comparison
-    gold_doc_stem = Path(drift_info.get("gold_doc", "")).stem.lower()
+    gold_doc = state["drift_info"].get("gold_doc", "")
     kept_doc_stems = {Path(s["source_document"]).stem.lower() for s in reranked_list}
     logging.info("[Re-rank] kept=%s  gold_in_keep=%s",
                  [Path(s["source_document"]).name for s in reranked_list],
-                 "YES ✅" if gold_doc_stem in kept_doc_stems else "NO ❌")
+                 "YES ✅" if Path(gold_doc).stem.lower() in kept_doc_stems else "NO ❌")
     # ------------------------------------------------
     
     # --- Step 5: Assemble final output ---
-    final_evidence_docs = [Path(s['source_document']).name for s in reranked_list]
-    final_support_docs = [Path(s['source_document']).name for s in supporting_context]
-    logging.info(f"Final Evidence List: {final_evidence_docs}")
-    logging.info(f"Final Supporting Context: {final_support_docs}")
+    #final_evidence_docs = [Path(s['source_document']).name for s in reranked_list]
+    #final_support_docs = [Path(s['source_document']).name for s in supporting_context]
+    #logging.info(f"Final Evidence List: {final_evidence_docs}")
+    #logging.info(f"Final Supporting Context: {final_support_docs}")
 
     return {
         "supporting_context": supporting_context,
