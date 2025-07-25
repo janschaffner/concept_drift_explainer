@@ -12,6 +12,7 @@ sys.path.append(str(project_root))
 # -----------------------
 
 from backend.graph.build_graph import build_graph
+from backend.agents.drift_linker_agent import run_drift_linker_agent
 
 def run_master_evaluation():
     """
@@ -67,6 +68,8 @@ def run_master_evaluation():
     for test_dir in test_set_dirs:
         test_set_name = test_dir.name
         logging.info(f"\n===== Processing Test Set: {test_set_name} =====")
+        # Reset the list for each new event log to ensure separate analysis
+        states_for_this_log = []
 
         try:
             golden_csv_path = next(test_dir.glob("*.csv"))
@@ -98,6 +101,9 @@ def run_master_evaluation():
                     logging.error(f"    > ERROR: Pipeline failed. Reason: {final_state['error']}")
                     continue
 
+                # Add the successful state to our list for meta-analysis
+                states_for_this_log.append(final_state)
+
                 explanation = final_state.get("explanation", {})
                 ranked_causes = explanation.get("ranked_causes", [])
                 
@@ -127,6 +133,17 @@ def run_master_evaluation():
                 logging.info(f"    > Recall@1: {'HIT ✅' if recall_at_1 else 'MISS ❌'}")
                 logging.info(f"    > Recall@2: {'HIT ✅' if recall_at_2 else 'MISS ❌'}")
                 logging.info(f"    > Reciprocal Rank: {mrr:.3f}")
+
+        # Run the Drift Linker Agent on the results from the current event log
+        if len(states_for_this_log) >= 2:
+            logging.info(f"\n===== Running Meta-Analysis for {test_set_name} =====")
+            linker_result = run_drift_linker_agent(states_for_this_log)
+            if linker_result.get("error"):
+                logging.error(f"Drift Linker Agent failed: {linker_result['error']}")
+            elif linker_result.get("linked_drift_summary"):
+                logging.info("--- Drift Linker Agent Summary ---")
+                logging.info(f"  Connection Type: {linker_result.get('connection_type')}")
+                logging.info(f"  Summary: {linker_result.get('linked_drift_summary')}")
 
     if results:
         report_df = pd.DataFrame(results)
