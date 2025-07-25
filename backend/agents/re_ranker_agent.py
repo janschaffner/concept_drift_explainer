@@ -2,10 +2,8 @@ import os
 import sys
 import logging
 from pathlib import Path
-from typing import List, Dict
+from typing import List
 from datetime import datetime
-import json
-import re
 import numpy as np
 from numpy.linalg import norm
 
@@ -158,9 +156,9 @@ def run_reranker_agent(state: GraphState) -> dict:
     sorted_candidates = sorted(candidate_snippets, key=lambda x: x.get('priority_score', 0.0), reverse=True)
 
     logging.info("Top candidates after pre-sorting (by blended priority score):")
-    for i, snip in enumerate(sorted_candidates[:5]):
+    for py_rank, snip in enumerate(sorted_candidates[:5]):
         logging.info(
-            f"  > Pre-Rank #{i+1}: {Path(snip['source_document']).name} "
+            f"  > Pre-Rank #{py_rank+1}: {Path(snip['source_document']).name} "
             f"(Priority: {snip.get('priority_score', 0.0):.3f}, SemSpec: {snip.get('semantic_specificity', 0.0):.3f}, Sim: {snip.get('score', 0.0):.3f})"
         )
 

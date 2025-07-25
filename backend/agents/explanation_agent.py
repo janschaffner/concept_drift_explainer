@@ -32,7 +32,12 @@ class Cause(BaseModel):
     evidence_snippet: str = Field(description="The specific text snippet that supports the analysis.")
     source_document: str = Field(description="The name of the source document for the evidence.")
     context_category: str = Field(description="The most relevant Franzoi context category path.")
- 
+    confidence_score: float = Field(description="The data-driven confidence score for this cause.")
+
+class RefinedCauseList(BaseModel):
+    """A list of refined potential causes for the drift."""
+    ranked_causes: List[Cause] = Field(description="A list of refined potential causes for the drift, ordered by importance.")
+
 # --- DRIFT PROMPTS: Specialized Prompt Templates for 4 Drift Types ---
 # These prompts guide the LLM to generate explanations tailored to the specific
 # characteristics of the detected concept drift.
@@ -126,7 +131,7 @@ Ensure the final summary is concise, the cause descriptions are logical, and tha
 {formatted_evidence}
 
 **## Draft Explanation to Review**
-{draft_explanation}
+{draft_causes}
 
 **## 3. Your Task**
 Critique and refine the draft explanation, ensuring the final wording is cautious and hypothetical. Your output must be a single, valid JSON object matching the requested schema.
@@ -187,74 +192,54 @@ def expand_context(snippets: List[Dict], index: Pinecone.Index) -> List[Dict]:
             # Create a new, expanded document object with the full text.
             expanded_doc = original_snippet.copy()
             expanded_doc["snippet_text"] = full_text
+
+            # Ensure the priority_score is carried over
+            if "priority_score" in original_snippet:
+                expanded_doc["priority_score"] = original_snippet["priority_score"]
+
             expanded_docs.append(expanded_doc)
             logging.info(f"  > Expanded '{source}' into a single context block.")
         except Exception as e:
             logging.error(f"Failed to expand context for '{source}': {e}")
 
-    # Return the new list of expanded documents, preserving the original rank order.
-    return sorted(expanded_docs, key=lambda x: x.get('score', 0.0), reverse=True)
+    # Sort the final list by the correct priority_score
+    return sorted(expanded_docs, key=lambda d: d.get("priority_score", 0.0), reverse=True)
 
+# Note: The 'rank' parameter is 0-based.
 def calculate_confidence_score(snippet: Dict, drift_info: Dict, rank: int) -> float:
-    """Calculates a data-driven confidence score for a given evidence snippet.
-
-    This function uses a multi-stage heuristic model to determine a score.
-    It first checks if a snippet meets a minimum semantic similarity threshold.
-    If it passes, the snippet starts with a high baseline confidence, to which
-    bonuses for specificity (entity matches) and temporal proximity are added.
-    The score is then capped at 100% and a final penalty is applied based on
-    the snippet's rank in the final list.
-
-    Args:
-        snippet (Dict): The evidence snippet object, which must contain the
-            'score' (similarity), 'specificity_score', and 'timestamp' keys.
-        drift_info (Dict): The dictionary containing information about the drift,
-            used here to get the 'start_timestamp'.
-        rank (int): The 0-indexed rank of the snippet, used to apply a
-            rank-based penalty.
-
-    Returns:
-        float: The final, calculated confidence score between 0.0 and 1.0.
     """
-    similarity_score = snippet.get("score", 0.0)
-    
-    # 1. First, check if the document meets a minimum similarity threshold.
-    # If not, it's not relevant enough to score highly.
-    if similarity_score < 0.20:
-        return round(similarity_score * 0.5, 2) # Return a very low score
+    Calculates a data-driven confidence score based on the blended priority
+    score, a temporal bonus, and a penalty based on the final rank.
+    """
+    # Start with the blended priority_score as the baseline
+    base_score = snippet.get("priority_score", 0.0)
 
-    # 2. Start with a baseline confidence since it passed the re-ranker and threshold.
-    score = 0.85
-
-    # 3. Add a significant bonus for specificity (up to 20%).
-    specificity_score = snippet.get("specificity_score", 0.0)
-    normalized_specificity = min(1.0, specificity_score / 3.0)
-    score += 0.20 * normalized_specificity
- 
-    # 4. Add a bonus for temporal proximity (up to 15%).
+    # Add a small temporal bonus (up to +0.15) for docs near the drift date
+    temporal_bonus = 0.0
     drift_start_dt = datetime.fromisoformat(drift_info["start_timestamp"])
     evidence_ts = snippet.get("timestamp", 0)
     if evidence_ts > 0:
-         evidence_dt = datetime.fromtimestamp(evidence_ts)
-         delta_days = abs((drift_start_dt - evidence_dt).days)
-    # The bonus decays linearly over 60 days.
-    temporal_bonus = 0.15 * max(0.0, 1.0 - (delta_days / 60.0))
-    score += temporal_bonus
- 
-    # 5. Cap the score at 1.0 and apply the final rank penalty.
-    capped_score = min(1.0, score)
-    rank_bonus = 1.0 if rank == 0 else 0.95 if rank == 1 else 0.90
-    final_score = capped_score * rank_bonus
+        evidence_dt = datetime.fromtimestamp(evidence_ts)
+        delta_days = abs((drift_start_dt - evidence_dt).days)
+        # Linear decay over 60 days
+        temporal_bonus = 0.15 * max(0.0, 1.0 - (delta_days / 60.0))
 
-    # Log the detailed breakdown of the score calculation for debugging.
+    score_with_bonus = base_score + temporal_bonus
+
+    # Apply a multiplier based on the final rank determined by the LLM
+    rank_multiplier = 2 if rank == 0 else 1.5 if rank == 1 else 1.0
+
+    # Cap the score at a maximum of 99% for realism
+    final_score = min(0.99, score_with_bonus * rank_multiplier)
+
     logging.debug(f"Score breakdown for '{snippet.get('source_document')}':")
-    logging.debug(f"  - Baseline: 0.85")
-    logging.debug(f"  - Specificity Bonus (score={specificity_score}): +{0.20 * normalized_specificity:.2f}")
-    logging.debug(f"  - Temporal Bonus (days_delta={delta_days if evidence_ts > 0 else 'N/A'}): +{temporal_bonus:.2f}")
-    logging.debug(f"  - Subtotal (capped): {capped_score:.2f}")
-    logging.debug(f"  - Final Score (after rank {rank} penalty of {rank_bonus:.2f}): {final_score:.2f}")
+    logging.debug(f"  - Base (Priority Score): {base_score:.3f}")
+    logging.debug(f"  - Temporal Bonus: +{temporal_bonus:.3f}")
+    logging.debug(f"  - Rank Multiplier (Rank {rank}): *{rank_multiplier}")
+    logging.debug(f"  - Final Score (Capped): {final_score:.2f}")
 
     return round(final_score, 2)
+
 
 def run_explanation_agent(state: GraphState, index: Pinecone.Index) -> dict:
     """
@@ -300,10 +285,63 @@ def run_explanation_agent(state: GraphState, index: Pinecone.Index) -> dict:
     structured_llm = llm.with_structured_output(Cause)
     llm_cache = load_cache()
     cache_updated = False
-    final_causes = []
-    
+        
     try:
+        # FALLBACK: Handle the "only one snippet" case
+        if len(usable_evidence) == 1:
+            logging.info("Only one evidence snippet found, generating a direct explanation.")
+            evidence_doc = usable_evidence[0]
+            
+            formatted_glossary = format_context_for_prompt(glossary_context)
+            formatted_evidence = format_context_for_prompt([evidence_doc])
+            
+            # Dynamically select the prompt based on the type of drift.
+            drift_type = drift_info.get('drift_type', '').lower()
+            prompt_template = INCREMENTAL_DRIFT_PROMPT
+            prompt_name = "INCREMENTAL"
+            if 'sudden' in drift_type: 
+                prompt_template = SUDDEN_DRIFT_PROMPT
+                prompt_name = "SUDDEN"
+            elif 'gradual' in drift_type: 
+                prompt_template = GRADUAL_DRIFT_PROMPT
+                prompt_name = "GRADUAL"
+            elif 'recurring' in drift_type: 
+                prompt_template = RECURRING_DRIFT_PROMPT
+                prompt_name = "RECURRING"
+            logging.debug(f"Using {prompt_name}_DRIFT_PROMPT for cause #1.")
+
+            prompt = prompt_template.format(
+                drift_type   = drift_info["drift_type"],
+                start_timestamp = drift_info["start_timestamp"],
+                end_timestamp   = drift_info["end_timestamp"],
+                formatted_glossary = formatted_glossary,
+                formatted_evidence = formatted_evidence
+            )
+
+            # Check cache before making an expensive API call.
+            cache_key = get_cache_key(prompt, MODEL_NAME)
+            if cache_key in llm_cache:
+                cause_dict = llm_cache[cache_key]
+            else:
+                response_obj = structured_llm.invoke(prompt) # API Call
+                cause_dict = response_obj.dict()
+                llm_cache[cache_key] = cause_dict
+                # Save the cache immediately after updating it
+                save_to_cache(llm_cache)
+
+            # Assign a high confidence score
+            cause_dict['confidence_score'] = 0.99
+            
+            final_explanation: Explanation = {
+                "summary": cause_dict["cause_description"],
+                "ranked_causes": [cause_dict]
+            }
+            logging.info(f"Generated cause for '{evidence_doc['source_document']}' with confidence score {cause_dict['confidence_score']:.2f}")
+            return {"explanation": final_explanation}
+        
         # --- STEP 1: Loop through each evidence doc and generate a cause ---
+        draft_causes = []
+        logging.info("--- Generating draft causes for each piece of evidence ---")
         for i, evidence_doc in enumerate(usable_evidence):
             # Format the context for this specific document.
             formatted_glossary = format_context_for_prompt(glossary_context)
@@ -337,49 +375,56 @@ def run_explanation_agent(state: GraphState, index: Pinecone.Index) -> dict:
             if cache_key in llm_cache:
                 cause_dict = llm_cache[cache_key]
             else:
-                response_obj = structured_llm.invoke(prompt)
+                response_obj = structured_llm.invoke(prompt) # API Call
                 cause_dict = response_obj.dict()
                 llm_cache[cache_key] = cause_dict
                 cache_updated = True
-            
-            # Calculate the data-driven confidence score and add it to the cause object.
+
+            # Calculate the new confidence score and attach it
+            # Pass drift_info to the confidence score function
             cause_dict['confidence_score'] = calculate_confidence_score(evidence_doc, drift_info, rank=i)
-            final_causes.append(cause_dict)
+            draft_causes.append(cause_dict)
             logging.info(f"Generated cause for '{evidence_doc['source_document']}' with confidence score {cause_dict['confidence_score']:.2f}")
 
-        # --- STEP 1b: Refine drafts via editor LLM ---
-        draft_causes = final_causes.copy()
-        refined_causes: list[Dict] = []
-        for i, draft in enumerate(draft_causes):
-            # prepare the same context pieces
-            formatted_glossary = format_context_for_prompt(glossary_context)
-            formatted_evidence = format_context_for_prompt([usable_evidence[i]])
+        # --- STEP 2: Refine drafts via editor LLM ---
+        logging.info("--- Refining the draft causes ---")
 
-            # build and cache the refine prompt
-            refine_prompt = REFINE_PROMPT_TEMPLATE.format(
-                formatted_glossary=formatted_glossary,
-                formatted_evidence=formatted_evidence,
-                draft_explanation=json.dumps(draft)
-            )
-            refine_key = get_cache_key(refine_prompt, MODEL_NAME)
-            if refine_key in llm_cache:
-                refined = llm_cache[refine_key]
-            else:
-                logging.info(f"Refining draft cause #{i+1} via LLM…")
-                response = structured_llm.invoke(refine_prompt)
-                refined = response.dict()
-                llm_cache[refine_key] = refined
-                cache_updated = True
+        # Use the same LLM instance, but configure a new parser for the list schema
+        structured_llm_refine = llm.with_structured_output(RefinedCauseList)
+        
+        # Prepare a version of draft_causes without confidence for the prompt
+        drafts_for_prompt = [
+            {k: v for k, v in cause.items() if k != 'confidence_score'} for cause in draft_causes
+        ]
 
-            # preserve the original confidence_score
-            refined['confidence_score'] = draft['confidence_score']
-            refined_causes.append(refined)
-            logging.info(f"Refined cause #{i+1} for '{draft['source_document']}'")
+        refine_prompt = REFINE_PROMPT_TEMPLATE.format(
+            formatted_glossary=format_context_for_prompt(glossary_context),
+            formatted_evidence=format_context_for_prompt(usable_evidence),
+            draft_causes=json.dumps({"ranked_causes": drafts_for_prompt}, indent=2)
+        )
+        
+        refine_cache_key = get_cache_key(refine_prompt, MODEL_NAME)
+        refined_causes_data = llm_cache.get(refine_cache_key)
 
-        # swap in refined causes for the summary
-        final_causes = refined_causes
+        if not refined_causes_data:
+            logging.info("CACHE MISS. Calling API for cause refinement...")
+            refined_causes_obj = structured_llm_refine.invoke(refine_prompt) 
+            refined_causes_data = refined_causes_obj.dict()
+            llm_cache[refine_cache_key] = refined_causes_data
+            cache_updated = True
+        else:
+            logging.info("CACHE HIT for cause refinement.")
+            
+        final_causes = refined_causes_data.get("ranked_causes", [])
 
-        # --- STEP 2: Generate a summary from all the generated causes ---
+        # Re-attach the original confidence scores to the refined causes
+        if len(final_causes) == len(draft_causes):
+            for i, cause in enumerate(final_causes):
+                cause['confidence_score'] = draft_causes[i]['confidence_score']
+        else:
+            logging.warning("Refiner changed the number of causes. Confidence scores may be incorrect.")
+
+        # --- STEP 3: Generate a summary from all the generated causes ---
         formatted_causes = "\n".join([f"- {c['cause_description']}" for c in final_causes])
         summary_prompt = SUMMARY_PROMPT_TEMPLATE.format(formatted_causes=formatted_causes)
         

@@ -35,6 +35,7 @@ class ContextSnippet(TypedDict):
     timestamp: int # Stored as Unix timestamp
     source_type: str # "context" or "bpm-kb"
     specificity_score: float # The calculated specificity score
+    priority_score: Optional[float]
     support_only: bool # True if this came from the glossary ("bpm-kb")
     classifications: List[FranzoiClassification] # list of detailed classifications
 
@@ -73,8 +74,8 @@ class GraphState(TypedDict):
     drift_info: Dict
     # Populated by the DriftAgent with general keywords from the trace.
     drift_keywords: Optional[List[str]]
-    # Populated by the DriftAgent with specific, unique entities from the trace.
-    specific_entities: Optional[List[str]]
+    # Populated by the DriftAgent with a specific, unique phrase.
+    drift_phrase: Optional[str]
 
     # Populated by the ContextRetrievalAgent with a broad list of candidates.
     raw_context_snippets: List[Dict]
