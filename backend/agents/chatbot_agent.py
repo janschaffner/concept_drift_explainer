@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 from pathlib import Path
+import textwrap
 
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory.
@@ -18,6 +19,12 @@ from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o-mini"
+
+# --- Initialization ---
+# Load environment variables and check for API key once at the module level
+load_dotenv()
+if not os.getenv("OPENAI_API_KEY"):
+    raise RuntimeError("OPENAI_API_KEY not found in environment variables.")
 
 def format_chat_history(chat_history: list) -> str:
     """
@@ -48,10 +55,6 @@ def run_chatbot_agent(state: GraphState) -> dict:
         A dictionary with the updated `chat_history`.
     """
     logging.info("--- Running Chatbot Agent ---")
-    
-    load_dotenv()
-    if not os.getenv("OPENAI_API_KEY"):
-        return {"error": "OPENAI_API_KEY not found."}
 
     user_question = state.get("user_question")
     if not user_question:
@@ -63,30 +66,39 @@ def run_chatbot_agent(state: GraphState) -> dict:
     drift_info = state.get('drift_info', {})
     explanation = state.get('explanation', {})
     chat_history = state.get('chat_history', [])
+    ranked_causes = explanation.get('ranked_causes', []) # Retrieve the ranked causes to provide as context
 
-    # Construct a context string that includes the original analysis and the conversation so far.
-    full_context = f"""
+    # Format the ranked causes into a readable list
+    causes_list = "\n".join(
+        f"- {c.get('source_document', 'N/A')}: \"{c.get('evidence_snippet', '')[:100]}…\""
+        for c in ranked_causes
+    ) or "None"
+
+    # Use textwrap.dedent and include the new causal documents list
+    full_context = textwrap.dedent(f"""
     **Original Analysis Context:**
     - Drift Detected: {drift_info.get('drift_type')} from {drift_info.get('start_timestamp')} to {drift_info.get('end_timestamp')}.
     - Explanation Summary: {explanation.get('summary')}
+    - Causal Documents:
+    {causes_list}
 
     **Previous Conversation:**
     {format_chat_history(chat_history)}
-    """
+    """)
 
-    prompt_template = """You are a helpful AI assistant having a conversation with a business analyst. The analyst is asking follow-up questions about a concept drift explanation that you have already provided.
+    prompt_template = textwrap.dedent("""\
+    You are a helpful AI assistant having a conversation with a business analyst. The analyst is asking follow-up questions about a concept drift explanation that you have already provided.
+    Use the provided "Original Analysis Context" and "Previous Conversation" to answer the "User's New Question". Keep your answers concise and helpful. You can now refer to the "Causal Documents" by name in your answer.
 
-Use the provided "Original Analysis Context" and "Previous Conversation" to answer the "User's New Question". Keep your answers concise and helpful.
+    ---
+    {context}
+    ---
 
----
-{context}
----
+    **User's New Question:**
+    {question}
 
-**User's New Question:**
-{question}
-
-**Your Answer:**
-"""
+    **Your Answer:**
+    """)
     prompt = prompt_template.format(context=full_context, question=user_question)
 
     # Log the full prompt for debugging purposes.
