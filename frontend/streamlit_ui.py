@@ -199,34 +199,49 @@ with st.sidebar:
 # --- Chat Dialog Logic ---
 @st.dialog("Conversational Analysis")
 def run_chat_dialog():
-    st.write("Ask follow-up questions about the full analysis.")
-    
+    #st.write("Ask follow-up questions about the full analysis.")
+
+    # Add an initial greeting if the chat history is empty
+    if not st.session_state.chat_history:
+        st.session_state.chat_history.append(
+            ("assistant", "Hello! How can I help you with this analysis?")
+        )
+
+    # Display the entire chat history with the correct avatars
     for author, message in st.session_state.chat_history:
-        with st.chat_message(author):
+        if author == "user":
+            avatar_path = "frontend/assets/user_avatar.png"
+        else:
+            avatar_path = "frontend/assets/chatbot_avatar.png"
+        
+        with st.chat_message(author, avatar=avatar_path):
             st.markdown(message)
 
+    # Get new input from the user.
     if user_question := st.chat_input("Ask your question..."):
+        # Immediately display the user's message
+        # 1. Append and display the user's message immediately.
         st.session_state.chat_history.append(("user", user_question))
-        
-        current_state = {
-            "full_state_log": st.session_state.full_state_log,
-            "chat_history": st.session_state.chat_history,
-            "user_question": user_question
-        }
-        
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="frontend/assets/user_avatar.png"):
             st.markdown(user_question)
-            
-        with st.chat_message("assistant"):
+
+        # 2. Reserve a container for the assistant's response.
+        assistant_spot = st.chat_message("assistant", avatar="frontend/assets/chatbot_avatar.png")
+
+        # 3. Show the spinner in the container while we wait.
+        with assistant_spot:
             with st.spinner("Thinking..."):
+                current_state = {
+                    "full_state_log": st.session_state.full_state_log,
+                    "chat_history": st.session_state.chat_history,
+                    "user_question": user_question
+                }
                 response = run_chatbot_agent(current_state)
-                if response.get("error"):
-                    st.error(f"Error from chatbot: {response['error']}")
-                else:
-                    st.session_state.chat_history = response.get('chat_history', [])
-                    ai_answer = st.session_state.chat_history[-1][1]
-                    st.markdown(ai_answer)
-        # Re-run the script to refresh the dialog's state and move the input to the bottom
+                st.session_state.chat_history = response.get('chat_history', [])
+                ai_answer = st.session_state.chat_history[-1][1]
+            
+            st.markdown(ai_answer)
+        # 4. Now that we have the response, rerun the script to draw the final state.
         st.rerun()
 
 # --- Displaying the Main Results ---
