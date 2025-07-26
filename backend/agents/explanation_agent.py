@@ -58,6 +58,9 @@ Prioritize evidence that points to a single, discrete event with a specific date
 
 **## 4. Your Task**
 Based on the single block of evidence provided, generate one potential cause for the **SUDDEN** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
+
+## Heuristic Guidance
+Pay special attention to any snippet classified as **ORGANIZATION_EXTERNAL::Legal** or **ORGANIZATION_EXTERNAL::Technical**, as these often explain sudden drifts.
 """
 
 GRADUAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Gradual Drift**.
@@ -76,7 +79,10 @@ Prioritize evidence suggesting a transition, coexistence of old/new processes, o
 
 **## 4. Your Task**
 Based on the single block of evidence provided, generate one potential cause for the **GRADUAL** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
- """
+
+## Heuristic Guidance
+Pay special attention to any snippet classified as **ORGANIZATION_INTERNAL::Organizational** or **ORGANIZATION_EXTERNAL::Legal**, as these often explain gradual drifts.
+"""
 
 INCREMENTAL_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain an **Incremental Drift**.
 An Incremental Drift consists of a sequence of small, continuous changes that cumulatively result in significant process transformation. It is often associated with agile BPM practices, where iterative adjustments are made without a single, identifiable change point (Bose et al., 2011; Kraus und van der Aa, 2025).
@@ -94,7 +100,10 @@ Prioritize evidence of multiple small adjustments, iterative improvements, or ag
 
 **## 4. Your Task**
 Based on the single block of evidence provided, generate one potential cause for the **INCREMENTAL** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
- """
+
+## Heuristic Guidance
+Pay special attention to any snippet classified as **ORGANIZATION_INTERNAL::Process_Management** or **ORGANIZATION_INTERNAL::IT_Management**, as these often explain incremental drifts.
+"""
 
 RECURRING_DRIFT_PROMPT = """You are an expert business process analyst. Your goal is to explain a **Recurring Drift**.
 A Recurring Drift occurs when previously observed process versions reappear over time, often in a cyclical pattern. These drifts may follow seasonal cycles or non-periodic triggers (e.g., market-specific promotional workflows) (Bose et al., 2011; Kraus und van der Aa, 2025).
@@ -112,7 +121,10 @@ Prioritize evidence of seasonal activities, cyclical patterns, or temporary proc
 
 **## 4. Your Task**
 Based on the single block of evidence provided, generate one potential cause for the **RECURRING** drift. The wording of your explanation must be cautious and hypothetical, not definitive. Use phrases like 'This could suggest...', 'A possible explanation is...', or 'The evidence may indicate...'. Your output must be a single, valid JSON object matching the requested schema.
- """
+
+## Heuristic Guidance
+Pay special attention to any snippet classified as **ORGANIZATION_EXTERNAL::Social** or **ORGANIZATION_EXTERNAL::Economic**, as these often explain recurring drifts.
+"""
 
 SUMMARY_PROMPT_TEMPLATE = """You are a senior business process analyst. Based on the following list of potential causes for a concept drift, write a concise, 1-3 sentence executive summary that synthesizes the main findings.
 
@@ -144,8 +156,9 @@ def format_context_for_prompt(classified_context: list) -> str:
         formatted_str += f"### Evidence Snippet {i+1}\n"
         formatted_str += f"- **Source Document:** {snippet['source_document']}\n"
         classifications_str = ", ".join([c['full_path'] for c in snippet.get('classifications', [])])
-        formatted_str += f"- **Classified As:** [{classifications_str}]\n"
-        formatted_str += f"- **Snippet Text:** \"{snippet['snippet_text']}\"\n\n"
+        if classifications_str:    
+            formatted_str += f"- **Classified As:** [{classifications_str}]\n"
+            formatted_str += f"- **Snippet Text:** \"{snippet['snippet_text']}\"\n\n"
     return formatted_str
 
 def expand_context(snippets: List[Dict], index: Pinecone.Index) -> List[Dict]:

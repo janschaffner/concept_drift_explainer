@@ -91,7 +91,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         return {"error": error_msg}
 
     # Initialize the LangChain LLM with structured output capabilities.
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
     structured_llm = llm.with_structured_output(ClassificationList)
 
     # Load the persistent cache to avoid redundant API calls.-
@@ -102,28 +102,27 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
     for snippet in context_snippets:
         logging.info(f"Classifying snippet from: {snippet['source_document']}")
 
-        prompt = PROMPT_TEMPLATE.format(snippet_text=snippet["snippet_text"])
+        # Sanitize the snippet text to prevent prompt injection issues
+        sanitized_snippet = snippet["snippet_text"].replace('"', '\\"')
+        prompt = PROMPT_TEMPLATE.format(snippet_text=sanitized_snippet)
 
         # Check the cache before making an expensive API call.
         cache_key = get_cache_key(prompt, MODEL_NAME)
         
-        if cache_key in llm_cache:
-            logging.info(f"CACHE HIT for snippet from: {snippet['source_document']}")
-            response_data = llm_cache[cache_key]
-        else:
+        response_data = llm_cache.get(cache_key)
+        if not response_data:
             logging.info(f"CACHE MISS. Calling API for snippet from: {snippet['source_document']}")
             try:
                 response_object = structured_llm.invoke(prompt)
-                # Convert Pydantic object to a standard dictionary to store in JSON cache.
                 response_data = response_object.dict()
-                
-                # Save the new response to the cache.
                 llm_cache[cache_key] = response_data
                 cache_updated = True
             except Exception as e:
                 logging.error(f"Error classifying snippet: {e}")
                 snippet['classifications'] = [{"full_path": "CLASSIFICATION_FAILED", "reasoning": str(e)}]
                 continue
+        else:
+            logging.info(f"CACHE HIT for snippet from: {snippet['source_document']}")
 
         # Process the response data (from cache or API) and enrich the snippet.
         typed_classifications: List[FranzoiClassification] = [
