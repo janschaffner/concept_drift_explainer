@@ -216,10 +216,11 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         all_docs = [Path(s['source_document']).name for s in retrieved_snippets]
         logging.info(f"All retrieved docs: {all_docs}")
 
-        gold = drift_info.get("gold_doc", "")
+        gold_doc = drift_info.get("gold_doc", "")
+        if gold_doc:
         # normalize case to avoid mismatches
-        found = "✅" if gold.lower() in [d.lower() for d in all_docs] else "❌"
-        logging.info(f"Gold doc: {gold}  Recall@all: {found}")
+            found = "✅" if gold_doc.lower() in [d.lower() for d in all_docs] else "❌"
+            logging.info(f"Gold doc: {gold_doc}  Recall@all: {found}")
 
     else:
         logging.warning("No context snippets found matching the criteria.")

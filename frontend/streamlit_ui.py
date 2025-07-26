@@ -45,14 +45,21 @@ def get_date_from_filename(filename: str) -> str:
 @st.cache_data
 def load_and_unpack_drifts():
     """
-    Loads drift data and unpacks rows with multiple drifts into a list.
+    Loads drift data from the drift_outputs directory and unpacks rows
+    with multiple drifts into a selectable list for the UI.
     """
-    csv_path = project_root / "data" / "drift_outputs" / "prediction_results.csv"
+    # The path points only to the drift_outputs directory
+    drift_dir = project_root / "data" / "drift_outputs"
+    
+    if not drift_dir.exists():
+        st.error(f"Could not find drift data directory at {drift_dir}")
+        return []
+
     try:
+        csv_path = next(drift_dir.glob("*.csv"))
         df = pd.read_csv(csv_path)
         
         drift_options = []
-        # This logic handles files where one row might contain multiple drifts in its columns
         for row_index, row in df.iterrows():
             drift_types = ast.literal_eval(row['Detected Drift Types'])
             changepoints = ast.literal_eval(row['Detected Changepoints'])
@@ -63,12 +70,12 @@ def load_and_unpack_drifts():
                     f"Drift #{len(drift_options) + 1}: {drift_type} "
                     f"(between {changepoints[drift_index][0]} and {changepoints[drift_index][1]})"
                 )
-                drift_options.append({"id": option_id, "display": display_name})
+                drift_options.append({"id": option_id, "display": display_name, "data_dir": str(drift_dir)})
         
         return drift_options
         
-    except FileNotFoundError:
-        st.error(f"Could not find drift data at {csv_path}")
+    except StopIteration:
+        st.error(f"No CSV file found in the drift data directory: {drift_dir}")
         return []
     except Exception as e:
         st.error(f"Error loading or parsing drift data: {e}")
@@ -83,14 +90,16 @@ def init_session_state():
     st.session_state.all_explanations = []
     st.session_state.error_message = None
     st.session_state.feedback_states = {}
-    st.session_state.chat_history = []
+    st.session_state.chat_history = [] # Chat history is a single, global list
     st.session_state.full_state_log = []
     st.session_state.linked_drift_summary = None
     st.session_state.connection_type = None
+    st.session_state.analysis_run_complete = False
+    st.session_state.show_chat = False
 
 # --- Main Application ---
 # Initialize state on first load if it doesn't exist
-if 'all_explanations' not in st.session_state:
+if 'analysis_run_complete' not in st.session_state:
     init_session_state()
 
 st.title("🤖 Concept Drift Explainer")
@@ -190,7 +199,7 @@ with st.sidebar:
 # --- Chat Dialog Logic ---
 @st.dialog("Conversational Analysis")
 def run_chat_dialog():
-    st.write("Ask follow-up questions about the generated explanations.")
+    st.write("Ask follow-up questions about the full analysis.")
     
     for author, message in st.session_state.chat_history:
         with st.chat_message(author):
@@ -198,14 +207,16 @@ def run_chat_dialog():
 
     if user_question := st.chat_input("Ask your question..."):
         st.session_state.chat_history.append(("user", user_question))
+        
+        current_state = {
+            "full_state_log": st.session_state.full_state_log,
+            "chat_history": st.session_state.chat_history,
+            "user_question": user_question
+        }
+        
         with st.chat_message("user"):
             st.markdown(user_question)
-
-        # For the chatbot, we can provide the full log of all states as context
-        current_state = {"full_state_log": st.session_state.full_state_log}
-        current_state['user_question'] = user_question
-        current_state['chat_history'] = st.session_state.chat_history
-        
+            
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 response = run_chatbot_agent(current_state)
@@ -215,6 +226,8 @@ def run_chat_dialog():
                     st.session_state.chat_history = response.get('chat_history', [])
                     ai_answer = st.session_state.chat_history[-1][1]
                     st.markdown(ai_answer)
+        # Re-run the script to refresh the dialog's state and move the input to the bottom
+        st.rerun()
 
 # --- Displaying the Main Results ---
 st.divider()
@@ -226,6 +239,13 @@ if st.session_state.error_message:
 elif st.session_state.all_explanations:
     st.success(f"Successfully analyzed {len(st.session_state.all_explanations)} drift(s).")
     
+    # The button now sets a state variable instead of calling the dialog directly
+    if st.button("💬 Ask Follow-up Questions about the Full Analysis"):
+        st.session_state.show_chat = True
+    # Conditionally display the dialog based on the state variable
+    if st.session_state.get("show_chat"):
+        run_chat_dialog()
+
     # --- Display the linked drift analysis summary ---
     if st.session_state.linked_drift_summary:
         connection_type = st.session_state.connection_type
@@ -316,11 +336,6 @@ elif st.session_state.all_explanations:
                                 print(f"Negative feedback logged for cause #{cause_idx+1} of drift #{explanation_idx+1}")
                                 st.rerun()
         st.divider()
-
-    # Button to launch Chat
-    if st.button("💬 Ask Follow-up Questions about this Analysis"):
-        st.session_state.chat_history = []
-        run_chat_dialog()
 
 else:
     st.info("Click 'Run Full Analysis' in the sidebar to start.")

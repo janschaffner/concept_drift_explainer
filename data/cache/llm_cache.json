@@ -200,14 +200,14 @@
     "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
     "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.65
+    "confidence_score": 0.64
   },
   "c1203185d2c3de92fad655f4e0348f44": {
     "cause_description": "The introduction of a standardized naming template for research project records could suggest a series of incremental adjustments aimed at improving consistency and efficiency in project management. This gradual implementation of naming conventions may reflect an agile approach to process management, where small changes are made over time to enhance internal tools and documentation practices.",
     "evidence_snippet": "\"To support the harmonization of project titles and references in internal tools, we are introducing a standardized naming template for all new research project records created after 1 November.\"",
     "source_document": "2017-10-20_Project_Title_Standardization_Guide.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.39
+    "confidence_score": 0.38
   },
   "b226b6fee797f36605c110167c9c7a86": {
     "cause_description": "This could suggest that the incremental adjustments in the payment request process, as outlined in the memo, reflect a continuous effort to streamline operations and reduce friction. The policy indicates a shift towards efficiency by allowing a single supervisor approval for lower amounts and a flexible approach to exception handling, which may have been gradually implemented over time to adapt to changing organizational needs.",
@@ -792,5 +792,174 @@
   "eb726270633d3d54f5d48a4c0b2fb466": {
     "connection_type": "Shared Evidence / Root Cause",
     "summary": "Both drifts focus on the introduction of a pre-approval practice for travel permits, indicating a shared initiative aimed at improving compliance and financial controls. The gradual transition described in Drift #2 aligns with the incremental changes noted in Drift #1, suggesting that both drifts stem from the same organizational response to audit findings."
+  },
+  "6dc25cf458bb26236a89265dfcff077a": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "0e0b5cceeaf9575c77ac822ee806a146": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "765ef7f34d171e9a1323d4b8d772bdcd": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that a new pre-approval step is being introduced into the international travel declaration process, indicating a potential transition from the old process to the new one. The mention of a transition period, where declarations submitted before a specific date will still be processed under the old rules but flagged, supports the hypothesis of coexistence between the old and new processes during this rollout phase.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver. This change does not affect the permit flow itself but applies to post-travel declarations only. Implementation Notes \u2022 Effective Date: 21 May 2018 \u2022 Transition Period: Declarations without pre-approval submitted before 30 June 2018 will still be processed but flagged.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the university is undergoing a transition phase regarding its international travel oversight practices, where both the old and new governance structures may coexist. The Vice-Rector's communication suggests that while the formal policy remains unchanged, new leadership practices are being encouraged starting January 2018. This could imply a gradual rollout of enhanced oversight measures, allowing for both the existing policy and the new practices to operate simultaneously during the transition period.",
+        "evidence_snippet": "In recent months, our university has seen a substantial increase in international travel... This initiative does not override policy, but reinforces shared responsibility in how we manage...",
+        "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.64
+      },
+      {
+        "cause_description": "The evidence suggests that the introduction of a pre-approval practice for travel permits may be part of a gradual transition towards a new process variant. Since the memo indicates that these changes are strongly encouraged but not mandatory, it implies that the old process will continue to coexist with the new pre-approval layer for some time. This coexistence could lead to a gradual drift as departments adopt the new practice at different rates, allowing both processes to operate simultaneously until the old process is phased out.",
+        "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+        "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.4
+      },
+      {
+        "cause_description": "The evidence indicates that a new mandatory data validation protocol for travel permit submissions was introduced, suggesting a transition phase where the old process of submitting travel permits may coexist with the new validation requirements. This gradual implementation might allow ongoing cases to continue under the old variant while new submissions adhere to the updated protocol, reflecting a phased rollout of the new process.",
+        "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.43
+      }
+    ]
+  },
+  "fc8a4ff375b8e6fdc8bc5abb6cd1da22": "The analysis reveals that the university is currently navigating a transition phase in its international travel declaration process, characterized by the coexistence of old and new governance structures and practices. The introduction of a pre-approval step and mandatory data validation protocols suggests a gradual rollout of enhanced oversight measures, allowing for a phased implementation where both processes operate simultaneously. This transitional approach may lead to concept drift as departments adopt the new practices at varying rates, potentially impacting the overall efficiency and compliance of the travel declaration process.",
+  "0b3e88bc02817f199719d82c8bd633b6": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the international travel declaration process and share key evidence documents, such as the 'Travel Compliance Notice' and the introduction of a pre-approval step. This indicates that they are part of a broader initiative to enhance compliance and oversight, suggesting a shared root cause related to the organization's response to audit findings and the need for improved financial controls."
+  },
+  "661c8be9763e3a43611ab8c01ebd6faa": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "c4d79f3f76b7d4e9b26d864ab98a1dc8": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "15eb87fd3f20d162a950886f6c6b7afa": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the international travel declaration process and share key evidence documents, particularly the 'Travel Compliance Notice' and the introduction of a pre-approval step. This indicates that the changes in Drift #1 are a direct response to the transitional phase described in Drift #2, suggesting that they stem from the same underlying need for improved oversight and compliance."
+  },
+  "aa76b8cb81e4d3c1fc01d938e567c3fb": "There are no documents available related to the first drift, as the analysis context indicates that no drift has been detected.",
+  "549165179d248f4220e7a6efa1b5fd26": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "6659e4812e67b61923316cf38beefca5": "It seems there are no documents available to explain. If you have any specific concepts or details you would like me to clarify about concept drift or related topics, please let me know!",
+  "8fbc021aa46627c61da7d66c295576a1": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "500cc73adcf4d5f78d559c5a73793163": {
+    "cause_description": "The evidence may indicate that the university's recurring internal controls program, which includes a scheduled IT security audit, reflects a series of incremental adjustments aimed at enhancing compliance and security measures over time. This ongoing commitment to auditing and improving IT practices could suggest a gradual transformation in the organization's approach to IT management, aligning with agile BPM practices that emphasize iterative improvements.",
+    "evidence_snippet": "Subject: Scheduled IT Security Audit \u2013 October\u2013November 2017 \nFrom: Information Security Office \nTo: All Staff and System Owners \nDate: 27 October 2017 \nCategory: Compliance Notice \n\nDear Colleagues, \nAs part of our recurring internal controls program, the Information Security Office will conduct a \nuniversity-wide IT audit from 30 October to 17 November. This effort supports our ISO 27001 \ncompliance efforts. \n\nWhat to Expect \n\u2022 Review of local device encryption \n\u2022 Access log sampling in core systems \n\u2022 Password policy adherence checks \n\u2022 Random interviews with departmental IT reps \n\nDepartments will be contacted at least 3 days in advance of site visits. \nWe ask for your cooperation to ensure a smooth and efficient audit process. \nThank you, \nTobias Mahler \nChief Information Security Officer",
+    "source_document": "2017-10-27_IT_Security_Audit_Announcement.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::IT_Management",
+    "confidence_score": 0.36
+  },
+  "a69d15757ce3c6d3565ccc3a0958d956": {
+    "ranked_causes": [
+      {
+        "cause_description": "The introduction of a Pre-Approval Step for international travel declarations may indicate a strategic shift towards enhancing financial controls and compliance. This change could reflect an iterative approach in the travel approval process, suggesting that the organization is adopting agile practices to improve oversight and mitigate risks identified in the 2017 external audit.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The implementation of a mandatory data validation protocol for travel permit submissions may reflect an effort to enhance process compliance and data integrity. This initiative could suggest that the organization is iteratively refining its processes to address specific audit concerns, such as duplicate trip registrations and budget mismatches, indicating a potential shift towards agile practices.",
+        "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.64
+      },
+      {
+        "cause_description": "The introduction of a standardized naming template for research project records may suggest a focus on improving consistency and efficiency in project management. This gradual implementation of naming conventions could reflect an agile approach to process management, where small, iterative changes are made to enhance internal tools and documentation practices.",
+        "evidence_snippet": "To support the harmonization of project titles and references in internal tools, we are introducing a standardized naming template for all new research project records created after 1 November.",
+        "source_document": "2017-10-20_Project_Title_Standardization_Guide.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.38
+      },
+      {
+        "cause_description": "The scheduled IT security audit as part of the university's recurring internal controls program may indicate a commitment to enhancing compliance and security measures over time. This ongoing auditing effort could suggest a gradual transformation in the organization's approach to IT management, aligning with agile practices that emphasize iterative improvements.",
+        "evidence_snippet": "Subject: Scheduled IT Security Audit \u2013 October\u2013November 2017 From: Information Security Office To: All Staff and System Owners Date: 27 October 2017 Category: Compliance Notice Dear Colleagues, As part of our recurring internal controls program, the Information Security Office will conduct a university-wide IT audit from 30 October to 17 November. This effort supports our ISO 27001 compliance efforts.",
+        "source_document": "2017-10-27_IT_Security_Audit_Announcement.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::IT_Management",
+        "confidence_score": 0.36
+      }
+    ]
+  },
+  "0286651fdfa718301774d84a06a5e757": "The recent changes in organizational processes, including the introduction of a Pre-Approval Step for international travel, mandatory data validation for travel permits, standardized naming templates for research projects, and scheduled IT security audits, indicate a strategic shift towards enhancing compliance, financial controls, and data integrity. These initiatives reflect an iterative, agile approach to process management, aimed at addressing past audit concerns and improving overall efficiency and oversight within the organization. This evolution underscores a commitment to continuous improvement and adaptive practices in response to identified risks and operational challenges.",
+  "ae9d964075b98b723cf9bea3954411d5": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "f8972644ccb39055251d0823b8c61088": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of a pre-approval step and mandatory data validation protocols for international travel declarations, indicating a shared focus on enhancing compliance and oversight. The coexistence of old and new practices in Drift #2 further supports the notion that these changes in Drift #1 are part of a broader organizational strategy to improve processes, suggesting a common root cause for the observed drifts."
+  },
+  "0c4634a4b9d8b2d0967610f2b5996998": "The first cause for the first drift is about new rules being put in place to make sure international travel is done properly. These changes include needing approval before travel can be finalized, checking data for travel permits, using standard names for research projects, and having regular IT security checks. These steps are aimed at improving how the organization manages its processes, ensuring compliance with regulations, and making things more efficient. Essentially, the organization is trying to learn from past mistakes and make better decisions moving forward.",
+  "998284c04e90ae4b85bb47e01a7ed29a": "The document related to the first cause for the first drift is titled **2017-10-15_Travel_Compliance_Notice.pdf**.",
+  "fe9d687cba5b7f121c89a91b313290a1": "The comprehensive list of all drift causes for Drift #1 includes the following documents:\n\n1. **2017-10-15_Travel_Compliance_Notice.pdf**: This document outlines the introduction of a Pre-Approval Step for international travel to enhance compliance.\n2. **2017-10-17_Data_Validation_Update_Notice.pdf**: This notice discusses the implementation of mandatory data validation for travel permits in preparation for audits.\n3. **2017-10-20_Project_Title_Standardization_Guide.pdf**: This guide introduces standardized naming templates for research projects to improve consistency.\n4. **2017-10-27_IT_Security_Audit_Announcement.pdf**: This announcement details scheduled IT security audits aimed at enhancing data integrity and security.\n\nThese documents collectively reflect the organization's strategic shift towards better compliance and operational efficiency.",
+  "f1dd09ca3721e717a96143cbcf4711e2": "The comprehensive list of all drift causes for Drift #2 includes the following documents:\n\n1. **2017-10-15_Travel_Compliance_Notice.pdf**: This document discusses the introduction of a Pre-Approval Step for international travel, aimed at improving oversight.\n2. **2017-10-10_Leadership_Note_Mobility_Oversight.pdf**: This note highlights the increase in international travel and the need for better oversight during this transition.\n3. **2017-10-17_Data_Validation_Update_Notice.pdf**: This notice outlines the implementation of mandatory data validation protocols for travel permits in preparation for audits.\n4. **2017-10-03_PreApproval_Practice_Memo.pdf**: This memo encourages departments to adopt the new pre-approval practices to enhance oversight of faculty-funded travel.\n\nThese documents reflect the organization's gradual transition to new travel processes, which may lead to varying levels of compliance and efficiency during the rollout.",
+  "43c27dea436c9b096ba754b6356f8043": "Here's a simple recipe for a delicious strawberry cake:\n\n### Ingredients:\n- **For the Cake:**\n  - 1 \u00bd cups all-purpose flour\n  - 1 cup granulated sugar\n  - \u00bd cup unsalted butter, softened\n  - 2 large eggs\n  - 1 teaspoon vanilla extract\n  - \u00bd cup milk\n  - 1 \u00bd teaspoons baking powder\n  - \u00bc teaspoon salt\n  - 1 cup fresh strawberries, pureed\n\n- **For the Frosting:**\n  - 1 cup heavy whipping cream\n  - \u00bd cup powdered sugar\n  - 1 teaspoon vanilla extract\n  - Fresh strawberries for garnish\n\n### Instructions:\n1. **Preheat the Oven:** Preheat your oven to 350\u00b0F (175\u00b0C). Grease and flour two 8-inch round cake pans.\n  \n2. **Mix the Cake Batter:**\n   - In a large bowl, cream together the butter and sugar until light and fluffy.\n   - Add the eggs one at a time, mixing well after each addition.\n   - Stir in the vanilla extract and strawberry puree.\n   - In another bowl, whisk together the flour, baking powder, and salt.\n   - Gradually add the dry ingredients to the wet mixture, alternating with milk, and mix until just combined.\n\n3. **Bake the Cake:**\n   - Divide the batter evenly between the prepared pans.\n   - Bake for 25-30 minutes, or until a toothpick inserted into the center comes out clean.\n   - Let the cakes cool in the pans for 10 minutes, then transfer to wire racks to cool completely.\n\n4. **Prepare the Frosting:**\n   - In a mixing bowl, whip the heavy cream until soft peaks form.\n   - Gradually add the powdered sugar and vanilla extract, and continue to whip until stiff peaks form.\n\n5. **Assemble the Cake:**\n   - Place one cake layer on a serving plate. Spread a layer of frosting on top.\n   - Add the second layer and frost the top and sides of the cake.\n   - Garnish with fresh strawberries on top.\n\n6. **Serve and Enjoy!**\n\nThis strawberry cake is perfect for any occasion. Enjoy your baking!",
+  "df9adf78e6603e306f9ec956ff2c2998": "### Strawberry Cake Recipe\n\n**Ingredients:**\n- **Cake:**\n  - 1 \u00bd cups flour\n  - 1 cup sugar\n  - \u00bd cup butter (softened)\n  - 2 eggs\n  - 1 tsp vanilla\n  - \u00bd cup milk\n  - 1 \u00bd tsp baking powder\n  - \u00bc tsp salt\n  - 1 cup pureed strawberries\n\n- **Frosting:**\n  - 1 cup heavy cream\n  - \u00bd cup powdered sugar\n  - 1 tsp vanilla\n  - Fresh strawberries (for garnish)\n\n**Instructions:**\n1. Preheat oven to 350\u00b0F (175\u00b0C) and grease two 8-inch pans.\n2. Cream butter and sugar; add eggs, vanilla, and strawberry puree.\n3. Mix flour, baking powder, and salt; alternate adding to wet mixture with milk.\n4. Bake for 25-30 minutes; cool.\n5. Whip cream, add powdered sugar and vanilla until stiff peaks form.\n6. Frost cooled cake layers and garnish with strawberries.\n\nEnjoy your strawberry cake!",
+  "4d945be74056a9ba373e0a82afa958cd": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "f4da7f72b4c4a5a423c0171d2887483e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "1a5ad2a95f445674ef9dd7e8a552d701": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the transition and enhancement of international travel declaration processes, sharing evidence documents that highlight the introduction of pre-approval steps and mandatory data validation protocols. This indicates that the changes in Drift #1 are a direct response to the gradual implementation observed in Drift #2, suggesting a common root cause related to improving compliance and operational efficiency."
   }
 }
