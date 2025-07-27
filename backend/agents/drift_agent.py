@@ -45,7 +45,7 @@ def extract_general_keywords(trace: etree._Element) -> list:
     for attr in trace.xpath(".//string | .//int | .//float"):
         val = attr.get("value", "")
         if val and val not in {"UNKNOWN", "MISSING", "EMPTY"} and not any(char.isdigit() for char in val) and len(val) > 3:
-            for word in re.split(r'[\s,()-/]', val):
+            for word in re.split(r'[\s,()/-]', val):
                 if word and len(word) > 3:
                     general_keywords.add(st.stem(word.lower()))
 
@@ -141,6 +141,5 @@ def run_drift_agent(state: GraphState) -> dict:
     return {
         "drift_info": drift_info,
         "drift_keywords": general_keywords,
-        "drift_phrase": drift_phrase, # Pass the new phrase to the state
-        "specific_entities": [], # This is no longer used
+        "drift_phrase": drift_phrase,
     }

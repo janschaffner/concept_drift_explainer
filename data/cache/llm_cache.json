@@ -293,7 +293,7 @@
     "evidence_snippet": "In recent months, our university has seen a substantial increase in international travel... This initiative does not override policy, but reinforces shared responsibility in how we manage...",
     "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.66
+    "confidence_score": 0.64
   },
   "4bd66210621e259c0d400448bdf27ad1": {
     "cause_description": "The evidence may indicate that a new mandatory data validation protocol for travel permit submissions was introduced, which could suggest a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation might allow ongoing cases to continue under the old variant while new submissions adhere to the updated protocol, reflecting a phased rollout of the new process.",
@@ -307,7 +307,7 @@
     "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
     "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.41
+    "confidence_score": 0.4
   },
   "779d625e0d236c851652c9937fcfc5da": {
     "ranked_causes": [
@@ -983,7 +983,7 @@
     "evidence_snippet": "\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports \n\nPlease ensure your unit coordinators and faculty staff are briefed. A system message will appear \nin the travel portal beginning 30 October. \nSincerely, \nDr. Lars Wiegand \nHead of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions \nFrom: Finance and Compliance Coordination Office \nDate: 17 October 2017 \nTo: All Budget Owners, Project Leads, Travel Officers \nCategory: Process Enforcement \n \nDear Colleagues, \nIn preparation for the annual financial reconciliation and internal audit season, we are \nimplementing a mandatory data validation protocol on all travel permit submissions, \neffective 1 November 2017. \n \nPolicy Update \nAll submitted travel permits must now contain: \n\u2022 A valid budget number \n\u2022 A specified project number and task ID \n\u2022 A populated activity code (if applicable) \nPermits lacking these fields will be automatically flagged for pre-approval review and may be \nreturned to the requester. \n \nCompliance Context \nThis update aligns with Article 9 of the University Financial Control Framework and addresses \naudit concerns regarding: \n\u2022 Budget mismatches \n\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
     "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.44
+    "confidence_score": 0.42
   },
   "b5500b3052cb88258a3cac6864db35c4": {
     "ranked_causes": [
@@ -1048,5 +1048,198 @@
   "3e7e5d42d0f9a2d123abd09608c4a9d4": "The root cause for drift #2 is the organization's need to enhance oversight and compliance in the international travel declaration process due to an increase in travel activities and the necessity for improved financial controls.",
   "49f1e4250dfdd3e2ae0d970d902a30c6": "The second drift, labeled as \"gradual,\" occurred from October 16, 2017, to January 1, 2018. It highlights a significant transition in the international travel declaration process, marked by the introduction of new pre-approval and data validation protocols. This phased rollout allows both old and new governance structures to coexist, indicating a gradual adaptation by departments to the enhanced oversight measures. Monitoring the impact of these changes on compliance and operational efficiency is essential during this transition. \n\n**Causal Documents:**\n- 2017-10-15_Travel_Compliance_Notice.pdf\n- 2017-10-10_Leadership_Note_Mobility_Oversight.pdf\n- 2017-10-17_Data_Validation_Update_Notice.pdf\n- 2017-10-03_PreApproval_Practice_Memo.pdf",
   "6e0e04d3a3c8ed29394668a67f8cafd0": "The first drift, labeled as \"incremental,\" occurred from October 24, 2017, to June 5, 2018. It reflects recent changes in travel declaration approvals, data validation protocols, project record naming conventions, and payment request processes. These changes indicate a strategic shift towards improved financial controls, compliance, and operational efficiency within the organization. The adjustments demonstrate an agile approach to business process management, focusing on continuous improvement and risk mitigation in response to audit concerns and evolving organizational needs.\n\n**Causal Documents:**\n- 2017-10-15_Travel_Compliance_Notice.pdf\n- 2017-10-17_Data_Validation_Update_Notice.pdf\n- 2017-10-20_Project_Title_Standardization_Guide.pdf\n- 2017-10-15_Rfp_Approval_Policy.pdf",
-  "9d5e59221d27a3cf101011be10a48c95": "The two drifts identified are \"incremental\" and \"gradual,\" each reflecting different aspects of changes in the organization's processes.\n\n### Drift Summaries:\n1. **Incremental Drift** (Oct 24, 2017 - Jun 5, 2018):\n   - Focuses on a strategic shift towards enhanced financial controls and operational efficiency.\n   - Involves changes in travel declaration approvals, data validation protocols, project naming conventions, and payment processes.\n   - Represents a commitment to continuous improvement and risk mitigation in response to audit concerns.\n\n2. **Gradual Drift** (Oct 16, 2017 - Jan 1, 2018):\n   - Highlights a significant transition in the international travel declaration process.\n   - Introduces new pre-approval and data validation protocols, allowing old and new governance structures to coexist.\n   - Suggests a phased adaptation by departments to enhanced oversight measures, emphasizing the need to monitor compliance and efficiency.\n\n### Comparison:\n- **Nature of Change**: The incremental drift indicates a broader strategic overhaul aimed at improving overall efficiency and compliance, while the gradual drift focuses specifically on the transition within the travel declaration process.\n- **Implementation**: The incremental drift reflects more comprehensive changes across multiple processes, whereas the gradual drift shows a phased approach to implementing new protocols.\n- **Timeframe**: The incremental drift has a longer duration, indicating ongoing improvements, while the gradual drift represents a specific period of adjustment.\n\nIn summary, while both drifts are related to improving organizational processes, the incremental drift is broader and more strategic, while the gradual drift is focused on a specific transition within a particular process."
+  "9d5e59221d27a3cf101011be10a48c95": "The two drifts identified are \"incremental\" and \"gradual,\" each reflecting different aspects of changes in the organization's processes.\n\n### Drift Summaries:\n1. **Incremental Drift** (Oct 24, 2017 - Jun 5, 2018):\n   - Focuses on a strategic shift towards enhanced financial controls and operational efficiency.\n   - Involves changes in travel declaration approvals, data validation protocols, project naming conventions, and payment processes.\n   - Represents a commitment to continuous improvement and risk mitigation in response to audit concerns.\n\n2. **Gradual Drift** (Oct 16, 2017 - Jan 1, 2018):\n   - Highlights a significant transition in the international travel declaration process.\n   - Introduces new pre-approval and data validation protocols, allowing old and new governance structures to coexist.\n   - Suggests a phased adaptation by departments to enhanced oversight measures, emphasizing the need to monitor compliance and efficiency.\n\n### Comparison:\n- **Nature of Change**: The incremental drift indicates a broader strategic overhaul aimed at improving overall efficiency and compliance, while the gradual drift focuses specifically on the transition within the travel declaration process.\n- **Implementation**: The incremental drift reflects more comprehensive changes across multiple processes, whereas the gradual drift shows a phased approach to implementing new protocols.\n- **Timeframe**: The incremental drift has a longer duration, indicating ongoing improvements, while the gradual drift represents a specific period of adjustment.\n\nIn summary, while both drifts are related to improving organizational processes, the incremental drift is broader and more strategic, while the gradual drift is focused on a specific transition within a particular process.",
+  "4b1ebc8f95b70922e3deb83c2a53541e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "669639befb94b5bab7f650b6daf872bb": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "102995aae273e142d2fba5d67cc0795a": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "ec8736fd7bc5f2dd3c80720f91916c44": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that a new pre-approval step is being introduced into the international travel declaration process, indicating a potential transition from the old process to the new one. The mention of a transition period, where declarations submitted before a specific date will still be processed under the old rules but flagged, supports the hypothesis of coexistence between the old and new processes during this rollout phase.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver. This change does not affect the permit flow itself but applies to post-travel declarations only. Implementation Notes \u2022 Effective Date: 21 May 2018 \u2022 Transition Period: Declarations without pre-approval submitted before 30 June 2018 will still be processed but flagged.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the university is in a transition phase regarding its international travel oversight practices, where both the old and new governance structures may coexist. The Vice-Rector's communication suggests that while the formal policy remains unchanged, new leadership practices are being encouraged starting January 2018. This could imply a gradual rollout of enhanced oversight measures, allowing for both the existing policy and the new practices to operate simultaneously during the transition period.",
+        "evidence_snippet": "In recent months, our university has seen a substantial increase in international travel... This initiative does not override policy, but reinforces shared responsibility in how we manage...",
+        "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.64
+      },
+      {
+        "cause_description": "The evidence suggests that the introduction of a pre-approval practice for travel permits may be part of a gradual transition towards a new process variant. Since the memo indicates that these changes are strongly encouraged but not mandatory, it implies that the old process will continue to coexist with the new pre-approval layer for some time. This coexistence could lead to a gradual drift as departments adopt the new practice at different rates, allowing both processes to operate simultaneously until the old process is phased out.",
+        "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+        "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.4
+      },
+      {
+        "cause_description": "The evidence indicates that a new mandatory data validation protocol for travel permit submissions was introduced, suggesting a transition phase where both the old and new processes may coexist. This aligns with the gradual drift concept, as ongoing cases may still be processed under the old system while new submissions adhere to the updated requirements. The phased rollout of this protocol, effective from 1 November 2017, implies that the organization is gradually shifting towards a more compliant process, potentially leading to the eventual phasing out of the old variant.",
+        "evidence_snippet": "\u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports Please ensure your unit coordinators and faculty staff are briefed. A system message will appear in the travel portal beginning 30 October. Sincerely, Dr. Lars Wiegand Head of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions From: Finance and Compliance Coordination Office Date: 17 October 2017 To: All Budget Owners, Project Leads, Travel Officers Category: Process Enforcement Dear Colleagues, In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017. Policy Update All submitted travel permits must now contain: \u2022 A valid budget number \u2022 A specified project number and task ID \u2022 A populated activity code (if applicable) Permits lacking these fields will be automatically flagged for pre-approval review and may be returned to the requester. Compliance Context This update aligns with Article 9 of the University Financial Control Framework and addresses audit concerns regarding: \u2022 Budget mismatches \u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.42
+      }
+    ]
+  },
+  "107d3759ebf83e4b83568800b5350ac8": "The analysis reveals that the organization is undergoing a significant transition in its international travel declaration process, characterized by the introduction of new pre-approval steps and mandatory data validation protocols. This phased rollout allows for the coexistence of both old and new governance structures, leading to a gradual drift as departments adopt the updated practices at varying rates. As a result, the organization is likely to experience a temporary period of operational complexity until the old processes are fully phased out.",
+  "90639c4a74abff50740c898fbe1b8853": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the changes in the international travel declaration process, particularly the introduction of pre-approval steps and data validation protocols. The evidence documents and key semantic phrases in both profiles highlight a common theme of enhancing compliance and operational efficiency, indicating that they are likely driven by the same underlying organizational goals."
+  },
+  "4d968a503d48026381c6968eb9b1bdd1": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "e19de26b54c13229f893570b00fe374e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "dd52ac9674e88b0e552d1f447721cdf6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "be210952ed0401ba29b53da6d6ef9277": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to compliance-driven changes within the organization, with Drift #1 highlighting immediate compliance measures following non-compliant disbursements and Drift #2 reflecting a strategic shift towards enhanced compliance and oversight. The shared focus on compliance and procedural updates suggests that both drifts stem from a common root cause of adapting to regulatory requirements and improving process management."
+  },
+  "a5b32783e72fb974b904ee168fba4676": {
+    "reranked_indices": [
+      2,
+      1,
+      3,
+      4
+    ]
+  },
+  "3c35e24c41a05202cd4a5a415b9c982f": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the introduction of a pre-approval practice for travel permits, indicating a shared initiative aimed at improving financial controls and compliance. The gradual transition described in Drift #2 aligns with the incremental changes noted in Drift #1, suggesting that both drifts stem from the same organizational response to audit findings."
+  },
+  "d009047831852bfbc6baaae4227d13bb": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "b21d5864820f390b6f545429b1487b1b": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "da33d882f02ac39649c6705e0a1309db": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "724adb409cea3ddc353402e24afab4e8": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "d376809e5ff88a488eb8d4833ab76c39": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "9208e69315aff5d708dd32f459cdfa28": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "624f9d1ba585e26029836cb727685a89": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the introduction of new pre-approval and data validation protocols within the international travel declaration process, indicating a shared root cause of enhancing compliance and operational efficiency. The overlapping evidence documents, such as the 'Travel Compliance Notice' and 'Data Validation Update Notice', further support the connection between these drifts."
+  },
+  "1593023e87d741f7b6cde6fbd40950d4": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "16870c5494cb53daed9eb4127d1fdee6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "22cb41e43c836c58dfb45b71d317a9fd": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "aabfc17e3864dcf7304916b1bedc0eef": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to compliance-driven changes within the organization, with Drift #1 highlighting immediate compliance measures in response to non-compliant disbursements and Drift #2 reflecting a strategic shift towards enhanced compliance and accountability through procedural updates. The shared focus on compliance and the same key semantic phrase 'request for payment' suggest a common root cause influencing both drifts."
+  },
+  "277cf180c44414b92951e5ca9a548deb": {
+    "reranked_indices": [
+      2,
+      1,
+      3,
+      4
+    ]
+  },
+  "9add53f3a3ca463163e1b601e64a1358": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the introduction of a pre-approval practice for travel permits, indicating a shared root cause related to enhancing financial controls and compliance. The gradual transition noted in Drift #2 aligns with the incremental changes described in Drift #1, suggesting that both drifts are part of a broader organizational strategy to improve process management and compliance."
+  }
 }
