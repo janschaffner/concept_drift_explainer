@@ -99,13 +99,17 @@ def run_drift_agent(state: GraphState) -> dict:
         
         general_keywords = extract_general_keywords(trace_to_analyze)
 
-        # Create a single semantic phrase from the unique changepoint concepts
-        unique_concepts = set()
+        # Preserve order when creating the drift phrase
+        ordered_concepts = []
+        seen_concepts = set()
         for activity in changepoint_pair:
             words = re.findall(r"[A-Za-z]+", activity.lower())
             if words:
-                unique_concepts.add(" ".join(words))
-        drift_phrase = " ".join(sorted(list(unique_concepts)))
+                concept = " ".join(words)
+                if concept not in seen_concepts:
+                    ordered_concepts.append(concept)
+                    seen_concepts.add(concept)
+        drift_phrase = " ".join(ordered_concepts)
 
         all_drift_types = ast.literal_eval(selected_row["Detected Drift Types"])
         drift_type = all_drift_types[drift_index_in_row]
