@@ -2387,5 +2387,69 @@
   "841a780c282605567b9789d64643b573": {
     "connection_type": "Shared Evidence / Root Cause",
     "summary": "Both drifts focus on the introduction of a pre-approval step for travel permits, indicating a shared root cause related to enhancing compliance and operational integrity in response to past audit findings. The gradual transition noted in Drift #2 aligns with the incremental changes described in Drift #1, suggesting that both drifts are part of a broader organizational strategy to refine travel and financial processes."
+  },
+  "07dd5cbb1089f61c17fba643e1163b8a": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "86bf28980eeb09ada857337c02dcbd06": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "731b1689e38c9f6ea2231ba3023e6a76": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "d0c1f74cf3114c7d559cd46806a12711": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the transition and enhancement of the international travel declaration process, highlighting the introduction of pre-approval steps and data validation protocols. The evidence documents and key semantic phrases in both profiles indicate a shared context of improving compliance and operational efficiency, suggesting that they stem from the same underlying organizational initiative."
+  },
+  "e3bb574a53b4fd1f6995dd28cf26b89a": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "601869a46ebcee038c6211064bd05d58": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "b20a200f651fc838e18e90ad19fc244d": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "6409a153b31ee488b9a8a76cc84af3ae": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are driven by compliance-related changes and procedural updates within the organization, indicating a shared focus on enhancing compliance and process management. The first drift is a sudden response to non-compliance issues, while the second drift reflects a gradual evolution towards improved oversight and accountability, suggesting that both are part of a broader organizational strategy to address compliance and efficiency."
+  },
+  "9424fd1c3bdd53a1b49c1353bdfc3990": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      5
+    ]
   }
 }

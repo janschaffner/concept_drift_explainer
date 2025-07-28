@@ -54,6 +54,14 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         error_msg = "Drift info not found in state. Cannot retrieve context."
         logging.error(error_msg)
         return {"error": error_msg}
+    
+    # Input Validation)
+    changepoints = drift_info.get("changepoints", [])
+    if not isinstance(changepoints, (list, tuple)) or len(changepoints) != 2:
+        error_msg = f"Invalid changepoints format: Expected a pair, but got {changepoints}"
+        logging.error(error_msg)
+        return {"error": error_msg}
+    start_activity, end_activity = changepoints
 
     # --- 1. Load .env and check API key before doing any OpenAI calls ---
     load_dotenv()
@@ -66,8 +74,6 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
     embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 
     # --- 3. Formulate Semantic Query ---
-    # Create a descriptive sentence and enhance it with specific keywords to create a rich query.
-    start_activity, end_activity = drift_info["changepoints"]
     process_name = drift_info.get("process_name", "a business process") # Get the process name
     # The query includes the process name for better context.
     base_query = (
@@ -75,28 +81,28 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         f"It occurred in the '{process_name}' process involving the activities '{start_activity}' and '{end_activity}'."
     )
     
-    # Enrich the query: prefer drift_keywords, then specific_entities, else a generic note.
-    specific_entities = state.get("specific_entities", [])
     if drift_keywords:
         keyword_str = ", ".join(drift_keywords)
         query_text = f"{base_query} Associated keywords include: {keyword_str}."
-    elif specific_entities:
-        ent_str = ", ".join(specific_entities)
-        logging.info("No general keywords; falling back to specific entities.")
-        query_text = f"{base_query} Associated entities include: {ent_str}."
     else:
         logging.warning("No keywords or entities extracted; using base query only.")
         query_text = f"{base_query} No additional keywords or entities were extracted."
     
     logging.info(f"Formulated enhanced query: {query_text}")
-    query_vector = embedder.embed_query(query_text)
+    
+    # Embedding Error Handling
+    try:
+        query_vector = embedder.embed_query(query_text)
+    except Exception as e:
+        error_msg = f"Failed to generate query embedding: {e}"
+        logging.error(error_msg)
+        return {"error": error_msg}
 
     # --- 3. Define Temporal Filter (only for the 'context' namespace) ---
     # Create a time window around the drift to filter documents by metadata.
     # The window is skewed to prioritize documents published shortly before or after the drift start date.
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
-        # Skewed temporal window logic
         filter_start = start_date - timedelta(days=WINDOW_BEFORE)
         filter_end   = start_date + timedelta(days=WINDOW_AFTER)
 
@@ -168,6 +174,8 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
             namespace=KB_NS,
             include_metadata=True
         )
+        if not getattr(kb_response, "matches", []):
+            logging.warning(f"No results returned from the '{KB_NS}' namespace.")
     except Exception as e:
         error_msg = f"Error querying '{KB_NS}' namespace: {e}"
         logging.error(error_msg)
