@@ -1,1 +1,1 @@
-streamlit run frontend/streamlit_ui.py
+streamlit run frontend/app.py

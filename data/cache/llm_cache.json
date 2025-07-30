@@ -2451,5 +2451,33 @@
       3,
       5
     ]
+  },
+  "b71afab63c8c500b389d4599e5170092": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "687e77052f47569bd41bf31ef599d1da": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "9b2d97e61f5e83dabefd8b0d1fcf4e88": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "1d7b214a0c2b9b95dbf8fe8e8fbbf367": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of new pre-approval steps and mandatory data validation protocols in the international travel declaration process, indicating a shared root cause of enhancing financial controls and compliance. The coexistence of old and new processes during the transition period further emphasizes their interrelated nature, as both drifts reflect the organization's strategic shift towards improved operational efficiency."
   }
 }
