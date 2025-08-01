@@ -75,3 +75,16 @@ def get_cache_key(prompt: str, model_name: str) -> str:
     # doesn't return a cached response from a different model.
     hash_input = f"{model_name}:{prompt}"
     return hashlib.md5(hash_input.encode()).hexdigest()
+
+def clear_llm_cache():
+    """
+    Deletes the LLM cache file if it exists and returns a status message.
+    """
+    if CACHE_FILE.exists():
+        try:
+            CACHE_FILE.unlink()  # This is the modern way to delete a file
+            return "✅ LLM cache cleared successfully."
+        except Exception as e:
+            return f"Error clearing cache: {e}"
+    else:
+        return "ℹ️ Cache file not found. Nothing to clear."
