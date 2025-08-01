@@ -2511,5 +2511,49 @@
       3,
       4
     ]
+  },
+  "e14332d9bb744bb0f9ce38f16a42d691": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "f9455ce0fcb524a2be47301677e32dfb": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "4c6f777aff4f8fb9360470370d2e5120": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the transition and enhancement of the international travel declaration process, highlighting the introduction of pre-approval steps and data validation protocols. The evidence documents and key semantic phrases in both profiles indicate a shared context of improving financial controls and compliance, suggesting that they stem from the same organizational initiative aimed at refining process management."
+  },
+  "084f495ee3178f98c75c1f09ea1a72bf": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "e5a6bf4031cd144000e1724327d3844a": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "fe322d8048eef0cc3c3ca4f4496439bd": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
   }
 }

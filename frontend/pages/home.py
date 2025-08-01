@@ -125,25 +125,23 @@ DRIFT_TYPE_EXPLANATIONS = {
     "recurring": "Recurring Drift: A process change that happens cyclically or seasonally. A previously used process version reappears for a temporary period."
 }
 
-# Session State Initialization
-def init_session_state():
-    st.session_state.all_explanations    = []
-    st.session_state.error_message       = None
-    st.session_state.feedback_states     = {}
-    st.session_state.chat_history        = []
-    st.session_state.full_state_log      = []
-    st.session_state.linked_drift_summary= None
-    st.session_state.connection_type     = None
+def reset_analysis_results():
+    """Clears only the results of a previous analysis run."""
+    st.session_state.all_explanations = []
+    st.session_state.error_message = None
+    st.session_state.feedback_states = {}
+    st.session_state.chat_history = []
+    st.session_state.full_state_log = []
+    st.session_state.linked_drift_summary = None
+    st.session_state.connection_type = None
     st.session_state.analysis_run_complete = False
-    st.session_state.show_chat           = False
+    st.session_state.show_chat = False
 
 # Page Config & Title
 st.set_page_config(page_title="Concept Drift Explainer", page_icon="🤖", layout="wide")
 
-if "analysis_run_complete" not in st.session_state:
-    init_session_state()
-
 st.title("Concept Drift Explainer")
+st.divider()
 
 # Hallucination Warning
 with st.container(border=True):
@@ -154,25 +152,7 @@ with st.container(border=True):
 
 # --- CSS MODIFICATION SECTION ---
 
-st.markdown("""
-<style>
-    /* Target the parent row of the columns */
-    div[data-testid="stHorizontalBlock"] {
-        align-items: stretch;
-    }
-
-    /* Target the column wrapper */
-    div[data-testid="stVerticalBlock"] {
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Target the bordered container inside the column */
-    div[data-testid="stVerticalBlock"] > div[data-testid="stAppViewContainer"] > div[data-testid="stBorderedStyler"] {
-        flex-grow: 1;
-    }
-</style>
-""", unsafe_allow_html=True)
+# empty atm
 
 # Top Controls: Event‐Log Dropdown + Run Button
 logs_folder = project_root / "data" / "event_logs"
@@ -223,9 +203,9 @@ with col_right:
     #st.markdown("&nbsp;") # Vertical spacer
 
     run_disabled = (n_drifts == 0) or (selected_log == placeholder)
-    if st.button("▶️ Run Drift Analysis", disabled=(n_drifts == 0)):
+    if st.button("▶️ Run Drift Analysis", disabled=run_disabled):
         # Reset state
-        init_session_state()
+        reset_analysis_results()
         all_expls = []
         full_log  = []
 
@@ -376,8 +356,13 @@ elif st.session_state.all_explanations:
                 # --- 4. Full-Width Content Below Columns ---
                 st.markdown("---") # Divider
 
+                # Get the value from session state
+                max_causes_to_show = st.session_state.max_causes
+
+                st.subheader(f"Top {max_causes_to_show} Ranked Causes", anchor=False)
+
                 # Each ranked cause in an expander
-                for c_idx, cause in enumerate(causes_with_timestamps):
+                for c_idx, cause in enumerate(causes_with_timestamps[:max_causes_to_show]):
                     if "bpm glossary" in cause.get("source_document","").lower():
                         continue
                         
@@ -403,7 +388,7 @@ elif st.session_state.all_explanations:
                         if st.session_state.feedback_states.get(fb_key):
                             st.success("Thanks for your feedback!")
                         else:
-                            col1, col2 = st.columns([1,1], gap="small")
+                            col1, col2 = st.columns([1,6], gap="small")
                             with col1:
                                 if st.button("👍", key=key_up):
                                     st.session_state.feedback_states[fb_key] = "positive"
