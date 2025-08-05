@@ -7,7 +7,7 @@ import ast
 from datetime import datetime
 import streamlit as st
 from streamlit_timeline import timeline
-from typing import List, Dict, Optional
+from typing import Optional
 
 # Path Correction
 project_root = Path(__file__).resolve().parents[2]
@@ -29,6 +29,30 @@ CONNECTION_TYPE_DESCRIPTIONS = {
 }
 
 # --- HELPER FUNCTIONS SECTION ---
+
+# Floating chat dialog (modal)
+@st.dialog("Conversational Analysis")
+def run_chat_dialog():
+    if not st.session_state.chat_history:
+        st.session_state.chat_history.append(
+            ("assistant", "Hello! Ask me anything about the analysis."))
+        
+    for author, msg in st.session_state.chat_history:
+        avatar = "assets/user_avatar.png" if author=="user" else "assets/chatbot_avatar.png"
+        with st.chat_message(author, avatar=avatar):
+            st.markdown(msg)
+
+    if prompt := st.chat_input("Your question..."):
+        st.session_state.chat_history.append(("user", prompt))
+        with st.chat_message("assistant", avatar="assets/chatbot_avatar.png"):
+            with st.spinner("Thinking..."):
+                resp = run_chatbot_agent({
+                    "full_state_log": st.session_state.full_state_log,
+                    "chat_history": st.session_state.chat_history,
+                    "user_question": prompt})
+                st.session_state.chat_history = resp["chat_history"]
+                st.markdown(st.session_state.chat_history[-1][1])
+        st.rerun()
 
 # Helper: Parse date out of filename
 def get_datetime_from_filename(filename: str) -> Optional[datetime]:
@@ -141,18 +165,20 @@ def reset_analysis_results():
 st.set_page_config(page_title="Concept Drift Explainer", page_icon="🤖", layout="wide")
 
 st.title("Concept Drift Explainer")
-st.divider()
+#st.divider()
 
 # Hallucination Warning
-with st.container(border=True):
-    st.warning(
-        "The Concept Drift Explainer can make mistakes. Verify important information!",
-        icon="⚠️"
-    )
+#with st.container(border=True):
+st.warning(
+    "The Concept Drift Explainer can make mistakes. Verify important information!",
+    icon="⚠️"
+)
 
 # --- CSS MODIFICATION SECTION ---
 
 # empty atm
+
+# --- STREAMLIT SECTION ---
 
 # Top Controls: Event‐Log Dropdown + Run Button
 logs_folder = project_root / "data" / "event_logs"
@@ -179,18 +205,7 @@ with col_left:
         drift_options = load_and_unpack_drifts(selected_log)
         n_drifts = len(drift_options)
         # show banner only when a real log is selected
-        st.markdown(
-            f"""<div style="
-                background-color: #d4edda;
-                color: #155724;
-                padding: 0.5rem 1rem;
-                border-radius: 0.5rem;
-                margin-bottom: 0.5rem;
-                ">
-                <strong>{n_drifts} drift(s) found</strong>
-            </div>""",
-            unsafe_allow_html=True,
-        )
+        st.success(f"{n_drifts} drift(s) found.")
     else:
         # no log chosen → zero drifts
         drift_options = []
@@ -242,55 +257,33 @@ with col_right:
         st.rerun()
 
 # Once analysis is done: divider + tabs for each drift
-st.divider()
+#st.divider()
 
 if st.session_state.error_message:
     st.error(f"An error occurred: {st.session_state.error_message}")
 
 elif st.session_state.all_explanations:
-    with st.container(border=True):
-        exps = st.session_state.all_explanations
-        st.success(f"Successfully analyzed {len(exps)} drift(s).")
+    #with st.container(border=True):
+    exps = st.session_state.all_explanations
+    st.success(f"Successfully analyzed {len(exps)} drift(s).")
 
-        # Ask‐follow‐up button
-        if st.button("💬 Ask Follow-up Questions"):
-            st.session_state.show_chat = True
+        # Askfollowup button
+        #if st.button("💬 Ask Follow-up Questions"):
+            #st.session_state.show_chat = True
 
-    # Floating chat dialog (modal)
-    @st.dialog("Conversational Analysis")
-    def run_chat_dialog():
-        if not st.session_state.chat_history:
-            st.session_state.chat_history.append(
-                ("assistant", "Hello! Ask me anything about the analysis."))
-        for author, msg in st.session_state.chat_history:
-            avatar = "frontend/assets/user_avatar.png" if author=="user" else "frontend/assets/chatbot_avatar.png"
-            with st.chat_message(author, avatar=avatar):
-                st.markdown(msg)
-        if prompt := st.chat_input("Your question..."):
-            st.session_state.chat_history.append(("user", prompt))
-            with st.chat_message("assistant", avatar="frontend/assets/chatbot_avatar.png"):
-                with st.spinner("Thinking..."):
-                    resp = run_chatbot_agent({
-                        "full_state_log": st.session_state.full_state_log,
-                        "chat_history": st.session_state.chat_history,
-                        "user_question": prompt})
-                    st.session_state.chat_history = resp["chat_history"]
-                    st.markdown(st.session_state.chat_history[-1][1])
-            st.rerun()
-
-    if st.session_state.show_chat:
-        run_chat_dialog()
+    #if st.session_state.show_chat:
+        #run_chat_dialog()
 
     # Cross‐drift summary
-    if st.session_state.linked_drift_summary:
-        ctype = st.session_state.connection_type
-        desc = CONNECTION_TYPE_DESCRIPTIONS.get(ctype, "")
-        with st.container():
-            st.subheader("🔗 Cross-Drift Analysis")
-            st.markdown(f"**Type:** {ctype}")
-            st.caption(desc)
-            st.markdown(st.session_state.linked_drift_summary)
-            st.markdown("---")
+    with st.container(border=True):
+        if st.session_state.linked_drift_summary:
+            ctype = st.session_state.connection_type
+            desc = CONNECTION_TYPE_DESCRIPTIONS.get(ctype, "")
+            with st.container():
+                st.subheader("🔗 Cross-Drift Analysis")
+                st.markdown(f"**Type:** {ctype}")
+                st.caption(desc)
+                st.markdown(st.session_state.linked_drift_summary)
 
     # Tabs: one per drift explanation (default to first)
     labels = [f"Drift #{i+1}" for i in range(len(exps))]
@@ -353,13 +346,22 @@ elif st.session_state.all_explanations:
                         predicted_docs=causes_with_timestamps
                     )
 
-                # --- 4. Full-Width Content Below Columns ---
-                st.markdown("---") # Divider
-
-                # Get the value from session state
+            with st.container(border=True):
+                # Get settings from session state
                 max_causes_to_show = st.session_state.max_causes
+                min_confidence = st.session_state.confidence_threshold
 
-                st.subheader(f"Top {max_causes_to_show} Ranked Causes", anchor=False)
+                # First, filter the list by the confidence threshold
+                filtered_causes = [
+                    cause for cause in causes_with_timestamps
+                    if cause.get('confidence_score', 0) >= min_confidence
+                ]
+
+                # Calculate the actual number of causes to display
+                actual_causes_shown = min(len(filtered_causes), max_causes_to_show)
+
+                # Use the new, correct variable in the subheader
+                st.subheader(f"Top {actual_causes_shown} Ranked Causes", anchor=False)
 
                 # Each ranked cause in an expander
                 for c_idx, cause in enumerate(causes_with_timestamps[:max_causes_to_show]):
@@ -368,18 +370,51 @@ elif st.session_state.all_explanations:
                         
                     # Get the datetime object again for display purposes
                     with st.container(border=True):
+                        doc_name = cause.get('source_document', 'N/A')
                         dt_object = get_datetime_from_filename(cause.get("source_document", ""))
                         trigger_str = dt_object.strftime("%d.%m.%Y") if dt_object else "N/A"
                         
                         st.metric("Drift Trigger Date", trigger_str)
                         st.markdown(f"**Confidence:** {cause.get('confidence_score',0)*100:.1f}%")
-                        st.markdown(f"**Source Document:** {cause.get('source_document','N/A')}")
+                        
+                        # Columns for document name and view button
+                        col_doc_name, col_doc_button = st.columns([3, 1])
+
+                        with col_doc_name:
+                            st.markdown(f"**Source Document:** {doc_name}")
+                        
+                        with col_doc_button:
+                            # Construct the correct path from project_root -> frontend -> static -> documents
+                            doc_path = project_root / "frontend" / "static" / "documents" / doc_name
+                            
+                            if doc_name != 'N/A' and doc_path.exists():
+                                with open(doc_path, "rb") as f:
+                                    pdf_bytes = f.read()
+                                
+                                st.download_button(
+                                    label="View Document",
+                                    data=pdf_bytes,
+                                    file_name=doc_name,
+                                    type="secondary",
+                                    key=f"doc_download_{idx}_{c_idx}"
+                                )
+                            else:
+                                st.error("File not found.") # Add an error for clarity
 
                         exp_title = f"Cause #{c_idx+1}: {cause.get('context_category','N/A')}"
                         with st.expander(exp_title):
-                            st.markdown(f"**Description:** {cause.get('cause_description','N/A')}")
-                            st.markdown("**Evidence:**")
-                            st.code(cause.get("evidence_snippet",""), language="text")
+                            st.markdown(f"**Description:**")
+                            st.markdown(f"{cause.get('cause_description','N/A')}")
+                            st.markdown("**Evidence Snippet from the Source Document:**")
+                            #st.code(cause.get("evidence_snippet",""), language="text")
+                            #st.info(cause.get("evidence_snippet",""))
+                            snippet = cause.get("evidence_snippet", "")
+                            #st.markdown(f"> {snippet}")
+                            #st.caption(f"Source Document: `{doc_name}`")
+                            with st.container(border=True):
+                                st.write(snippet)
+                                
+                            st.markdown(f"**Source Document:** `{doc_name}`")
 
                         # Feedback buttons
                         key_up   = f"up_{idx}_{c_idx}"
@@ -419,3 +454,16 @@ elif st.session_state.all_explanations:
 
 else:
     st.info("Click ▶️ Run Full Analysis above to start.")
+
+# This block adds the button to the sidebar and calls the dialog
+if st.session_state.analysis_run_complete:
+    with st.sidebar:
+        #st.divider()
+        st.subheader("Chatbot", anchor=False)
+        if st.button("💬 Ask Follow-up Questions", use_container_width=True):
+            st.session_state.show_chat = True # This flag opens the dialog
+
+# This logic runs the dialog function (which is in your helper section)
+# when the flag is set to True
+if st.session_state.get("show_chat", False):
+    run_chat_dialog()

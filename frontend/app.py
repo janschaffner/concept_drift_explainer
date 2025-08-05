@@ -1,4 +1,9 @@
 import streamlit as st
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parents[1]
+sys.path.append(str(project_root))
 
 def init_session_state():
     """Initializes session state variables if they don't exist."""
@@ -7,6 +12,7 @@ def init_session_state():
         
         # --- Settings ---
         st.session_state.max_causes = 5 # Default value
+        st.session_state.confidence_threshold = 0.25
         
         # --- Analysis Results & UI State ---
         st.session_state.all_explanations = []
@@ -29,6 +35,18 @@ pages = [
     st.Page("pages/settings.py", title="Settings", icon="⚙️"),
 ]
 
+# Get a reference to the home page object from our list
+home_page = pages[0]
+
 # Run the navigation
 page = st.navigation(pages, position="sidebar")
+
+# Reset the chat flag when navigating away from the Home page.
+# The 'page' object tells us which page script is currently active.
+# We check if the active page is NOT the home page.
+if page is not home_page:
+    # If we are on any other page, ensure the chat dialog flag is reset.
+    st.session_state.show_chat = False
+
+# Run the selected page
 page.run()

@@ -1,0 +1,309 @@
+{
+  "b622378e3c87829f9195a4e74b8acf40": "The travel expense claims process at the university involves employees submitting travel permits and expense declarations, which are then approved by various stakeholders before payment is processed. The key change in the process flow is that in the end point trace, the administration now approves the travel permit before the supervisor's final approval, whereas in the start point trace, the supervisor's approval followed the administration's approval without a distinct step for the administration's approval prior to the supervisor's final approval.",
+  "1ed8964571bf8a2faec6ec4448462e1f": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "7e9f761f1211ab92a6171ee70d19fd17": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text describes a new process step (Pre-Approval) and a revised process flow, indicating a change in process management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The introduction of a new role (Pre-Approver) and the mention of local structure suggest organizational changes."
+      }
+    ]
+  },
+  "f2ece6ac7e107af1c6908975eacabf3e": {
+    "classifications": [
+      {
+        "full_path": "PROCESS_IMMEDIATE::Case",
+        "reasoning": "The mention of 'duplicate trip registrations' relates to specific instances of process execution."
+      },
+      {
+        "full_path": "PROCESS_IMMEDIATE::System_Interaction",
+        "reasoning": "The reference to a system message in the travel portal indicates a technical system event."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The need to brief unit coordinators and faculty staff suggests a change in process management or compliance."
+      }
+    ]
+  },
+  "3ce6ab42ab2a0f950f325cbf69e19f19": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The memo outlines governance for Requests for Payment (RFPs), which relates to process management and the establishment of approval requirements and audit protocols."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The memo is directed to all budget holders and academic units, indicating a potential organizational context regarding roles and responsibilities in financial governance."
+      }
+    ]
+  },
+  "28144e0246eafbdb8042153233f78231": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses the introduction of a standardized naming template for research project records, which relates to process redesign and standardization of internal procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The communication is directed towards all faculty and project coordinators, indicating a change in internal processes that affects organizational roles and responsibilities."
+      }
+    ]
+  },
+  "34cb869b26acd9e5e4e687b33b9dc815": {
+    "cause_description": "The evidence may indicate that the introduction of a Pre-Approval Step for international travel declarations represents a series of incremental adjustments aimed at enhancing financial controls and compliance. This change, which involves a new role for designated Pre-Approvers and a revised process flow, suggests a gradual evolution in the organization's approach to managing travel expenditures, reflecting agile practices in response to audit findings. Such iterative improvements could cumulatively lead to a significant transformation in the travel declaration process over time.",
+    "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+    "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "4d130b211af2d788ae425c510d7cc478": {
+    "cause_description": "The evidence may indicate that the implementation of a mandatory data validation protocol for travel permit submissions, as outlined in the communication from Dr. Lars Wiegand, reflects a series of incremental adjustments aimed at improving process compliance and data accuracy. This could suggest that the organization is adopting agile practices by iteratively refining its processes to address specific audit concerns, such as duplicate trip registrations and budget mismatches, over time.",
+    "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+    "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.81
+  },
+  "3dc679c712362d7ec6aa81fca095252e": {
+    "cause_description": "This could suggest that the incremental adjustments in the payment request process, as outlined in the memo, reflect a continuous effort to streamline operations and reduce friction. The policy's emphasis on minimal approval requirements and post hoc reviews may indicate a series of iterative improvements aimed at enhancing efficiency over time.",
+    "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+    "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.46
+  },
+  "c1203185d2c3de92fad655f4e0348f44": {
+    "cause_description": "The introduction of a standardized naming template for research projects could suggest a series of incremental adjustments aimed at improving consistency and clarity in project management. This aligns with agile practices where small, iterative changes are made to enhance process efficiency over time. The evidence may indicate that such standardization efforts were part of a broader strategy to refine internal processes gradually, contributing to the observed incremental drift.",
+    "evidence_snippet": "\"To support the harmonization of project titles and references in internal tools, we are introducing a standardized naming template for all new research project records created after 1 November.\"",
+    "source_document": "2017-10-20_Project_Title_Standardization_Guide.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.44
+  },
+  "749dd67a5f48a101159c516751049112": {
+    "ranked_causes": [
+      {
+        "cause_description": "The introduction of a Pre-Approval Step for international travel declarations may reflect a cautious response to audit findings, aimed at enhancing financial controls and compliance. This change, which designates specific roles for Pre-Approvers and revises the process flow, suggests a potential evolution in the organization's approach to managing travel expenditures. Such incremental adjustments could cumulatively lead to a significant transformation in the travel declaration process over time.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The implementation of a mandatory data validation protocol for travel permit submissions may indicate a strategic effort to improve process compliance and data accuracy. This protocol, as outlined by Dr. Lars Wiegand, could suggest that the organization is adopting a methodical approach to refine its processes in response to specific audit concerns, such as duplicate trip registrations and budget mismatches, over time.",
+        "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.81
+      },
+      {
+        "cause_description": "The adjustments in the payment request process, as outlined in the memo, may reflect an ongoing effort to streamline operations and reduce friction. The policy's emphasis on minimal approval requirements and post hoc reviews could suggest a cautious approach to enhancing efficiency, indicating that these iterative improvements are part of a broader strategy to refine financial processes over time.",
+        "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+        "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.46
+      },
+      {
+        "cause_description": "The introduction of a standardized naming template for research projects may suggest a cautious effort to improve consistency and clarity in project management. This aligns with agile practices where small, iterative changes are made to enhance process efficiency. The evidence indicates that such standardization efforts could be part of a broader strategy to gradually refine internal processes, potentially contributing to the observed incremental drift.",
+        "evidence_snippet": "To support the harmonization of project titles and references in internal tools, we are introducing a standardized naming template for all new research project records created after 1 November.",
+        "source_document": "2017-10-20_Project_Title_Standardization_Guide.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.44
+      }
+    ]
+  },
+  "6164b5ea198e6cbf885c1f50bfac4875": "The recent changes in the organization's travel declaration and financial processes, including the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects, reflect a strategic response to audit findings aimed at enhancing compliance, efficiency, and clarity. These incremental adjustments suggest a deliberate evolution in process management, indicating a broader commitment to refining operational practices over time. Collectively, these efforts may lead to significant transformations in how the organization manages travel expenditures and financial controls.",
+  "0d2d643fd78af892906451e9bd351cd8": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "77104bb955b2922ea56d9aa5a6a46b62": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "de17199a0df7ba702d84195c2e536b5e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "b8d3b02094ef8b6cb48c03b58c8944d7": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "aabd0dcdca663880a7689a898d20d4c6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "2192dd284c061575c84a57f4aaa72143": "The first drift, labeled as \"incremental,\" occurred between October 24, 2017, and June 5, 2018. It reflects a series of recent changes in the organization's travel declaration and financial processes. Key adjustments included the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects. These changes were a strategic response to audit findings aimed at enhancing compliance, efficiency, and clarity. Overall, they indicate a commitment to refining operational practices, which may lead to significant improvements in managing travel expenditures and financial controls. \n\nFor more details, you can refer to the causal documents, such as the \"Travel Compliance Notice\" and \"Data Validation Update Notice.\"",
+  "d3c474e31281a2519675830c02a9a06e": "The first drift, labeled as \"incremental,\" took place between October 24, 2017, and June 5, 2018. It highlights a series of changes in the organization's travel declaration and financial processes, including the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects. These adjustments were made in response to audit findings to improve compliance, efficiency, and clarity. Overall, they signify a commitment to refining operational practices, which could lead to better management of travel expenditures and financial controls. For more details, you can refer to the causal documents like the \"Travel Compliance Notice\" and \"Data Validation Update Notice.\"",
+  "4a7e8e897e002186589dca1026be321b": "The travel expense claims process at the university involves employees submitting requests for both domestic and international trips, with international trips requiring pre-approval. The key change in the process flow is that the approval sequence for permits has shifted from a two-step process involving a pre-approver and supervisor to a three-step process that includes approvals from administration, budget owner, and supervisor, indicating a more structured oversight for international travel claims.",
+  "e0b70b7e2a80bd2cb163e830e6605012": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "e7851380b7bf606bb53f497cd397e10d": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses the introduction of a new management practice (pre-approval for travel permits) which relates to process redesign and oversight improvements."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The communication is from a Vice President and addresses all faculty deans and administrative managers, indicating a change in roles and responsibilities within the organization."
+      }
+    ]
+  },
+  "8f4c7338b8a874223d91075be33c0103": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses recommended practices for leadership and governance in managing project budgets and travel permits, indicating a focus on process management and potential redesign of procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of faculty-managed project budgets and the need for integrated mobility governance suggests changes in organizational structure and roles."
+      }
+    ]
+  },
+  "9794006a315a7538478a245f336f5f18": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses the implementation of a mandatory data validation protocol, which relates to process enforcement and redesign of procedures."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The communication is from the Finance and Compliance Coordination Office and addresses all budget owners and project leads, indicating an internal organizational context."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The update aligns with Article 9 of the University Financial Control Framework, indicating compliance with external legal or regulatory requirements."
+      }
+    ]
+  },
+  "9f9fcc2093fa8d60f7d0659212706de7": {
+    "cause_description": "The evidence may indicate that a new pre-approval step is being introduced in the international travel declaration process, which suggests a gradual transition from the old process to the new one. The mention of a transition period where declarations submitted before a certain date will still be processed under the old rules, but flagged, implies that both the old and new processes will coexist for a time. This could suggest that the organization is phasing in the new process while still accommodating ongoing cases under the previous system.",
+    "evidence_snippet": "This change does not affect the permit flow itself but applies to post-travel declarations only. Implementation Notes \u2022 Effective Date: 21 May 2018 \u2022 Transition Period: Declarations without pre-approval submitted before 30 June 2018 will still be processed but flagged.",
+    "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "2a62a2cb6d00bddf767f97bd92a6d08f": {
+    "cause_description": "The evidence may indicate that the university is in a transition phase regarding its international travel oversight practices, where both the old and new governance structures coexist. The Vice-Rector's communication suggests that while the formal policy remains unchanged, new leadership practices are being encouraged starting January 2018. This could suggest a gradual rollout of enhanced oversight measures, allowing for both existing practices and new recommendations to operate simultaneously during the transition period.",
+    "evidence_snippet": "While this reflects positively on our global engagement, it also raises important considerations regarding strategic oversight and budgetary alignment.",
+    "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.86
+  },
+  "89dae8bada4b9fdd4e30e4872df2f864": {
+    "cause_description": "The evidence may indicate that the introduction of a pre-approval practice for travel permits is part of a gradual transition towards a new process variant. This could suggest that while the formal approval structure remains unchanged, departments are encouraged to adopt this new layer of oversight, allowing both the old and new processes to coexist during the transition period. Over time, as departments implement this practice, the older process may be phased out, aligning with the characteristics of a gradual drift.",
+    "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+    "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.54
+  },
+  "984ed77077b3b5bda1d7769734fd1bdc": {
+    "cause_description": "The evidence may indicate that a new mandatory data validation protocol for travel permit submissions was introduced, which could suggest a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation, effective from November 1, 2017, implies that while new submissions must adhere to the updated protocol, existing submissions may still follow the previous guidelines until they are phased out during the reconciliation and audit process.",
+    "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+    "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.55
+  },
+  "7accd9baaed71ba7ee100275245c6371": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that a new pre-approval step is being introduced in the international travel declaration process, indicating a potential transition from the old process to the new one. The mention of a transition period, where declarations submitted before a specific date will still be processed under the old rules but flagged, implies that both the old and new processes may coexist temporarily. This could indicate that the organization is phasing in the new process while still accommodating ongoing cases under the previous system.",
+        "evidence_snippet": "This change does not affect the permit flow itself but applies to post-travel declarations only. Implementation Notes \u2022 Effective Date: 21 May 2018 \u2022 Transition Period: Declarations without pre-approval submitted before 30 June 2018 will still be processed but flagged.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the university may be in a transition phase regarding its international travel oversight practices, where both the old and new governance structures coexist. The Vice-Rector's communication suggests that while the formal policy remains unchanged, new leadership practices are being encouraged starting January 2018. This could imply a gradual rollout of enhanced oversight measures, allowing existing practices and new recommendations to operate simultaneously during the transition period.",
+        "evidence_snippet": "While this reflects positively on our global engagement, it also raises important considerations regarding strategic oversight and budgetary alignment.",
+        "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.86
+      },
+      {
+        "cause_description": "The evidence suggests that the introduction of a pre-approval practice for travel permits may be part of a gradual transition towards a new process variant. This could indicate that while the formal approval structure remains unchanged, departments are encouraged to adopt this new layer of oversight, allowing both the old and new processes to coexist during the transition period. Over time, as departments implement this practice, the older process may be phased out, aligning with the characteristics of a gradual drift.",
+        "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+        "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.54
+      },
+      {
+        "cause_description": "The evidence indicates that a new mandatory data validation protocol for travel permit submissions was introduced, suggesting a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation, effective from November 1, 2017, implies that while new submissions must adhere to the updated protocol, existing submissions may still follow the previous guidelines until they are phased out during the reconciliation and audit process.",
+        "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.55
+      }
+    ]
+  },
+  "d435a36dcfef00adebb2795c6ff4cf4f": "The analysis reveals that the organization is undergoing a gradual transition in its international travel declaration process, characterized by the introduction of new pre-approval steps and mandatory data validation protocols. This transition allows both old and new governance structures to coexist temporarily, accommodating ongoing cases under previous rules while encouraging departments to adopt enhanced oversight measures. As these new practices are phased in, the organization is likely to experience a concept drift, reflecting the evolving nature of its travel oversight practices.",
+  "86af16e909f44c86426f8b41e4a8e7e5": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of new pre-approval steps and mandatory data validation protocols in the international travel declaration process, indicating a shared response to audit findings and a strategic effort to enhance compliance and oversight. The overlapping timeframes and similar themes in their summaries suggest that these changes are part of a coordinated effort to refine operational practices, reflecting a common root cause driving the evolution of the travel processes."
+  },
+  "b02079602307559a3a8fc3daa597370e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "4f12c60a364532bcea5387c3f627530b": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "909c2724f800f6fabcae8c4244a4ed8d": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of new pre-approval steps and mandatory data validation protocols in the international travel declaration process, indicating a shared response to audit findings and a strategic effort to enhance compliance and oversight. The overlapping timeframes and similar themes in their summaries suggest that these changes are part of a coordinated effort to refine operational practices, reflecting a common root cause driving the evolution of the travel processes."
+  },
+  "3354a83c07e481d4c4bda44b3113c85f": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "3c9729f5d02219ccc96e360ae7e9f5cc": "This drift, referred to as \"incremental,\" reflects a series of gradual changes in the organization's travel declaration and financial processes from October 2017 to June 2018. These changes include the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects. These adjustments were made in response to audit findings to enhance compliance, efficiency, and clarity in operational practices. The drift indicates a strategic evolution in how the organization manages travel expenditures and financial controls over time. For more details, you can refer to the causal documents mentioned in the analysis."
+}
