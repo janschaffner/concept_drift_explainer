@@ -20,6 +20,7 @@ warnings.filterwarnings("ignore", message=".*Pydantic BaseModel V1.*")
 from backend.graph.build_graph import build_graph
 from backend.agents.chatbot_agent import run_chatbot_agent
 from backend.agents.drift_linker_agent import run_drift_linker_agent, ConnectionType
+from backend.utils.reporting import generate_docx_report
 
 # Descriptions for Drift Linker Categories
 CONNECTION_TYPE_DESCRIPTIONS = {
@@ -307,7 +308,7 @@ elif st.session_state.all_explanations:
                         cause['timestamp'] = None
                     causes_with_timestamps.append(cause)
 
-                # 2. Create the New Main Header (Full-Width)
+                # 2. Create the Main Header (Full-Width)
                 dtype = info.get("drift_type", "Unknown").capitalize()
                 start = info.get("start_timestamp","N/A").split(" ")[0]
                 end = info.get("end_timestamp","N/A").split(" ")[0]
@@ -318,17 +319,32 @@ elif st.session_state.all_explanations:
                 except Exception:
                     timeframe_str = ""
 
+                # Create columns for the header and the export button
+                header_col, button_col = st.columns([4, 1])
+
                 # Look up the explanation for the current drift type
                 drift_key = dtype.lower()
                 help_text = DRIFT_TYPE_EXPLANATIONS.get(drift_key, "No explanation available for this drift type.")
 
-                # Create the new header with the help popover
-                st.header(
-                    f"Explanation for Drift #{idx+1}: {dtype}",
-                    anchor=False,
-                    help=help_text
-                )
-                st.subheader(timeframe_str, anchor=False)
+                with header_col:
+                    st.header(f"Explanation for Drift #{idx+1}: {dtype}", anchor=False, help=help_text)
+                    st.subheader(timeframe_str, anchor=False)
+
+                with button_col:
+                    # Add some vertical space to push the button down
+                    st.write("")
+
+                    # Generate the report content by calling the new backend function
+                    docx_bytes = generate_docx_report(info, explanation, drift_index=idx+1)
+
+                    st.download_button(
+                        label="📄 Export as DOCX",
+                        data=docx_bytes,
+                        file_name=f"drift_report_{idx+1}_{dtype.lower()}.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        help="Download the analysis for this drift as a DOCX file.",
+                        use_container_width=True # Makes the button fill the column width
+                    )
 
                 # 3. Create the Two-Column Layout with Subheaders
                 col_text, col_timeline = st.columns(2, gap="small", border=True)

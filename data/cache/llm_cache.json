@@ -305,5 +305,21 @@
       4
     ]
   },
-  "3c9729f5d02219ccc96e360ae7e9f5cc": "This drift, referred to as \"incremental,\" reflects a series of gradual changes in the organization's travel declaration and financial processes from October 2017 to June 2018. These changes include the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects. These adjustments were made in response to audit findings to enhance compliance, efficiency, and clarity in operational practices. The drift indicates a strategic evolution in how the organization manages travel expenditures and financial controls over time. For more details, you can refer to the causal documents mentioned in the analysis."
+  "3c9729f5d02219ccc96e360ae7e9f5cc": "This drift, referred to as \"incremental,\" reflects a series of gradual changes in the organization's travel declaration and financial processes from October 2017 to June 2018. These changes include the introduction of a Pre-Approval Step, mandatory data validation protocols, streamlined payment request procedures, and standardized naming templates for research projects. These adjustments were made in response to audit findings to enhance compliance, efficiency, and clarity in operational practices. The drift indicates a strategic evolution in how the organization manages travel expenditures and financial controls over time. For more details, you can refer to the causal documents mentioned in the analysis.",
+  "40ab110c98f619d5fc10624ea4f89812": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "73012bb008b89e509e71ed21f6ff8424": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
 }
