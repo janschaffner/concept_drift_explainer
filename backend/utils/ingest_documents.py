@@ -35,7 +35,7 @@ KB_NS      = "bpm-kb"
 
 
 # Data path
-DOCUMENTS_PATH = project_root / "data" / "documents"
+DOCUMENTS_PATH = project_root / "frontend" / "static" / "documents"
 # Create a temporary cache directory for extracted images
 CACHE_DIR = project_root / "data" / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -221,24 +221,20 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
     
     return total_vectors_ingested
 
-if __name__ == "__main__":
-    # This block allows the script to be run directly from the command line.
-    # It will find all supported files in the documents directory and process them.
-    logging.info("--- Running Ingestion Script in Standalone Mode ---")
-    
-    # 1. Load API Key and Index Name from .env
+def initialize_ingestion_backend():
+    """
+    Initializes and returns the Pinecone index, embedder, and text splitter.
+    This function contains the setup logic previously in the __main__ block.
+    """
     load_dotenv()
     api_key = os.getenv("PINECONE_API_KEY")
     pinecone_index_name = os.getenv("PINECONE_INDEX_NAME")
 
     if not all([api_key, pinecone_index_name]):
-        logging.error("PINECONE_API_KEY or PINECONE_INDEX_NAME not found in .env file.")
-        sys.exit(1)
+        raise ValueError("PINECONE_API_KEY or PINECONE_INDEX_NAME not found in .env file.")
 
-    # 2. Initialize Pinecone
     pc = Pinecone(api_key=api_key)
-    
-    # 3. Check for and create the index if it doesn't exist
+
     if pinecone_index_name not in pc.list_indexes().names():
         logging.info(f"Index '{pinecone_index_name}' not found. Creating a new one...")
         pc.create_index(
@@ -252,14 +248,23 @@ if __name__ == "__main__":
         logging.info(f"Connected to existing index: '{pinecone_index_name}'")
 
     index = pc.Index(pinecone_index_name)
-
-    # 4. Initialize Embedder and Text Splitter
-    logging.info(f"Loading embedding model: '{EMBEDDING_MODEL_NAME}'...")
     embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+
+    logging.info("Backend ingestion resources initialized.")
+    return index, embedder, text_splitter
+
+
+
+if __name__ == "__main__":
+    # This block allows the script to be run directly from the command line.
+    # It will find all supported files in the documents directory and process them.
+    logging.info("--- Running Ingestion Script in Standalone Mode ---")
     
-    # 5. Process Context Documents
-    # Discover all supported files in the documents directory.
+    # 1. Initialize all backend resources using the new reusable function
+    index, embedder, text_splitter = initialize_ingestion_backend()
+    
+    # 2. Discover all supported files in the documents directory.
     all_files_to_process = (
         list(DOCUMENTS_PATH.glob("*.pdf")) +
         list(DOCUMENTS_PATH.glob("*.pptx")) +
@@ -270,11 +275,12 @@ if __name__ == "__main__":
     )
 
     if all_files_to_process:
+        # 3. Process the discovered context documents
         process_context_files(all_files_to_process, index, embedder, text_splitter)
     else:
         logging.warning(f"No context documents found in {DOCUMENTS_PATH} to process.")
 
-    # 6. Process Glossary File
+    # 4. Process the glossary file
     process_glossary_file(index, embedder)
 
     logging.info("\n--- Full Ingestion Process Complete ---")

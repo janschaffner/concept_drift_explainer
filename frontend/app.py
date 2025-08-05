@@ -30,9 +30,9 @@ init_session_state()
 
 # Define the pages
 pages = [
-    st.Page("pages/home.py",     title="Home",     icon="🏠"),
-    st.Page("pages/upload.py",   title="Upload",   icon="📁"),
-    st.Page("pages/settings.py", title="Settings", icon="⚙️"),
+    st.Page("pages/home.py",     title="Home",             icon="🏠"),
+    st.Page("pages/manage_context.py",   title="Manage Context",   icon="📁"),
+    st.Page("pages/settings.py", title="Settings",         icon="⚙️"),
 ]
 
 # Get a reference to the home page object from our list

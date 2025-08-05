@@ -166,7 +166,7 @@ def reset_analysis_results():
 st.set_page_config(page_title="Concept Drift Explainer", page_icon="🤖", layout="wide")
 
 st.title("Concept Drift Explainer")
-#st.divider()
+st.divider()
 
 # Hallucination Warning
 #with st.container(border=True):

@@ -86,9 +86,10 @@ def analyze_image_content(image_path: Path) -> str:
     except Exception as e:
         logging.error(f"Error analyzing image with LLM: {e}")
         return f"Error analyzing image: {e}"
+    
 
+# This block allows the script to be run directly for testing purposes.
 if __name__ == '__main__':
-    # This block allows the script to be run directly for testing purposes.
     from dotenv import load_dotenv
     load_dotenv()
     
