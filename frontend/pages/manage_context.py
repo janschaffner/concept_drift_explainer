@@ -23,8 +23,7 @@ def get_ingestion_resources():
 
 index, embedder, text_splitter = get_ingestion_resources()
 
-# --- Page Config & Title ---
-#st.set_page_config(page_title="Upload & Manage Context", layout="wide")
+# --- Page Title ---
 st.title("📁 Upload & Manage Context Documents")
 st.write("Upload new documents or review the current context knowledge base.")
 

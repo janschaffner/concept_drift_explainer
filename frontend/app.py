@@ -5,6 +5,13 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_root))
 
+# --- Set Page Config (global) ---
+st.set_page_config(
+    page_title="Concept Drift Explainer",
+    page_icon="assets/tab_icon.png",
+    layout="wide"
+)
+
 def init_session_state():
     """Initializes session state variables if they don't exist."""
     if "state_initialized" not in st.session_state:

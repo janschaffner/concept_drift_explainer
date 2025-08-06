@@ -1,9 +1,6 @@
 import streamlit as st
 from backend.utils.cache import clear_llm_cache
 
-# Page config
-st.set_page_config(page_title="Settings", layout="wide")
-
 # Display the toast message for cleared cache from the previous run
 if "cache_status_message" in st.session_state:
     st.toast(st.session_state.cache_status_message)

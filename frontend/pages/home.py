@@ -162,10 +162,14 @@ def reset_analysis_results():
     st.session_state.analysis_run_complete = False
     st.session_state.show_chat = False
 
-# Page Config & Title
-st.set_page_config(page_title="Concept Drift Explainer", page_icon="🤖", layout="wide")
+# Page Title
+col1, col2 = st.columns([2, 20], vertical_alignment="center")
 
-st.title("Concept Drift Explainer")
+with col1:
+    st.markdown('<p style="font-size: 4px;">&nbsp;</p>', unsafe_allow_html=True)
+    st.image("assets/tab_icon.png", width=64)
+with col2:
+    st.title("Concept Drift Explainer", anchor=False)
 st.divider()
 
 # Hallucination Warning
