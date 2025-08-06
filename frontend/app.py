@@ -5,10 +5,13 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_root))
 
+# --- Construct the absolute path to the icon ---
+icon_path = project_root / "frontend" / "assets" / "tab_icon.png"
+
 # --- Set Page Config (global) ---
 st.set_page_config(
     page_title="Concept Drift Explainer",
-    page_icon="assets/tab_icon.png",
+    page_icon=str(icon_path),  # Use the full, correct path
     layout="wide"
 )
 

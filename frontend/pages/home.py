@@ -39,13 +39,18 @@ def run_chat_dialog():
             ("assistant", "Hello! Ask me anything about the analysis."))
         
     for author, msg in st.session_state.chat_history:
-        avatar = "assets/user_avatar.png" if author=="user" else "assets/chatbot_avatar.png"
+        user_avatar_path = project_root / "frontend" / "assets" / "user_avatar.png"
+        bot_avatar_path = project_root / "frontend" / "assets" / "chatbot_avatar.png"
+
+        avatar = str(user_avatar_path) if author=="user" else str(bot_avatar_path)
         with st.chat_message(author, avatar=avatar):
             st.markdown(msg)
 
     if prompt := st.chat_input("Your question..."):
         st.session_state.chat_history.append(("user", prompt))
-        with st.chat_message("assistant", avatar="assets/chatbot_avatar.png"):
+
+        bot_avatar_path = project_root / "frontend" / "assets" / "chatbot_avatar.png"
+        with st.chat_message("assistant", avatar=str(bot_avatar_path)):
             with st.spinner("Thinking..."):
                 resp = run_chatbot_agent({
                     "full_state_log": st.session_state.full_state_log,
@@ -166,8 +171,9 @@ def reset_analysis_results():
 col1, col2 = st.columns([2, 20], vertical_alignment="center")
 
 with col1:
+    icon_path = project_root / "frontend" / "assets" / "tab_icon.png"
     st.markdown('<p style="font-size: 4px;">&nbsp;</p>', unsafe_allow_html=True)
-    st.image("assets/tab_icon.png", width=64)
+    st.image(str(icon_path), width=64)
 with col2:
     st.title("Concept Drift Explainer", anchor=False)
 st.divider()
