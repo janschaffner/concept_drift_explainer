@@ -1,6 +1,18 @@
 import docx
 import io
+import re
 from datetime import datetime
+
+def sanitize_xml_string(text: str) -> str:
+    """
+    Removes illegal XML characters from a string to prevent errors
+    when writing to file formats like DOCX.
+    """
+    if not isinstance(text, str):
+        return ""
+    # This regex finds and removes characters that are invalid in XML
+    illegal_xml_chars_re = re.compile(r'[\x00-\x08\x0b\x0c\x0e-\x1f]')
+    return illegal_xml_chars_re.sub('', text)
 
 def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     """
@@ -17,7 +29,8 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     document = docx.Document()
 
     # --- Header ---
-    dtype = info.get("drift_type", "Unknown").capitalize()
+    # Sanitize all text before adding it to the document
+    dtype = sanitize_xml_string(info.get("drift_type", "Unknown").capitalize())
     start = info.get("start_timestamp", "N/A").split(" ")[0]
     end = info.get("end_timestamp", "N/A").split(" ")[0]
     try:
@@ -32,7 +45,7 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     document.add_paragraph(f"Timeframe: {timeframe}")
 
     # --- Summary ---
-    summary = explanation.get("summary", "No summary available.")
+    summary = sanitize_xml_string(explanation.get("summary", "No summary available."))
     document.add_heading("Executive Summary", level=2)
     document.add_paragraph(summary)
     
@@ -44,9 +57,10 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     else:
         for i, cause in enumerate(ranked_causes, 1):
             confidence = cause.get('confidence_score', 0) * 100
-            doc_name = cause.get('source_document', 'N/A')
-            desc = cause.get('cause_description', 'N/A')
-            snippet = cause.get('evidence_snippet', 'No snippet available.')
+            # Sanitize all text fields from the 'cause' dictionary
+            doc_name = sanitize_xml_string(cause.get('source_document', 'N/A'))
+            desc = sanitize_xml_string(cause.get('cause_description', 'N/A'))
+            snippet = sanitize_xml_string(cause.get('evidence_snippet', 'No snippet available.'))
 
             document.add_heading(f"Cause #{i}: {doc_name}", level=3)
             p = document.add_paragraph()
@@ -59,7 +73,7 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
 
             p = document.add_paragraph()
             p.add_run('Evidence Snippet:').bold = True
-            document.add_paragraph(snippet, style='Intense Quote') # Use a quote style
+            document.add_paragraph(snippet, style='Intense Quote')
 
     # --- Save to an in-memory stream ---
     doc_stream = io.BytesIO()

@@ -244,7 +244,11 @@ with col_right:
                     frac = (i + 1) / n_drifts
                     progress.progress(frac, text=f"Analyzing {drift['display']}…")
                     row_idx, d_idx = map(int, drift["id"].split("-"))
-                    inp = {"selected_drift": {"row_index": row_idx, "drift_index": d_idx}}
+
+                    # The `data_dir` is now correctly passed to the backend
+                    data_dir_path = str(logs_folder / selected_log)
+                    inp = {"selected_drift": {"row_index": row_idx, "drift_index": d_idx, "data_dir": data_dir_path}}
+
                     state = graph_app.invoke(inp)
                     if state.get("error"):
                         st.session_state.error_message = f"Error in {drift['display']}: {state['error']}"
@@ -266,9 +270,6 @@ with col_right:
                 st.session_state.analysis_run_complete = True
             progress.empty()
         st.rerun()
-
-# Once analysis is done: divider + tabs for each drift
-#st.divider()
 
 if st.session_state.error_message:
     st.error(f"An error occurred: {st.session_state.error_message}")

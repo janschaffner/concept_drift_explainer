@@ -224,14 +224,14 @@
     "evidence_snippet": "While this reflects positively on our global engagement, it also raises important considerations regarding strategic oversight and budgetary alignment.",
     "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.86
+    "confidence_score": 0.88
   },
   "89dae8bada4b9fdd4e30e4872df2f864": {
     "cause_description": "The evidence may indicate that the introduction of a pre-approval practice for travel permits is part of a gradual transition towards a new process variant. This could suggest that while the formal approval structure remains unchanged, departments are encouraged to adopt this new layer of oversight, allowing both the old and new processes to coexist during the transition period. Over time, as departments implement this practice, the older process may be phased out, aligning with the characteristics of a gradual drift.",
     "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
     "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.54
+    "confidence_score": 0.55
   },
   "984ed77077b3b5bda1d7769734fd1bdc": {
     "cause_description": "The evidence may indicate that a new mandatory data validation protocol for travel permit submissions was introduced, which could suggest a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation, effective from November 1, 2017, implies that while new submissions must adhere to the updated protocol, existing submissions may still follow the previous guidelines until they are phased out during the reconciliation and audit process.",
@@ -323,6 +323,788 @@
     ]
   },
   "639a933f846987113f6769e394afc7d4": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "248583732449e22e57e1123a929e7d1e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "fce78f73c56a5073c2cc57702b7db0b7": "The travel expense claims process at the university involves employees submitting claims that are reviewed and approved by various stakeholders before payment is processed. The key change in the process flow from the start to the end of the drift period is the introduction of an additional approval step by the Administration before the Supervisor's final approval, which has resulted in a more structured review process.",
+  "dd31660e5faaecd56ad3310fc7f4f6f6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "0c0c258033a1be04e99aa4c3c1b33aed": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses changes to the approval process and the introduction of new requirements for expense approvals, which falls under process management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The changes affect all departments and faculties, indicating a restructuring or change in roles related to the approval process."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The mention of a unified finance system suggests an IT management context, as it involves system integration and possibly updates to the software used for processing travel declarations."
+      }
+    ]
+  },
+  "3bda4572ca1d10457407c4007da57507": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text describes a new approval structure and process steps, indicating a redesign of existing processes and potentially new Standard Operating Procedures (SOPs)."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The mention of a new approval structure implies changes in roles and responsibilities within the organization."
+      }
+    ]
+  },
+  "a4b93bb30c60412ea83a3ee4a85aa359": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses an annual lab inventory check, which relates to process management and the need for asset verification checklists."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The reminder is issued by the Department Operations, indicating an internal organizational directive."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Economic",
+        "reasoning": "The mention of unreturned or untracked items affecting funding eligibility relates to economic factors and funding implications."
+      }
+    ]
+  },
+  "6a128ebe9faab98b919cd5499b5c9e8d": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Economic",
+        "reasoning": "The text discusses a new funding opportunity related to the Erasmus+ program, which can be influenced by economic factors such as budget limits and eligibility for exchanges."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The call for applications is issued by the EU Commission, indicating compliance with external regulations and requirements for funding."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The mention of internal pre-checks and submission deadlines suggests a process management context within the organization."
+      }
+    ]
+  },
+  "ee1b77b0ae52a9bcaa7fe33cf410a0a0": {
+    "cause_description": "The evidence may indicate that the university's travel expense declaration process underwent a series of incremental adjustments aimed at enhancing compliance and oversight. The introduction of a new requirement for final approval by supervisors, effective from October 2018, suggests a gradual shift towards more stringent approval protocols. This could reflect an ongoing effort to align with sector-wide compliance norms and address identified procedural inconsistencies, indicating a pattern of iterative improvements in process management.",
+    "evidence_snippet": "The internal review identified procedural inconsistencies in the approval of domestic expense declarations across faculties. Specifically, declarations exceeding \u20ac250 were often processed without any supervisory oversight, raising concerns about spending accountability, role conflicts in approval chains, and budget misclassification risks. The report recommends enhanced segregation of duties and the establishment of additional review layers for expense approvals. As a result, the university is introducing an interim compliance measure that affects all domestic travel declarations, effective 1 October 2018.",
+    "source_document": "2017-12-05_Compliance_Guidance_Update.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "d9a3e02067e43662b3bf9ada0644426e": {
+    "cause_description": "The introduction of a mandatory pre-approval step for Request for Payment submissions, as outlined in the procedural policy update, could suggest a series of incremental adjustments aimed at enhancing compliance and reducing risk exposure. This change, effective from January 2018, may indicate a shift towards more rigorous process management practices, reflecting an agile approach to continuous improvement in response to identified vulnerabilities in the existing approval process.",
+    "evidence_snippet": "New Approval Structure (Effective 2 January 2018) 1. Employee Submits Request 2. Review by Pre-Approver o Must be a designated financial reviewer within the unit o Verifies metadata and eligibility 3. Final Approval by Supervisor 4. System Payment Trigger This new step applies to all projects, including internal cost centers and third-party funded activities.",
+    "source_document": "2017-12-14_Rfp_Review_Rules_Update.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.83
+  },
+  "8159a88d0e5cfeeaa0387c3ea446747a": {
+    "cause_description": "This could suggest that the organization has been gradually implementing a more structured approach to inventory management through iterative reminders and checklists, which may reflect an incremental drift towards improved process management practices. The emphasis on asset verification and the potential impact on funding eligibility indicates a continuous effort to refine and enhance operational efficiency over time.",
+    "evidence_snippet": "\"Reminder: Annual Lab Inventory Check Underway Posted by: Department Operations Deadline: 15 December 2017 All lab coordinators are requested to submit completed asset verification checklists for shared and grant-funded equipment by the above deadline. Focus areas: Conference-use items (projectors, clickers) Travel kits checked out under faculty projects Equipment funded under TEMPUS, Erasmus+, and DFG Unreturned or untracked items may affect 2018 funding eligibility. Forms and instructions: [Intranet > Lab Management > Inventory 2017]\"",
+    "source_document": "2017-12-07_Lab_Inventory_Check_Reminder.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.43
+  },
+  "5dcacfb488169ffe388567c1953d703b": {
+    "cause_description": "The evidence may indicate that the Erasmus+ mobility call for faculty and staff exchanges introduced several incremental changes, such as expanded travel budget limits and eligibility for research-linked exchanges. These adjustments could suggest a gradual evolution in the process management practices within the organization, aligning with agile methodologies that favor iterative improvements over time.",
+    "evidence_snippet": "Subject: New Call: Erasmus+ Mobility Projects (2018 Intake) From: International Funding Desk To: Faculty Mobility Coordinators, Project Officers Date: 14 December 2017 Key features: \u2022 Expanded travel budget limits (up to \u20ac1,100 per mobility slot) \u2022 Eligibility for research-linked exchanges (min. 5 days) \u2022 New regions: Baltic + Western Balkans now supported",
+    "source_document": "2017-12-14_EU_Mobility_Call_Opened.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.44
+  },
+  "72809f11f373bae5f9a8e52eb9f6c612": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that the university's travel expense declaration process has undergone a series of incremental adjustments aimed at enhancing compliance and oversight. The introduction of a new requirement for final approval by supervisors, effective from October 2018, may indicate a gradual shift towards more stringent approval protocols. This change could reflect an ongoing effort to align with sector-wide compliance norms and address identified procedural inconsistencies, hinting at a pattern of iterative improvements in process management.",
+        "evidence_snippet": "The internal review identified procedural inconsistencies in the approval of domestic expense declarations across faculties. Specifically, declarations exceeding \u20ac250 were often processed without any supervisory oversight, raising concerns about spending accountability, role conflicts in approval chains, and budget misclassification risks. The report recommends enhanced segregation of duties and the establishment of additional review layers for expense approvals. As a result, the university is introducing an interim compliance measure that affects all domestic travel declarations, effective 1 October 2018.",
+        "source_document": "2017-12-05_Compliance_Guidance_Update.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The introduction of a mandatory pre-approval step for Request for Payment submissions, as outlined in the procedural policy update, may suggest a series of incremental adjustments aimed at enhancing compliance and reducing risk exposure. This change, effective from January 2018, could indicate a shift towards more rigorous process management practices, reflecting an agile approach to continuous improvement in response to identified vulnerabilities in the existing approval process.",
+        "evidence_snippet": "New Approval Structure (Effective 2 January 2018) 1. Employee Submits Request 2. Review by Pre-Approver o Must be a designated financial reviewer within the unit o Verifies metadata and eligibility 3. Final Approval by Supervisor 4. System Payment Trigger This new step applies to all projects, including internal cost centers and third-party funded activities.",
+        "source_document": "2017-12-14_Rfp_Review_Rules_Update.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.83
+      },
+      {
+        "cause_description": "The evidence may imply that the organization has been gradually implementing a more structured approach to inventory management through iterative reminders and checklists. This could reflect an incremental drift towards improved process management practices. The emphasis on asset verification and the potential impact on funding eligibility suggests a continuous effort to refine and enhance operational efficiency over time.",
+        "evidence_snippet": "\"Reminder: Annual Lab Inventory Check Underway Posted by: Department Operations Deadline: 15 December 2017 All lab coordinators are requested to submit completed asset verification checklists for shared and grant-funded equipment by the above deadline. Focus areas: Conference-use items (projectors, clickers) Travel kits checked out under faculty projects Equipment funded under TEMPUS, Erasmus+, and DFG Unreturned or untracked items may affect 2018 funding eligibility. Forms and instructions: [Intranet > Lab Management > Inventory 2017]\"",
+        "source_document": "2017-12-07_Lab_Inventory_Check_Reminder.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.43
+      },
+      {
+        "cause_description": "The evidence may indicate that the Erasmus+ mobility call for faculty and staff exchanges introduced several incremental changes, such as expanded travel budget limits and eligibility for research-linked exchanges. These adjustments could suggest a gradual evolution in the process management practices within the organization, aligning with agile methodologies that favor iterative improvements over time.",
+        "evidence_snippet": "Subject: New Call: Erasmus+ Mobility Projects (2018 Intake) From: International Funding Desk To: Faculty Mobility Coordinators, Project Officers Date: 14 December 2017 Key features: \u2022 Expanded travel budget limits (up to \u20ac1,100 per mobility slot) \u2022 Eligibility for research-linked exchanges (min. 5 days) \u2022 New regions: Baltic + Western Balkans now supported",
+        "source_document": "2017-12-14_EU_Mobility_Call_Opened.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.44
+      }
+    ]
+  },
+  "bbe837ecaa508b6eb5efb6917f7512cd": "The analysis reveals a trend of incremental adjustments across various processes within the university, aimed at enhancing compliance, oversight, and operational efficiency. Key changes, such as the introduction of mandatory pre-approval steps and final supervisor approvals, reflect a strategic shift towards more rigorous process management practices. This ongoing evolution aligns with sector-wide compliance norms and demonstrates the organization's commitment to continuous improvement in response to identified vulnerabilities and procedural inconsistencies.",
+  "dd1b232eb6110f896342d7d355771bb1": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "0891ee432fc7adaa4f7ed1ff8b64415e": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "4bd66210621e259c0d400448bdf27ad1": {
+    "cause_description": "The evidence may indicate that a new mandatory data validation protocol for travel permit submissions was introduced, which could suggest a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation, effective from November 1, 2017, implies that while new submissions must adhere to the updated protocol, existing cases may still be processed under the previous guidelines until they are fully phased out.",
+    "evidence_snippet": "\"In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.\"",
+    "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.57
+  },
+  "929cfaa80560e872946a3f33262c75fa": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that a new pre-approval step is being introduced in the international travel declaration process, indicating a potential transition from the old process to the new one. The transition period mentioned, where declarations submitted before a specific date will still be processed under the old rules but flagged, implies that both processes may coexist temporarily. This could indicate that the organization is phasing in the new process while accommodating ongoing cases under the previous system.",
+        "evidence_snippet": "This change does not affect the permit flow itself but applies to post-travel declarations only. Implementation Notes \u2022 Effective Date: 21 May 2018 \u2022 Transition Period: Declarations without pre-approval submitted before 30 June 2018 will still be processed but flagged.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the university may be in a transition phase regarding its international travel oversight practices, where both the old and new governance structures coexist. The Vice-Rector's communication suggests that while the formal policy remains unchanged, new leadership practices are being encouraged starting January 2018. This could imply a gradual rollout of enhanced oversight measures, allowing existing practices and new recommendations to operate simultaneously during the transition period.",
+        "evidence_snippet": "While this reflects positively on our global engagement, it also raises important considerations regarding strategic oversight and budgetary alignment.",
+        "source_document": "2017-10-10_Leadership_Note_Mobility_Oversight.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.88
+      },
+      {
+        "cause_description": "The evidence suggests that the introduction of a pre-approval practice for travel permits may be part of a gradual transition towards a new process variant. This indicates that while the formal approval structure remains unchanged, departments are encouraged to adopt this new layer of oversight, allowing both the old and new processes to coexist during the transition period. Over time, as departments implement this practice, the older process may be phased out, aligning with the characteristics of a gradual drift.",
+        "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+        "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.55
+      },
+      {
+        "cause_description": "The evidence indicates that a new mandatory data validation protocol for travel permit submissions was introduced, suggesting a transition phase where the old process of submitting travel permits coexists with the new validation requirements. This gradual implementation, effective from November 1, 2017, implies that while new submissions must adhere to the updated protocol, existing cases may still be processed under the previous guidelines until they are fully phased out.",
+        "evidence_snippet": "In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017.",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.57
+      }
+    ]
+  },
+  "8c56ea11c0b1c79234538a9602ab9e94": "The analysis reveals that the organization is undergoing a gradual transition in its international travel declaration process, characterized by the introduction of new pre-approval steps and mandatory data validation protocols. This transition allows both the old and new governance structures to coexist temporarily, facilitating a phased implementation of enhanced oversight measures while accommodating ongoing cases under the previous system. As departments adapt to these changes, the older processes are expected to be gradually phased out, indicating a clear shift in operational practices.",
+  "bcceb544348ec97afb2564be1167294c": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of pre-approval steps and mandatory data validation protocols in the international travel declaration process, indicating a shared response to audit findings and a strategic effort to enhance compliance and oversight. The coexistence of old and new processes during the transition period further emphasizes a common root cause driving these changes."
+  },
+  "5f0cd5292fbf7c295c2e471a8c4553de": "1. The travel expense claims process at the university involves employees submitting requests for travel permits and payment, with approvals required from various administrative levels depending on the trip type. \n\n2. The key change in the process flow is the introduction of multiple approval stages for the travel permit, including an additional approval by the Director, and a significant increase in payment request rejections by both Administration and the Employee, indicating a more stringent review process.",
+  "f8d7d1982dea706d509755a61211ac6c": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "1868da8c53a121233c58345e2a7577e9": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses revised workflow requirements and new procedures for processing travel cost requests, indicating a change in process management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The mention of a new error screen and automated pre-checks indicates changes in the IT systems and processes that support the workflow."
+      }
+    ]
+  },
+  "28b0789098bfe67d52958422f235d705": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The text discusses the rollout of an updated absence logging system, which falls under IT management as it involves a new software platform."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The introduction of a new absence reporting module indicates a change in process management, including new procedures for logging absences."
+      }
+    ]
+  },
+  "f6b2499e4c280c6f4256b1daf802b59e": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses the launch of a new digital parking registration system, which involves a process redesign and new procedures for staff vehicle access."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The implementation of a new digital system for parking management indicates a new software rollout within the organization."
+      }
+    ]
+  },
+  "e70486fd422a615ac6eebb449d798a8c": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses changes to building access protocols, which can be seen as a redesign of internal processes related to security and access management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The changes in access protocols may be related to organizational adjustments due to increased activity and construction, indicating a shift in operational procedures."
+      }
+    ]
+  },
+  "17d2b840308a5c96411f853cee470d47": {
+    "cause_description": "The evidence may indicate that the implementation of mandatory metadata checks for prepaid travel cost requests represents a series of incremental changes aimed at improving data accuracy and compliance. This gradual shift, as outlined in the communication from the Office of Financial Compliance and Systems, suggests a continuous effort to address recurring audit findings and enhance the overall workflow for travel cost requests. The phased introduction of automated pre-checks and revised workflow requirements could reflect an agile approach to process management, where small adjustments are made over time to achieve significant improvements in operational efficiency.",
+    "evidence_snippet": "Starting 2 July 2018, the travel cost system will enforce automated pre-checks before allowing a Request for Payment to proceed. Specifically: \u2022 Valid permit IDs must be attached for all international travel \u2022 Budget and project numbers must match those recorded in the permit \u2022 Incomplete or \u201cUNKNOWN\u201d entries will block submission",
+    "source_document": "2017-11-13_Compliance_Check_Preload_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "31c61ba65a66ad31f696f7cf55db5e56": {
+    "cause_description": "This could suggest that the organization is adopting an incremental approach to process improvement through the implementation of the updated absence logging system. The transition to a centralized entry for various types of leave and the integration with finance indicates a series of small, iterative changes aimed at enhancing efficiency and user experience. Such adjustments align with agile BPM practices, where continuous improvements are made over time without a single, identifiable change point.",
+    "evidence_snippet": "Subject: Launch of Updated Absence Logging System From: Human Resources To: Department Admins and Timekeepers Date: 8 November 2017  \n\nDear Colleagues,  \nAs part of the transition to our upgraded Workforce Presence Platform, all units are required to begin using the new absence reporting module starting 15 November.  \n  \n     What\u2019s changing:  \n\u2022 Centralized entry for travel, sick leave, and remote work  \n\u2022 Daily sync with finance to match per-diem and trip status  \n\u2022 Access via staff portal (no VPN needed)  \n  \nAn onboarding webinar will take place 13 November, 10:00\u201310:45. No registration needed.  \nBest regards,  \nOlga Baumgartner  \nHR Process Innovation",
+    "source_document": "2017-11-08_Absence_Monitoring_System_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.68
+  },
+  "8fe5dd1f013d0185a6564f181a226efb": {
+    "cause_description": "The evidence may indicate that the pilot launch of the digital parking management system represents a series of small, iterative changes aimed at improving operational efficiency. By replacing physical dashboard passes with a digital permit request system and implementing a reservation-based access model, the organization is likely making incremental adjustments to its parking management processes. This could suggest a broader trend of adopting agile practices within the organization, where feedback from the pilot is used to inform future enhancements and potential system expansions.",
+    "evidence_snippet": "Subject: Pilot Launch of Digital Parking Management System \nFrom: Campus Infrastructure & Logistics \nTo: All Employees \u2013 Urban Campus \nDate: 15 November 2017 \nCategory: Operational Update \n \nDear Team, \nWe are launching a 3-month pilot of a new digital parking registration system for staff vehicle \naccess at the Urban Campus. \n \nKey Pilot Details \n\u2022 Digital permit request replaces physical dashboard passes \n\u2022 License plate number will be used for gate recognition \n\u2022 Limited spaces will rotate on a reservation basis \n\u2022 Staff will receive access based on declared office presence \n \nYour participation and feedback will help us determine whether to expand the system across all \nsites in early 2018. \nThank you for your support, \nManuel Dietrich \nLogistics Systems Manager",
+    "source_document": "2017-11-15_Campus_Parking_Pilot_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.46
+  },
+  "4beb94288bd6f993d477b06aaeb63319": {
+    "cause_description": "This could suggest that the adjustments to building access protocols, as outlined in the communication from Campus Security Operations, represent a series of incremental changes aimed at improving security and access management. The implementation of auto-locking doors and the introduction of a new reception kiosk for visitor sign-ins may reflect an ongoing effort to adapt to increased activity and construction in the South Campus zone, indicating a gradual evolution of the process rather than a single, significant overhaul.",
+    "evidence_snippet": "Subject: After-Hours Access Changes \u2013 South Campus Facilities From: Campus Security Operations To: Faculty and Administrative Staff Date: 9 November 2017  Dear Colleagues, Due to increased activity and construction in the South Campus zone, we are adjusting building access protocols during evening and weekend hours, effective Monday, 13 November. Key Changes \u2022 Doors will auto-lock from 18:00 onward \u2022 Badge entry is still available for all registered staff \u2022 Visitors must be signed in at the new reception kiosk Please contact security@university.edu if you require expanded access permissions for special projects or field work preparations. Thank you for your cooperation, Stefan Kohlmann Head of Campus Security",
+    "source_document": "2017-11-09_Building_Access_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.37
+  },
+  "1c85271ae90423dba53ad5c51a5f9bcf": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence may suggest that the implementation of mandatory metadata checks for prepaid travel cost requests represents a series of incremental changes aimed at improving data accuracy and compliance. This gradual shift, as outlined in the communication from the Office of Financial Compliance and Systems, could indicate a continuous effort to address recurring audit findings and enhance the overall workflow for travel cost requests. The phased introduction of automated pre-checks and revised workflow requirements might reflect an agile approach to process management, where small adjustments are made over time to achieve significant improvements in operational efficiency.",
+        "evidence_snippet": "Starting 2 July 2018, the travel cost system will enforce automated pre-checks before allowing a Request for Payment to proceed. Specifically: \u2022 Valid permit IDs must be attached for all international travel \u2022 Budget and project numbers must match those recorded in the permit \u2022 Incomplete or \u201cUNKNOWN\u201d entries will block submission",
+        "source_document": "2017-11-13_Compliance_Check_Preload_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "This could imply that the organization is adopting an incremental approach to process improvement through the implementation of the updated absence logging system. The transition to a centralized entry for various types of leave and the integration with finance may indicate a series of small, iterative changes aimed at enhancing efficiency and user experience. Such adjustments might align with agile BPM practices, where continuous improvements are made over time without a single, identifiable change point.",
+        "evidence_snippet": "Subject: Launch of Updated Absence Logging System From: Human Resources To: Department Admins and Timekeepers Date: 8 November 2017  Dear Colleagues, As part of the transition to our upgraded Workforce Presence Platform, all units are required to begin using the new absence reporting module starting 15 November.  What\u2019s changing: \u2022 Centralized entry for travel, sick leave, and remote work \u2022 Daily sync with finance to match per-diem and trip status \u2022 Access via staff portal (no VPN needed)  An onboarding webinar will take place 13 November, 10:00\u201310:45. No registration needed. Best regards, Olga Baumgartner HR Process Innovation",
+        "source_document": "2017-11-08_Absence_Monitoring_System_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.68
+      },
+      {
+        "cause_description": "The evidence may indicate that the pilot launch of the digital parking management system represents a series of small, iterative changes aimed at improving operational efficiency. By replacing physical dashboard passes with a digital permit request system and implementing a reservation-based access model, the organization might be making incremental adjustments to its parking management processes. This could suggest a broader trend of adopting agile practices within the organization, where feedback from the pilot is used to inform future enhancements and potential system expansions.",
+        "evidence_snippet": "Subject: Pilot Launch of Digital Parking Management System From: Campus Infrastructure & Logistics To: All Employees \u2013 Urban Campus Date: 15 November 2017 Category: Operational Update  Dear Team, We are launching a 3-month pilot of a new digital parking registration system for staff vehicle access at the Urban Campus.  Key Pilot Details \u2022 Digital permit request replaces physical dashboard passes \u2022 License plate number will be used for gate recognition \u2022 Limited spaces will rotate on a reservation basis \u2022 Staff will receive access based on declared office presence  Your participation and feedback will help us determine whether to expand the system across all sites in early 2018. Thank you for your support, Manuel Dietrich Logistics Systems Manager",
+        "source_document": "2017-11-15_Campus_Parking_Pilot_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.46
+      },
+      {
+        "cause_description": "This could suggest that the adjustments to building access protocols, as outlined in the communication from Campus Security Operations, represent a series of incremental changes aimed at improving security and access management. The implementation of auto-locking doors and the introduction of a new reception kiosk for visitor sign-ins may reflect an ongoing effort to adapt to increased activity and construction in the South Campus zone, indicating a gradual evolution of the process rather than a single, significant overhaul.",
+        "evidence_snippet": "Subject: After-Hours Access Changes \u2013 South Campus Facilities From: Campus Security Operations To: Faculty and Administrative Staff Date: 9 November 2017  Dear Colleagues, Due to increased activity and construction in the South Campus zone, we are adjusting building access protocols during evening and weekend hours, effective Monday, 13 November. Key Changes \u2022 Doors will auto-lock from 18:00 onward \u2022 Badge entry is still available for all registered staff \u2022 Visitors must be signed in at the new reception kiosk Please contact security@university.edu if you require expanded access permissions for special projects or field work preparations. Thank you for your cooperation, Stefan Kohlmann Head of Campus Security",
+        "source_document": "2017-11-09_Building_Access_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.37
+      }
+    ]
+  },
+  "958f2ebf0b5d03db4779bf10fc0d4c23": "The analysis reveals a consistent trend of incremental process improvements across various organizational initiatives, including mandatory metadata checks for travel cost requests, an updated absence logging system, a digital parking management pilot, and enhanced building access protocols. These initiatives reflect an agile approach to business process management, characterized by small, iterative changes aimed at enhancing operational efficiency, data accuracy, and user experience. This ongoing commitment to gradual enhancements suggests a strategic focus on continuous improvement in response to evolving operational needs and compliance requirements.",
+  "f66f6eff3841e1d3e31a44e8c3810d45": "The travel expense claims process at the university involves employees submitting requests that are then reviewed and approved by various stakeholders before payment is processed. The key change in the process flow from the start to the end of the drift period is the introduction of an additional approval step by the Administration before the Supervisor's final approval, which has resulted in a more structured review process.",
+  "1c41614a9982001a64e6b8a40ed64b57": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "95fc5d7ba7b58a0d9067fe8b02081030": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses changes to cost allocation windows and funding structures, which relates to process management and potentially new Standard Operating Procedures (SOPs) for handling project funding."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Economic",
+        "reasoning": "The changes mentioned are aligned with adjustments in funding structures by an external body (Joint Academic Research Board), indicating an economic context affecting internal processes."
+      }
+    ]
+  },
+  "4f53863d1c676830843bfe53e575037c": {
+    "cause_description": "The introduction of a mandatory pre-approval step for Request for Payment submissions, as outlined in the procedural policy update, could suggest a series of incremental adjustments aimed at enhancing compliance and reducing risk exposure. This change, effective from January 2018, reflects an iterative improvement in the approval process, which may have been influenced by previous audits identifying vulnerabilities in the existing system. Such continuous enhancements align with agile BPM practices, where small, ongoing modifications contribute to significant process transformation over time.",
+    "evidence_snippet": "New Approval Structure (Effective 2 January 2018) 1. Employee Submits Request 2. Review by Pre-Approver o Must be a designated financial reviewer within the unit o Verifies metadata and eligibility 3. Final Approval by Supervisor 4. System Payment Trigger This new step applies to all projects, including internal cost centers and third-party funded activities.",
+    "source_document": "2017-12-14_Rfp_Review_Rules_Update.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "3316df96a533754c38f4a6222d725974": {
+    "cause_description": "This could suggest that the organization is implementing a series of small adjustments to its funding allocation processes, as indicated by the revised deadlines and new rules for unspent travel funds. These incremental changes may reflect an agile approach to process management, allowing for continuous improvement in response to evolving funding structures.",
+    "evidence_snippet": "Subject: Revised Deadlines for Year-End Project Funding Allocations From: Research Funding Office To: Project PIs, Department Finance Officers Date: 21 December 2017  \n \nDear Colleagues,  \nPlease note the following changes to year-end cost allocation windows for 2017-funded projects:  \n \nWhat\u2019s Changing  \n\u2022 Transfer requests must be submitted by 28 December 17:00  \n\u2022 Unspent travel funds will not roll over unless pre-declared  \n\u2022 Supplemental requests for mobility grants will not be accepted after 5 January  \nThese changes align with adjustments in funding structures by the Joint Academic Research Board.  \nFor assistance, contact: research-finance@university.edu  \nBest regards,  \nMagdalena Stroh  \nGrant Funding Coordinator",
+    "source_document": "2017-12-21_Funding_Timeline_Change_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.72
+  },
+  "6c3302f77999edd96ba0b6d9bb4ce195": {
+    "cause_description": "The evidence may indicate that the Erasmus+ 2018 mobility call introduced several incremental changes to the application process, such as expanded travel budget limits and new eligibility criteria. These adjustments could reflect a series of small, iterative improvements aimed at enhancing the mobility program, aligning with agile BPM practices. This gradual evolution in the process might have contributed to the observed incremental drift over the specified period.",
+    "evidence_snippet": "Subject: New Call: Erasmus+ Mobility Projects (2018 Intake) From: International Funding Desk To: Faculty Mobility Coordinators, Project Officers Date: 14 December 2017 Dear Partners, The Erasmus+ 2018 mobility call for faculty and staff exchanges is now open. Application documents and templates have been released by the EU Commission. Key features: \u2022 Expanded travel budget limits (up to \u20ac1,100 per mobility slot) \u2022 Eligibility for research-linked exchanges (min. 5 days) \u2022 New regions: Baltic + Western Balkans now supported Deadlines: \u2022 Internal pre-check: 12 January \u2022 Submission to EU Portal: 25 January Please notify us by 22 December if your unit plans to submit. Sincerely, Amira Cenk Senior Mobility Coordinator",
+    "source_document": "2017-12-14_EU_Mobility_Call_Opened.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.42
+  },
+  "a0df0d37b3eae4caee4b780907095ac4": {
+    "cause_description": "This could suggest that the organization has been implementing a series of small, iterative improvements in their lab inventory management process, as indicated by the reminder for annual inventory checks and the emphasis on asset verification. The focus on specific items and the deadline for submission may reflect an ongoing effort to refine and enhance the process over time, aligning with agile BPM practices.",
+    "evidence_snippet": "Reminder: Annual Lab Inventory Check Underway \n          Posted by: Department Operations \n        Deadline: 15 December 2017 \nAll lab coordinators are requested to submit completed asset verification checklists for shared \nand grant-funded equipment by the above deadline. \n \n       Focus areas: \n\u2022 Conference-use items (projectors, clickers) \n\u2022 Travel kits checked out under faculty projects \n\u2022 Equipment funded under TEMPUS, Erasmus+, and DFG \n      Unreturned or untracked items may affect 2018 funding eligibility. \n    Forms and instructions: [Intranet > Lab Management > Inventory 2017]",
+    "source_document": "2017-12-07_Lab_Inventory_Check_Reminder.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.38
+  },
+  "fa064c5f1a6f1e6d5f6a5fa7b1bcfb98": {
+    "ranked_causes": [
+      {
+        "cause_description": "The introduction of a mandatory pre-approval step for Request for Payment submissions, as outlined in the procedural policy update, may indicate a strategic effort to enhance compliance and mitigate risk exposure. This change, effective from January 2018, appears to be a response to previous audits that identified vulnerabilities in the existing system. Such procedural adjustments could reflect an iterative improvement approach, aligning with agile BPM practices where ongoing modifications contribute to significant process transformation over time.",
+        "evidence_snippet": "New Approval Structure (Effective 2 January 2018) 1. Employee Submits Request 2. Review by Pre-Approver o Must be a designated financial reviewer within the unit o Verifies metadata and eligibility 3. Final Approval by Supervisor 4. System Payment Trigger This new step applies to all projects, including internal cost centers and third-party funded activities.",
+        "source_document": "2017-12-14_Rfp_Review_Rules_Update.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The revised deadlines and new rules for unspent travel funds may suggest that the organization is implementing a series of incremental adjustments to its funding allocation processes. These changes could reflect an agile approach to process management, allowing for continuous improvement in response to evolving funding structures, potentially enhancing overall efficiency and compliance.",
+        "evidence_snippet": "Subject: Revised Deadlines for Year-End Project Funding Allocations From: Research Funding Office To: Project PIs, Department Finance Officers Date: 21 December 2017  \n \nDear Colleagues,  \nPlease note the following changes to year-end cost allocation windows for 2017-funded projects:  \n \nWhat\u2019s Changing  \n\u2022 Transfer requests must be submitted by 28 December 17:00  \n\u2022 Unspent travel funds will not roll over unless pre-declared  \n\u2022 Supplemental requests for mobility grants will not be accepted after 5 January  \nThese changes align with adjustments in funding structures by the Joint Academic Research Board.  \nFor assistance, contact: research-finance@university.edu  \nBest regards,  \nMagdalena Stroh  \nGrant Funding Coordinator",
+        "source_document": "2017-12-21_Funding_Timeline_Change_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.72
+      },
+      {
+        "cause_description": "The Erasmus+ 2018 mobility call may indicate that the organization is introducing several incremental changes to the application process, such as expanded travel budget limits and new eligibility criteria. These adjustments could reflect a series of small, iterative improvements aimed at enhancing the mobility program, which aligns with agile BPM practices. This gradual evolution in the process might have contributed to the observed incremental drift over the specified period.",
+        "evidence_snippet": "Subject: New Call: Erasmus+ Mobility Projects (2018 Intake) From: International Funding Desk To: Faculty Mobility Coordinators, Project Officers Date: 14 December 2017 Dear Partners, The Erasmus+ 2018 mobility call for faculty and staff exchanges is now open. Application documents and templates have been released by the EU Commission. Key features: \u2022 Expanded travel budget limits (up to \u20ac1,100 per mobility slot) \u2022 Eligibility for research-linked exchanges (min. 5 days) \u2022 New regions: Baltic + Western Balkans now supported Deadlines: \u2022 Internal pre-check: 12 January \u2022 Submission to EU Portal: 25 January Please notify us by 22 December if your unit plans to submit. Sincerely, Amira Cenk Senior Mobility Coordinator",
+        "source_document": "2017-12-14_EU_Mobility_Call_Opened.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.42
+      },
+      {
+        "cause_description": "The reminder for annual lab inventory checks may suggest that the organization is implementing a series of small, iterative improvements in their lab inventory management process. The emphasis on asset verification and specific focus areas could reflect an ongoing effort to refine and enhance the process over time, which aligns with agile BPM practices. This focus on continuous improvement may contribute to better compliance and funding eligibility.",
+        "evidence_snippet": "Reminder: Annual Lab Inventory Check Underway \n          Posted by: Department Operations \n        Deadline: 15 December 2017 \nAll lab coordinators are requested to submit completed asset verification checklists for shared \nand grant-funded equipment by the above deadline. \n \n       Focus areas: \n\u2022 Conference-use items (projectors, clickers) \n\u2022 Travel kits checked out under faculty projects \n\u2022 Equipment funded under TEMPUS, Erasmus+, and DFG \n      Unreturned or untracked items may affect 2018 funding eligibility. \n    Forms and instructions: [Intranet > Lab Management > Inventory 2017]",
+        "source_document": "2017-12-07_Lab_Inventory_Check_Reminder.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.38
+      }
+    ]
+  },
+  "1fc338cc55c3825bc3b0387d1bfecc61": "The recent procedural updates, including the introduction of mandatory pre-approval for payment submissions and revised rules for unspent travel funds, reflect a strategic shift towards enhanced compliance and risk mitigation. These incremental changes, aligned with agile business process management practices, indicate a commitment to continuous improvement across various operational areas, including funding allocation and inventory management. Such iterative enhancements are likely contributing to the observed concept drift, as the organization adapts to evolving requirements and strives for greater efficiency.",
+  "09dd8df66eadbe24c0308a1b148cf99c": "1. The travel expense claims process at the university involves employees submitting requests for payment, which are then approved by administration and supervisors before payment is processed. \n\n2. There is no change in the process flow between the start point and end point traces, as both instances follow the same sequence of events from submission to payment handling.",
+  "743c5bed8e902bb433298ea551321ac9": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "ac0b3a4c14d7d9a9c1cf2d002a731ed3": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses new constraints and procedures related to the processing of RFPs, which falls under process management and redesign."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The update affects all finance staff and department heads, indicating a change in organizational procedures and roles."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The mention of compliance and internal directives suggests a need for adherence to internal IT management policies."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The implementation of measures under Article 17 of the internal spending directive indicates a legal context related to compliance."
+      }
+    ]
+  },
+  "e573fe6455a4379f96b9a2453bd2a749": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The text discusses a scheduled downtime for a system upgrade, which falls under IT management as it involves system updates."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The upgrade affects specific processes related to financial operations, indicating a change in process management."
+      }
+    ]
+  },
+  "f7f58e58e6ebbfbf1921d3b338b131c9": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The text discusses a process related to the re-issuance of staff identification cards, which can be considered a part of process management within the organization."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The communication is directed to all employees and pertains to organizational policies regarding staff identification cards, indicating a change or requirement within the organization."
+      }
+    ]
+  },
+  "6f740ca693c0e4f87db9b3943e273241": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The launch of a new portal for managing registrations and cost tracking indicates a redesign of processes related to event planning and management."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The introduction of a new portal suggests a new software rollout to support academic event logistics."
+      }
+    ]
+  },
+  "11b132a46e2213bd2abb9d56925c2418": {
+    "cause_description": "The evidence may indicate that the sudden drift in the RFP processing pipeline was triggered by the discovery of non-compliant disbursements during the Q4 closeout process. This could suggest that the university's immediate response to restore compliance confidence necessitated abrupt changes to the RFP submission process, effective January 8, 2018, as outlined in the communication from the Controller\u2019s Office.",
+    "evidence_snippet": "Due to a recent discovery of non-compliant disbursements during the Q4 closeout process, the university is instituting temporary restrictions on RFP (Request for Payment) submissions effective 8 January 2018.",
+    "source_document": "2018-01-03_Immediate_Rfp_Restrictions.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "816b3652cad026a265625c9063366e86": {
+    "cause_description": "This could suggest that the sudden drift in processes on January 8, 2018, was triggered by the scheduled downtime for the Finance Portal upgrade that occurred from January 5 to January 7, 2018. The upgrade may have necessitated a complete transition to a new process for handling reimbursements and claims, as the old process was no longer available after the upgrade was completed.",
+    "evidence_snippet": "Subject: Scheduled Downtime: Finance Portal Upgrade From: IT Operations + Financial Systems To: All Users of Reimbursement & Claim Portals Date: 4 January 2018 Dear Users, Please be advised that the Finance Portal will be unavailable from 5 January (18:00) until 7 January (12:00) for scheduled upgrades. This affects: \u2022 Travel declaration uploads \u2022 Request for Payment submissions \u2022 Budget tracking dashboards No data will be lost. Queued submissions will resume automatically once the upgrade is complete. Need help? Contact portal-support@university.edu Thank you, Luis Rettig Systems Reliability Lead",
+    "source_document": "2018-01-04_Finance_Portal_Jan_Outage.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::IT_Management/ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.75
+  },
+  "83a30392cdd2ec20caacac828d32d846": {
+    "cause_description": "The evidence may indicate that the reissuance of staff identification cards was mandated due to a regulatory requirement, which could have led to an abrupt change in the process for accessing building entry systems and other services. This sudden need for compliance might have resulted in the immediate substitution of the old card access process with a new one, effective from the deadline stated in the communication.",
+    "evidence_snippet": "Subject: Deadline Approaching: Staff Card Re-Issuance Cycle From: University Card Services To: All Employees (Issued Before 2015) Date: 7 January 2018 Dear Colleagues, If your staff identification card was issued before January 2015, please ensure it is reissued by 31 January 2018 to maintain access to: \u2022 Building entry systems \u2022 Printer authentication \u2022 Cafeteria and travel expense integration You can visit the campus card office (Building D03, Room 119) between 08:30\u201315:00 on weekdays. Thank you, Tamara Hesse Service Access & ID Office",
+    "source_document": "2018-01-07_Staff_Card_Reissue_Reminder.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.43
+  },
+  "8a9f9aa24eb10ae2fa44b963224dd22d": {
+    "cause_description": "This could suggest that the launch of the Centralized Conference Registration Support Portal on December 28, 2017, led to an immediate shift in the process for managing conference registrations and logistics. The abrupt introduction of this new portal may have replaced the previous methods of handling registrations, indicating a sudden drift in the process.",
+    "evidence_snippet": "Subject: Launch of Centralized Conference Registration Support Portal \nFrom: Academic Support Services \nTo: All Staff Engaged in Event Planning \nDate: 28 December 2017 \n \nDear Colleagues, \nTo better support academic event logistics, we have launched a new portal for managing \nregistrations and cost tracking for university-hosted conferences.",
+    "source_document": "2017-12-28_Conference_Registration_Hub_Launch.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.39
+  },
+  "d01e20d82a5121a8cf868ed7b1cecd42": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that the drift in the RFP processing pipeline may have been triggered by the discovery of non-compliant disbursements during the Q4 closeout process. This discovery prompted the university to implement immediate restrictions on RFP submissions, effective January 8, 2018, as a measure to restore compliance confidence, as indicated in the communication from the Controller\u2019s Office.",
+        "evidence_snippet": "Due to a recent discovery of non-compliant disbursements during the Q4 closeout process, the university is instituting temporary restrictions on RFP (Request for Payment) submissions effective 8 January 2018.",
+        "source_document": "2018-01-03_Immediate_Rfp_Restrictions.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the scheduled downtime for the Finance Portal upgrade from January 5 to January 7, 2018, may have contributed to the drift in processes on January 8, 2018. The upgrade could have necessitated a transition to a new process for handling reimbursements and claims, as the previous process was unavailable during the upgrade period.",
+        "evidence_snippet": "Subject: Scheduled Downtime: Finance Portal Upgrade From: IT Operations + Financial Systems To: All Users of Reimbursement & Claim Portals Date: 4 January 2018 Dear Users, Please be advised that the Finance Portal will be unavailable from 5 January (18:00) until 7 January (12:00) for scheduled upgrades. This affects: \u2022 Travel declaration uploads \u2022 Request for Payment submissions \u2022 Budget tracking dashboards No data will be lost. Queued submissions will resume automatically once the upgrade is complete. Need help? Contact portal-support@university.edu Thank you, Luis Rettig Systems Reliability Lead",
+        "source_document": "2018-01-04_Finance_Portal_Jan_Outage.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::IT_Management/ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.75
+      },
+      {
+        "cause_description": "The evidence suggests that the reissuance of staff identification cards, mandated by a regulatory requirement, may have led to an abrupt change in the process for accessing building entry systems and other services. This sudden compliance need could have resulted in the immediate substitution of the old card access process with a new one, effective from the stated deadline.",
+        "evidence_snippet": "Subject: Deadline Approaching: Staff Card Re-Issuance Cycle From: University Card Services To: All Employees (Issued Before 2015) Date: 7 January 2018 Dear Colleagues, If your staff identification card was issued before January 2015, please ensure it is reissued by 31 January 2018 to maintain access to: \u2022 Building entry systems \u2022 Printer authentication \u2022 Cafeteria and travel expense integration You can visit the campus card office (Building D03, Room 119) between 08:30\u201315:00 on weekdays. Thank you, Tamara Hesse Service Access & ID Office",
+        "source_document": "2018-01-07_Staff_Card_Reissue_Reminder.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.43
+      },
+      {
+        "cause_description": "The evidence indicates that the launch of the Centralized Conference Registration Support Portal on December 28, 2017, may have led to a shift in the process for managing conference registrations and logistics. The introduction of this new portal could have replaced previous methods, suggesting a sudden drift in the process.",
+        "evidence_snippet": "Subject: Launch of Centralized Conference Registration Support Portal From: Academic Support Services To: All Staff Engaged in Event Planning Date: 28 December 2017 Dear Colleagues, To better support academic event logistics, we have launched a new portal for managing registrations and cost tracking for university-hosted conferences.",
+        "source_document": "2017-12-28_Conference_Registration_Hub_Launch.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.39
+      }
+    ]
+  },
+  "4204c40b517b2f0fd2e076be15c9912d": "The analysis identifies several key factors contributing to the observed concept drift in the RFP processing pipeline. Notably, the discovery of non-compliant disbursements prompted immediate restrictions on RFP submissions, while a scheduled Finance Portal upgrade necessitated a transition to new reimbursement processes. Additionally, regulatory changes regarding staff identification cards and the launch of a new Centralized Conference Registration Support Portal further disrupted established workflows, indicating a significant shift in operational processes.",
+  "c4bb712e7341ed66a14d4911ed318205": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to changes in the Request for Payment process, with Drift #1 highlighting immediate compliance measures and operational disruptions, while Drift #2 reflects incremental procedural updates aimed at enhancing compliance and risk mitigation. The shared focus on compliance and process management indicates a common root cause related to evolving regulatory and operational requirements."
+  },
+  "83d427ca53a10293013e7a9090cc03af": "The travel expense claims process at the university involves employees submitting travel permits and expense declarations, which are then approved by various stakeholders before payment is processed. The key change in the process flow is that the approval of permits and declarations transitioned from a sequential approval by a pre-approver and supervisor to a more streamlined process involving administration and budget owner approvals, thereby reducing the number of approval steps and potentially expediting the overall timeline.",
+  "fb3881c2cfe224ca62f860bf8fa6b8b2": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      5
+    ]
+  },
+  "051693a241907c3ac7c35f75c35fb8a4": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Process_Management",
+        "reasoning": "The guidelines update relates to process redesign and operational procedures for catering logistics during conferences."
+      },
+      {
+        "full_path": "ORGANIZATION_INTERNAL::Organizational",
+        "reasoning": "The communication involves changes in operational guidelines which may reflect organizational adjustments in catering management."
+      }
+    ]
+  },
+  "68bb7461609298b9e9d278f733353131": {
+    "cause_description": "The evidence may indicate that the introduction of a Pre-Approval Step for international travel declarations represents a series of incremental adjustments aimed at enhancing financial controls and compliance. This change, effective from May 2018, suggests a gradual evolution in the process management practices within the organization, reflecting an agile approach to addressing identified discrepancies from the 2017 audit. The implementation of this new step, along with the transition period for existing declarations, could imply a continuous effort to refine and improve the travel declaration process over time, rather than a single, abrupt change.",
+    "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+    "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "00b190602fac964eb792a792c3d13181": {
+    "cause_description": "The evidence may indicate that the implementation of a mandatory data validation protocol for travel permit submissions, as outlined in the document, reflects a series of incremental adjustments aimed at improving process compliance and data accuracy. This could suggest that the organization is adopting agile practices by iteratively refining its processes to address specific audit concerns, such as budget mismatches and duplicate registrations, over time.",
+    "evidence_snippet": "\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports \n\nPlease ensure your unit coordinators and faculty staff are briefed. A system message will appear \nin the travel portal beginning 30 October. \nSincerely, \nDr. Lars Wiegand \nHead of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions \nFrom: Finance and Compliance Coordination Office \nDate: 17 October 2017 \nTo: All Budget Owners, Project Leads, Travel Officers \nCategory: Process Enforcement \n \nDear Colleagues, \nIn preparation for the annual financial reconciliation and internal audit season, we are \nimplementing a mandatory data validation protocol on all travel permit submissions, \neffective 1 November 2017. \n \nPolicy Update \nAll submitted travel permits must now contain: \n\u2022 A valid budget number \n\u2022 A specified project number and task ID \n\u2022 A populated activity code (if applicable) \nPermits lacking these fields will be automatically flagged for pre-approval review and may be \nreturned to the requester. \n \nCompliance Context \nThis update aligns with Article 9 of the University Financial Control Framework and addresses \nauditing concerns regarding: \n\u2022 Budget mismatches \n\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+    "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.96
+  },
+  "937367eb52bdb30f586158ec14dc291e": {
+    "cause_description": "This could suggest that the incremental adjustments in the payment request process, as outlined in the memo, reflect a continuous effort to streamline operations and reduce friction. The policy's emphasis on minimal approval requirements and post hoc reviews may indicate a series of iterative improvements aimed at enhancing efficiency over time. Such changes align with agile BPM practices, where small, ongoing modifications contribute to a significant transformation in process management.",
+    "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+    "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.49
+  },
+  "8f0f04e7e9973f5dce36fc2604527c69": {
+    "cause_description": "The evidence may indicate that the university has implemented a series of incremental updates to its catering guidelines, which could reflect an ongoing effort to streamline processes and improve efficiency in event management. This gradual evolution in the guidelines, such as the introduction of new requirements for vendor engagement and receipt submission, suggests a commitment to agile practices in process management.",
+    "evidence_snippet": "\u2022 All catering receipts should be submitted within 10 working days post-event \n\nPlease refer to the internal event portal for booking templates, preferred vendor lists, and FAQs. \nSincerely, \nJens Holzer \nHead of Facility Operations Subject: Guidelines for On-Campus Catering during Hosted Conferences \nFrom: Events & Facility Management \nTo: Faculty Event Coordinators \nDate: 11 October 2017 \nCategory: Operational Information \n \nDear Colleagues, \nTo streamline catering logistics during university-hosted conferences, we have updated our \nguidelines for working with preferred on-campus and third-party vendors. \n \nScope of Update \nThese guidelines apply to: \n\u2022 Catering for conferences held in university buildings \n\u2022 Events funded through research grants or department budgets \n\u2022 External vendor engagement for meals, receptions, or coffee breaks \n \nKey Points \n\u2022 Pre-approval is not needed for catering below \u20ac1,500 \n\u2022 All orders must include vendor invoice, cost breakdown, and event ID \n\u2022 Alcohol service must be approved by Facility Risk Management \n\u2022 All catering receipts should be submitted within 10 working days post-event",
+    "source_document": "2017-10-11_Conference_Catering_Guidelines.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.41
+  },
+  "8a64a8970ee068688d73b329005a422f": {
+    "ranked_causes": [
+      {
+        "cause_description": "The introduction of a Pre-Approval Step for international travel declarations may reflect a strategic response to identified discrepancies from the 2017 audit. This change, effective from May 2018, suggests a gradual evolution in process management practices aimed at enhancing financial controls and compliance. The implementation of this new step, along with a transition period for existing declarations, indicates a commitment to refining the travel declaration process over time, rather than a sudden overhaul.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The implementation of a mandatory data validation protocol for travel permit submissions may signify an ongoing effort to improve process compliance and data accuracy. This initiative appears to be a response to specific audit concerns, such as budget mismatches and duplicate registrations, suggesting that the organization is adopting iterative practices to refine its processes over time.",
+        "evidence_snippet": "\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports \n\nPlease ensure your unit coordinators and faculty staff are briefed. A system message will appear in the travel portal beginning 30 October. \nSincerely, \nDr. Lars Wiegand \nHead of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions \nFrom: Finance and Compliance Coordination Office \nDate: 17 October 2017 \nTo: All Budget Owners, Project Leads, Travel Officers \nCategory: Process Enforcement \n \nDear Colleagues, \nIn preparation for the annual financial reconciliation and internal audit season, we are \nimplementing a mandatory data validation protocol on all travel permit submissions, \neffective 1 November 2017. \n \nPolicy Update \nAll submitted travel permits must now contain: \n\u2022 A valid budget number \n\u2022 A specified project number and task ID \n\u2022 A populated activity code (if applicable) \nPermits lacking these fields will be automatically flagged for pre-approval review and may be \nreturned to the requester. \n \nCompliance Context \nThis update aligns with Article 9 of the University Financial Control Framework and addresses \nauditing concerns regarding: \n\u2022 Budget mismatches \n\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.95
+      },
+      {
+        "cause_description": "The adjustments in the payment request process may indicate a continuous effort to streamline operations and enhance efficiency. The policy's focus on minimal approval requirements and post hoc reviews suggests a series of iterative improvements aimed at reducing friction in the payment process, aligning with agile business process management practices.",
+        "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u00022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u00022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u00022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+        "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.49
+      },
+      {
+        "cause_description": "The updates to the catering guidelines may reflect an ongoing commitment to streamline processes and improve efficiency in event management. The gradual evolution of these guidelines, including new requirements for vendor engagement and receipt submission, suggests an alignment with agile practices in process management, aimed at enhancing operational effectiveness.",
+        "evidence_snippet": "\u2022 All catering receipts should be submitted within 10 working days post-event \n\nPlease refer to the internal event portal for booking templates, preferred vendor lists, and FAQs. \nSincerely, \nJens Holzer \nHead of Facility Operations Subject: Guidelines for On-Campus Catering during Hosted Conferences \nFrom: Events & Facility Management \nTo: Faculty Event Coordinators \nDate: 11 October 2017 \nCategory: Operational Information \n \nDear Colleagues, \nTo streamline catering logistics during university-hosted conferences, we have updated our \nguidelines for working with preferred on-campus and third-party vendors. \n \nScope of Update \nThese guidelines apply to: \n\u2022 Catering for conferences held in university buildings \n\u2022 Events funded through research grants or department budgets \n\u2022 External vendor engagement for meals, receptions, or coffee breaks \n \nKey Points \n\u2022 Pre-approval is not needed for catering below \u20ac1,500 \n\u2022 All orders must include vendor invoice, cost breakdown, and event ID \n\u2022 Alcohol service must be approved by Facility Risk Management \n\u2022 All catering receipts should be submitted within 10 working days post-event",
+        "source_document": "2017-10-11_Conference_Catering_Guidelines.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.41
+      }
+    ]
+  },
+  "f0794a40f84489c91772f04b0b029a42": "The recent changes in travel declaration processes, data validation protocols, payment request procedures, and catering guidelines reflect a strategic commitment to continuous improvement and compliance within the organization. These iterative enhancements, driven by insights from past audits, indicate a proactive approach to refining operational efficiency and financial controls, aligning with agile business process management practices. Overall, these adjustments signify a deliberate evolution in process management aimed at addressing identified discrepancies and enhancing overall effectiveness.",
+  "9279148641307f9a9edc32086dcbdc51": "The travel expense claims process at the university involves employees submitting travel permits and expense declarations for approval before payment is processed. The key change in the process flow is that, in the later instance, the permit approval now includes an additional step where the Director provides final approval, whereas in the earlier instance, the Supervisor was the final approver.",
+  "8e136effbeeffcaeb31773d75f1b905c": {
+    "cause_description": "The evidence may indicate that the introduction of a pre-approval practice for travel permits is part of a gradual transition towards a new process variant. Since the memo suggests that the changes are strongly encouraged but not mandatory, it implies that both the old process (without pre-approval) and the new process (with pre-approval) may coexist during this transition period. Over time, as departments adopt the new practice, the older process could be phased out entirely.",
+    "evidence_snippet": "As part of our ongoing efforts to improve oversight of faculty-funded travel, we encourage departments to adopt a pre-approval layer for all travel permits, particularly those linked to externally funded projects.",
+    "source_document": "2017-10-03_PreApproval_Practice_Memo.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.85
+  },
+  "263427b017be37c4040469c1c575f56a": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the introduction of a pre-approval process for travel permits, indicating a shared root cause related to improving compliance and operational efficiency. The gradual transition noted in Drift #2 aligns with the incremental changes described in Drift #1, suggesting that both drifts are part of a broader strategy to enhance the travel expense claims process."
+  },
+  "70cfdaf98c990922901ad13631075766": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "5ec151735de36e2351405071cbf3fea6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      5
+    ]
+  },
+  "e95e810e4b34a0e473b7bad271fc931b": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "ff70848fa8799c29295f1728a92d7c85": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "8d2c16d4af469816b6a1cc1805698eb6": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "dd7cadbf4ebe4844735c67cd74759212": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts highlight the introduction of new pre-approval steps and mandatory data validation protocols in the international travel declaration process, indicating a shared response to audit findings and a strategic effort to enhance compliance and oversight. The overlapping timeframes and similar themes in their summaries suggest that these changes are part of a coordinated effort to refine operational practices within the organization."
+  },
+  "30fa6f6a81a5421b7dfdf0a35b1164c2": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "750a1710b2103cad401c51f6d5cfe10e": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "2c1050a1665fa44790b65ea0a0c08a30": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "3b4eb38ba43468594851dad69206251f": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to changes in the Request for Payment (RFP) process, with Drift #1 highlighting immediate compliance measures and operational disruptions, while Drift #2 reflects a strategic shift towards enhanced compliance through procedural updates. The shared focus on compliance and process management indicates that the underlying causes of these drifts are interconnected, stemming from the organization's response to regulatory and operational challenges."
+  },
+  "02e4c0a5b38b006cfbe08aa1cb88f8f6": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "33fcd057c57e6d2d535a81ba6e071596": {
+    "classifications": [
+      {
+        "full_path": "ORGANIZATION_INTERNAL::IT_Management",
+        "reasoning": "The text discusses an IT security audit, which is related to system updates and compliance efforts within the organization."
+      },
+      {
+        "full_path": "ORGANIZATION_EXTERNAL::Legal",
+        "reasoning": "The audit is part of compliance with ISO 27001, which involves adherence to external legal and regulatory standards."
+      }
+    ]
+  },
+  "f376896d45be86b83227770786d020d7": {
+    "cause_description": "The evidence may indicate that the university's recurring internal controls program, which includes a scheduled IT security audit, reflects a series of incremental adjustments aimed at enhancing compliance and security measures over time. This ongoing commitment to auditing and improving IT practices could suggest a gradual transformation in the organization's approach to IT management, aligning with agile BPM practices that emphasize iterative improvements.",
+    "evidence_snippet": "Subject: Scheduled IT Security Audit \u2013 October\u2013November 2017 From: Information Security Office To: All Staff and System Owners Date: 27 October 2017 Category: Compliance Notice Dear Colleagues, As part of our recurring internal controls program, the Information Security Office will conduct a university-wide IT audit from 30 October to 17 November. This effort supports our ISO 27001 compliance efforts. What to Expect \u2022 Review of local device encryption \u2022 Access log sampling in core systems \u2022 Password policy adherence checks \u2022 Random interviews with departmental IT reps Departments will be contacted at least 3 days in advance of site visits. We ask for your cooperation to ensure a smooth and efficient audit process. Thank you, Tobias Mahler Chief Information Security Officer",
+    "source_document": "2017-10-27_IT_Security_Audit_Announcement.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::IT_Management",
+    "confidence_score": 0.45
+  },
+  "1f70f839edfe8d988ae2549fde96b44c": {
+    "ranked_causes": [
+      {
+        "cause_description": "The introduction of a Pre-Approval Step for international travel declarations may reflect a series of incremental adjustments aimed at enhancing financial controls and compliance. This change, effective from May 2018, suggests a gradual evolution in process management practices within the organization, addressing discrepancies identified in the 2017 audit. The implementation of this new step, along with a transition period for existing declarations, could imply a continuous effort to refine the travel declaration process over time, rather than a single, abrupt change.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The implementation of a mandatory data validation protocol for travel permit submissions may indicate a series of incremental adjustments aimed at improving process compliance and data accuracy. This suggests that the organization is adopting agile practices by iteratively refining its processes to address specific audit concerns, such as budget mismatches and duplicate registrations, over time.",
+        "evidence_snippet": "\u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports Please ensure your unit coordinators and faculty staff are briefed. A system message will appear in the travel portal beginning 30 October. Sincerely, Dr. Lars Wiegand Head of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions From: Finance and Compliance Coordination Office Date: 17 October 2017 To: All Budget Owners, Project Leads, Travel Officers Category: Process Enforcement Dear Colleagues, In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017. Policy Update All submitted travel permits must now contain: \u2022 A valid budget number \u2022 A specified project number and task ID \u2022 A populated activity code (if applicable) Permits lacking these fields will be automatically flagged for pre-approval review and may be returned to the requester. Compliance Context This update aligns with Article 9 of the University Financial Control Framework and addresses auditing concerns regarding: \u2022 Budget mismatches \u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.96
+      },
+      {
+        "cause_description": "The incremental adjustments in the payment request process, as outlined in the memo, may reflect a continuous effort to streamline operations and reduce friction. The policy's emphasis on minimal approval requirements and post hoc reviews could indicate a series of iterative improvements aimed at enhancing efficiency over time. Such changes may align with agile BPM practices, where small, ongoing modifications contribute to a significant transformation in process management.",
+        "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+        "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.49
+      },
+      {
+        "cause_description": "The university's recurring internal controls program, which includes a scheduled IT security audit, may reflect a series of incremental adjustments aimed at enhancing compliance and security measures over time. This ongoing commitment to auditing and improving IT practices could suggest a gradual transformation in the organization's approach to IT management, aligning with agile BPM practices that emphasize iterative improvements.",
+        "evidence_snippet": "Subject: Scheduled IT Security Audit \u2013 October\u2013November 2017 From: Information Security Office To: All Staff and System Owners Date: 27 October 2017 Category: Compliance Notice Dear Colleagues, As part of our recurring internal controls program, the Information Security Office will conduct a university-wide IT audit from 30 October to 17 November. This effort supports our ISO 27001 compliance efforts. What to Expect \u2022 Review of local device encryption \u2022 Access log sampling in core systems \u2022 Password policy adherence checks \u2022 Random interviews with departmental IT reps Departments will be contacted at least 3 days in advance of site visits. We ask for your cooperation to ensure a smooth and efficient audit process. Thank you, Tobias Mahler Chief Information Security Officer",
+        "source_document": "2017-10-27_IT_Security_Audit_Announcement.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::IT_Management",
+        "confidence_score": 0.45
+      }
+    ]
+  },
+  "d298fdb452e97757fe876e6e1a209f1a": "The analysis reveals that the organization is undergoing a series of incremental adjustments across various processes, including international travel declarations, data validation for travel permits, payment requests, and IT security audits. These changes, initiated in response to audit findings, reflect a commitment to enhancing compliance, data accuracy, and operational efficiency through agile business process management practices. This continuous evolution underscores the organization's proactive approach to refining its processes and addressing identified discrepancies over time.",
+  "9bd1138b761831525f5ce3554e50272a": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts focus on the introduction of a pre-approval process for travel permits, indicating a shared root cause of enhancing compliance and operational efficiency. The incremental adjustments in Drift #1 and the gradual transition in Drift #2 suggest that these changes are part of a broader organizational effort to refine processes in response to audit findings."
+  },
+  "abeaab5aca2a64c3050bd02660e2fa1b": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "e5278182d2664b05096636fb75c5ce04": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "8a88cd6f51f18dad566495d420b6c8c8": {
     "reranked_indices": [
       1,
       2,
