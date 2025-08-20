@@ -155,10 +155,14 @@ def format_context_for_prompt(classified_context: list) -> str:
     for i, snippet in enumerate(classified_context):
         formatted_str += f"### Evidence Snippet {i+1}\n"
         formatted_str += f"- **Source Document:** {snippet['source_document']}\n"
+
         classifications_str = ", ".join([c['full_path'] for c in snippet.get('classifications', [])])
         if classifications_str:    
             formatted_str += f"- **Classified As:** [{classifications_str}]\n"
-            formatted_str += f"- **Snippet Text:** \"{snippet['snippet_text']}\"\n\n"
+
+        # Sanitize the snippet text to prevent prompt injection errors
+        sanitized_text = snippet['snippet_text'].replace('"', '\\"')
+        formatted_str += f"- **Snippet Text:** \"{sanitized_text}\"\n\n"
     return formatted_str
 
 def expand_context(snippets: List[Dict], index: Pinecone.Index) -> List[Dict]:
