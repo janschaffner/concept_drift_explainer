@@ -1312,7 +1312,7 @@
     "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
     "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
     "context_category": "ORGANIZATION_INTERNAL::Process_Management",
-    "confidence_score": 0.47
+    "confidence_score": 0.45
   },
   "e14d92f116a74c498f5fb9441c97deb7": {
     "cause_description": "The introduction of a standardized naming template for research project records could suggest a series of small, incremental changes aimed at improving consistency and efficiency in project management. This aligns with agile practices where iterative adjustments are made to enhance internal processes over time.",
@@ -1717,5 +1717,246 @@
   "83eb9a6fed260b6d10ae4b8a12042034": {
     "connection_type": "Shared Evidence / Root Cause",
     "summary": "Both drifts involve the introduction of a pre-approval step for travel permits, indicating a shared focus on enhancing compliance and operational efficiency in the travel expense claims process. The evidence documents and key semantic phrases highlight a common theme of transitioning towards improved process management, suggesting that the changes in Drift #1 may be a continuation or expansion of the practices initiated in Drift #2."
+  },
+  "dfcea9f12e399fe59bdde747138f6ed8": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "8f2c2cacfb50727df618b28f02dba722": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "0a015d315a240ff8946730e14f025231": {
+    "cause_description": "The evidence may indicate that the implementation of a mandatory data validation protocol for travel permit submissions, as outlined in the update notice, represents a series of small, incremental changes aimed at improving process compliance and data accuracy. These adjustments, such as requiring specific fields in submissions and flagging incomplete permits for review, could cumulatively lead to a significant transformation in the travel permit process over time.",
+    "evidence_snippet": "\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports \n\nPlease ensure your unit coordinators and faculty staff are briefed. A system message will appear \nin the travel portal beginning 30 October. \nSincerely, \nDr. Lars Wiegand \nHead of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions \nFrom: Finance and Compliance Coordination Office \nDate: 17 October 2017 \nTo: All Budget Owners, Project Leads, Travel Officers \nCategory: Process Enforcement \n \nDear Colleagues, \nIn preparation for the annual financial reconciliation and internal audit season, we are \nimplementing a mandatory data validation protocol on all travel permit submissions, \neffective 1 November 2017. \n \nPolicy Update \nAll submitted travel permits must now contain: \n\u2022 A valid budget number \n\u2022 A specified project number and task ID \n\u2022 A populated activity code (if applicable) \nPermits lacking these fields will be automatically flagged for pre-approval review and may be \nreturned to the requester. \n \nCompliance Context \nThis update aligns with Article 9 of the University Financial Control Framework and addresses \nauditing concerns regarding: \n\u2022 Budget mismatches \n\u2022 Duplicate trip registrations \n\u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+    "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.8
+  },
+  "86b74ecf1391e6b7f84dfd22f5364b33": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that the introduction of a Pre-Approval Step for international travel declarations may represent a series of small, incremental changes aimed at enhancing financial controls and compliance. This could indicate a gradual evolution in the travel declaration process, where adjustments such as the designation of Pre-Approvers and the revised approval workflow contribute to a significant transformation in how travel expenses are managed and monitored over time.",
+        "evidence_snippet": "To mitigate these risks, we are instituting a Pre-Approval Step before supervisor final approval. New Step: Declaration Pre-Approval Effective immediately, all international declarations must include an initial review by a designated Pre-Approver.",
+        "source_document": "2017-10-15_Travel_Compliance_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the implementation of a mandatory data validation protocol for travel permit submissions may represent a series of small, incremental changes aimed at improving process compliance and data accuracy. These adjustments, such as requiring specific fields in submissions and flagging incomplete permits for review, could cumulatively lead to a significant transformation in the travel permit process over time.",
+        "evidence_snippet": "\u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports Please ensure your unit coordinators and faculty staff are briefed. A system message will appear in the travel portal beginning 30 October. Sincerely, Dr. Lars Wiegand Head of Process Compliance Subject: Enforced Metadata Validation for Travel Permit Submissions From: Finance and Compliance Coordination Office Date: 17 October 2017 To: All Budget Owners, Project Leads, Travel Officers Category: Process Enforcement Dear Colleagues, In preparation for the annual financial reconciliation and internal audit season, we are implementing a mandatory data validation protocol on all travel permit submissions, effective 1 November 2017. Policy Update All submitted travel permits must now contain: \u2022 A valid budget number \u2022 A specified project number and task ID \u2022 A populated activity code (if applicable) Permits lacking these fields will be automatically flagged for pre-approval review and may be returned to the requester. Compliance Context This update aligns with Article 9 of the University Financial Control Framework and addresses auditing concerns regarding: \u2022 Budget mismatches \u2022 Duplicate trip registrations \u2022 \u201cUnknown\u201d fields in travel cost tracking reports",
+        "source_document": "2017-10-17_Data_Validation_Update_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.8
+      },
+      {
+        "cause_description": "This could suggest that the governance structure for Requests for Payment (RFPs) has undergone a series of small adjustments aimed at enhancing efficiency and reducing friction in the payment process. The memo outlines a streamlined approval requirement and an exception handling process that may have evolved incrementally over time to adapt to the needs of budget holders and academic units. Such iterative improvements align with the concept of incremental drift, where continuous changes accumulate to create a significant transformation in the process.",
+        "evidence_snippet": "This memo summarizes the current governance for Requests for Payment (RFPs) across all university cost centers. Under the Finance Policy 2016/18, payment requests follow this structure: \u2022 Approval Requirement: Only one supervisor approval is needed for payments under \u20ac1,000. \u2022 Exception Handling: Missing codes or tasks do not block payment but may be reviewed post hoc. \u2022 Audit Protocol: Annual random sampling by the Central Audit Unit is sufficient for compliance assurance.",
+        "source_document": "2017-10-15_Rfp_Approval_Policy.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.45
+      },
+      {
+        "cause_description": "The introduction of a standardized naming template for research project records may suggest a series of small, incremental changes aimed at improving consistency and efficiency in project management. This aligns with agile practices where iterative adjustments are made to enhance internal processes over time.",
+        "evidence_snippet": "To support the harmonization of project titles and references in internal tools, we are introducing a standardized naming template for all new research project records created after 1 November.",
+        "source_document": "2017-10-20_Project_Title_Standardization_Guide.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.44
+      }
+    ]
+  },
+  "856b3e742d17b2e357be802716abc257": "The analysis reveals that the observed concept drift in various processes\u2014such as international travel declarations, travel permit submissions, Requests for Payment (RFPs), and research project management\u2014can be attributed to a series of incremental changes aimed at enhancing compliance, efficiency, and data accuracy. These small adjustments, including the introduction of pre-approval steps, mandatory data validation protocols, streamlined governance structures, and standardized naming conventions, collectively signify a significant transformation in how these processes are managed and monitored over time. This trend underscores the importance of continuous improvement in organizational practices to adapt to evolving needs and enhance overall operational effectiveness.",
+  "950907f902782f21f3f4eb0c0bd11ac7": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "20a61c742553818894d061d5e4a7b71e": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to the evolution of international travel processes within the organization, with Drift #1 focusing on incremental changes and Drift #2 highlighting a gradual transition. They share common evidence documents and key themes, such as the introduction of pre-approval steps and enhanced governance practices, indicating that they stem from the same underlying need for improved compliance and efficiency."
+  },
+  "a6349be225399ea82aac0db916612d1c": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "c7cefb745f091c72db6ce44cc0e4ad78": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "60c4eec804cee1f003ffa3d8e8faaa80": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "26028cf7afa74ae3b36474f3990d30c5": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to the Request for Payment process and highlight the organization's response to compliance and operational efficiency challenges. The sudden drift in Drift #1 was driven by urgent compliance needs and operational changes, while Drift #2 reflects a series of incremental adjustments aimed at enhancing compliance and process effectiveness, indicating a shared focus on improving the same underlying process."
+  },
+  "9d8eae74cbb54e7f576537c347c624ff": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      5
+    ]
+  },
+  "3f356766c0765e9ee7f423c19fcd90b1": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts involve the introduction of a pre-approval step for travel permits, indicating a shared focus on enhancing compliance and operational efficiency in the travel expense claims process. The evidence documents and key semantic phrases highlight a common theme of transitioning towards improved process management, suggesting that the changes in Drift #1 may be a continuation or expansion of the practices initiated in Drift #2."
+  },
+  "e169e9bb7bd94f96df685a09dc729d37": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "7bbe23eb2cc69cedcd379c38da3b3100": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "c30cf191f3952c03b7da0d093f7f0b49": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "5023118f1d6e5b4e28149885ad2ceb10": {
+    "reranked_indices": [
+      1,
+      3,
+      2,
+      4
+    ]
+  },
+  "e2bb110da31e43c416e472968126aa9b": {
+    "connection_type": "Shared Evidence / Root Cause",
+    "summary": "Both drifts are related to the evolution of international travel processes within the organization, with Drift #1 focusing on incremental changes and Drift #2 highlighting a gradual transition. They share common evidence documents and key themes, such as the introduction of pre-approval steps and enhanced governance practices, indicating that they stem from the same underlying need for improved compliance and efficiency."
+  },
+  "9c0cd33923e28997ca463f0d114478dd": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "70dc2a985f7739b6ac4c6f96205f73ca": {
+    "cause_description": "The evidence may indicate that the implementation of mandatory metadata checks for prepaid travel cost requests represents a series of small, iterative improvements aimed at enhancing data accuracy and compliance. This gradual shift towards more stringent validation protocols could suggest an incremental drift in the organization's process management practices, as these changes accumulate over time to significantly transform the workflow.",
+    "evidence_snippet": "\u2022 A list of common issues and support guidance will be distributed separately \n \nThis measure aims to reduce audit risk, improve data accuracy, and support future digitization of travel workflows. \nWe thank you for your cooperation during this transition. \nSincerely, \nEva M\u00fcller \nHead of Financial Compliance Systems Subject: Implementation of Mandatory Metadata Checks for Prepaid Travel Cost Requests \nFrom: Office of Financial Compliance and Systems \nDate: 13 November 2017 \nTo: Finance Officers, Administrative Coordinators, Researchers \nCategory: System Policy Update \u2013 Immediate Action Required \n \nDear Colleagues, \nAs part of the 2018 Internal Controls Action Plan, the university is rolling out a mandatory metadata validation protocol for all prepaid travel cost requests. This change responds to recurring audit findings involving incomplete or inconsistent data in payment records. \n \nBackground \nA joint review conducted by the Finance Directorate and the Internal Audit Unit revealed that: \n\u2022 Over 12% of prepaid cost records lacked valid permit IDs or had mismatched budget numbers \n\u2022 Several payments were processed despite missing approvals \n\u2022 Project coding errors caused reimbursement delays and retroactive corrections \n \nWhat Is Changing What Is Changing \nStarting 2 July 2018, the travel cost system will enforce automated pre-checks before allowing a \nRequest for Payment to proceed. Specifically: \n\u2022 Valid permit IDs must be attached for all international travel \n\u2022 Budget and project numbers must match those recorded in the permit \n\u2022 Incomplete or \u201cUNKNOWN\u201d entries will block submission \n \nRevised Workflow Requirements \n1. Permit Approval must be complete (SUPERVISOR and DIRECTOR levels) \n2. Metadata fields (Organizational Unit, Task, Budget, Project) must be populated and match across permit and request \n3. If a permit was not required (e.g., domestic or certain grants), justification must be noted in the comment field \n \nSystem Changes \n\u2022 A new error screen will alert users when required fields are missing or inconsistent \n\u2022 Finance staff will no longer manually override blocked submissions",
+    "source_document": "2017-11-13_Compliance_Check_Preload_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.99
+  },
+  "a2c1c2c32281e9ae2ae4406968ede36e": {
+    "cause_description": "The evidence may indicate that the introduction of the updated absence logging system involved a series of small, iterative changes aimed at improving the process of absence reporting. This could suggest that the organization is adopting agile practices by implementing incremental updates, such as centralized entry for various types of leave and daily synchronization with finance, which collectively contribute to a significant transformation in how absence is managed.",
+    "evidence_snippet": "Subject: Launch of Updated Absence Logging System \nFrom: Human Resources \nTo: Department Admins and Timekeepers \nDate: 8 November 2017 \n \nDear Colleagues, \nAs part of the transition to our upgraded Workforce Presence Platform, all units are required to \nbegin using the new absence reporting module starting 15 November. \n \n     What\u2019s changing: \n\u2022 Centralized entry for travel, sick leave, and remote work \n\u2022 Daily sync with finance to match per-diem and trip status \n\u2022 Access via staff portal (no VPN needed) \n \nAn onboarding webinar will take place 13 November, 10:00\u201310:45. No registration needed. \nBest regards, \nOlga Baumgartner \nHR Process Innovation",
+    "source_document": "2017-11-08_Absence_Monitoring_System_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.68
+  },
+  "65b5b0dee2fe6c7d9cf5fe22d762d850": {
+    "cause_description": "The evidence may indicate that the pilot launch of the digital parking management system represents a series of small, iterative changes aimed at improving operational efficiency. This gradual implementation, starting with a limited pilot program, could suggest an incremental drift in the organization's approach to process management, as it allows for feedback and adjustments before a full-scale rollout.",
+    "evidence_snippet": "Subject: Pilot Launch of Digital Parking Management System \nFrom: Campus Infrastructure & Logistics \nTo: All Employees \u2013 Urban Campus \nDate: 15 November 2017 \nCategory: Operational Update \n \nDear Team, \nWe are launching a 3-month pilot of a new digital parking registration system for staff vehicle \naccess at the Urban Campus. \n \nKey Pilot Details \n\u2022 Digital permit request replaces physical dashboard passes \n\u2022 License plate number will be used for gate recognition \n\u2022 Limited spaces will rotate on a reservation basis \n\u2022 Staff will receive access based on declared office presence \n \nYour participation and feedback will help us determine whether to expand the system across all \nsites in early 2018. \nThank you for your support, \nManuel Dietrich \nLogistics Systems Manager",
+    "source_document": "2017-11-15_Campus_Parking_Pilot_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.46
+  },
+  "1f1240bfc6bddd118ac3155c75fc4eeb": {
+    "cause_description": "The adjustments to building access protocols during evening and weekend hours, as outlined in the communication from Campus Security Operations, could suggest a series of small, incremental changes aimed at enhancing security and operational efficiency. This may indicate a broader trend of iterative improvements in process management within the organization, reflecting agile practices in response to evolving needs.",
+    "evidence_snippet": "Due to increased activity and construction in the South Campus zone, we are adjusting building access protocols during evening and weekend hours, effective Monday, 13 November. Key Changes \u2022 Doors will auto-lock from 18:00 onward \u2022 Badge entry is still available for all registered staff \u2022 Visitors must be signed in at the new reception kiosk.",
+    "source_document": "2017-11-09_Building_Access_Notice.pdf",
+    "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+    "confidence_score": 0.37
+  },
+  "7c831ec4a8b157bb22321e06f152254c": {
+    "ranked_causes": [
+      {
+        "cause_description": "The evidence suggests that the implementation of mandatory metadata checks for prepaid travel cost requests may represent a series of small, iterative improvements aimed at enhancing data accuracy and compliance. This gradual shift towards more stringent validation protocols could indicate an incremental drift in the organization's process management practices, as these changes accumulate over time to significantly transform the workflow.",
+        "evidence_snippet": "\u2022 A list of common issues and support guidance will be distributed separately \n \nThis measure aims to reduce audit risk, improve data accuracy, and support future digitization of travel workflows. \nWe thank you for your cooperation during this transition. \nSincerely, \nEva M\u00fcller \nHead of Financial Compliance Systems Subject: Implementation of Mandatory Metadata Checks for Prepaid Travel Cost Requests \nFrom: Office of Financial Compliance and Systems \nDate: 13 November 2017 \nTo: Finance Officers, Administrative Coordinators, Researchers \nCategory: System Policy Update \u2013 Immediate Action Required \n \nDear Colleagues, \nAs part of the 2018 Internal Controls Action Plan, the university is rolling out a mandatory metadata validation protocol for all prepaid travel cost requests. This change responds to recurring audit findings involving incomplete or inconsistent data in payment records. \n \nBackground \nA joint review conducted by the Finance Directorate and the Internal Audit Unit revealed that: \n\u2022 Over 12% of prepaid cost records lacked valid permit IDs or had mismatched budget numbers \n\u2022 Several payments were processed despite missing approvals \n\u2022 Project coding errors caused reimbursement delays and retroactive corrections \n \nWhat Is Changing What Is Changing \nStarting 2 July 2018, the travel cost system will enforce automated pre-checks before allowing a \nRequest for Payment to proceed. Specifically: \n\u2022 Valid permit IDs must be attached for all international travel \n\u2022 Budget and project numbers must match those recorded in the permit \n\u2022 Incomplete or \u201cUNKNOWN\u201d entries will block submission \n \nRevised Workflow Requirements \n1. Permit Approval must be complete (SUPERVISOR and DIRECTOR levels) \n2. Metadata fields (Organizational Unit, Task, Budget, Project) must be populated and match across permit and request \n3. If a permit was not required (e.g., domestic or certain grants), justification must be noted in the comment field \n \nSystem Changes \n\u2022 A new error screen will alert users when required fields are missing or inconsistent \n\u2022 Finance staff will no longer manually override blocked submissions",
+        "source_document": "2017-11-13_Compliance_Check_Preload_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.99
+      },
+      {
+        "cause_description": "The evidence indicates that the introduction of the updated absence logging system may involve a series of small, iterative changes aimed at improving the process of absence reporting. This could suggest that the organization is adopting agile practices by implementing incremental updates, such as centralized entry for various types of leave and daily synchronization with finance, which collectively contribute to a significant transformation in how absence is managed.",
+        "evidence_snippet": "Subject: Launch of Updated Absence Logging System \nFrom: Human Resources \nTo: Department Admins and Timekeepers \nDate: 8 November 2017 \n \nDear Colleagues, \nAs part of the transition to our upgraded Workforce Presence Platform, all units are required to \nbegin using the new absence reporting module starting 15 November. \n \n     What\u2019s changing: \n\u2022 Centralized entry for travel, sick leave, and remote work \n\u2022 Daily sync with finance to match per-diem and trip status \n\u2022 Access via staff portal (no VPN needed) \n \nAn onboarding webinar will take place 13 November, 10:00\u201310:45. No registration needed. \nBest regards, \nOlga Baumgartner \nHR Process Innovation",
+        "source_document": "2017-11-08_Absence_Monitoring_System_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.68
+      },
+      {
+        "cause_description": "The evidence suggests that the pilot launch of the digital parking management system may represent a series of small, iterative changes aimed at improving operational efficiency. This gradual implementation, starting with a limited pilot program, could indicate an incremental drift in the organization's approach to process management, as it allows for feedback and adjustments before a full-scale rollout.",
+        "evidence_snippet": "Subject: Pilot Launch of Digital Parking Management System \nFrom: Campus Infrastructure & Logistics \nTo: All Employees \u2013 Urban Campus \nDate: 15 November 2017 \nCategory: Operational Update \n \nDear Team, \nWe are launching a 3-month pilot of a new digital parking registration system for staff vehicle \naccess at the Urban Campus. \n \nKey Pilot Details \n\u2022 Digital permit request replaces physical dashboard passes \n\u2022 License plate number will be used for gate recognition \n\u2022 Limited spaces will rotate on a reservation basis \n\u2022 Staff will receive access based on declared office presence \n \nYour participation and feedback will help us determine whether to expand the system across all \nsites in early 2018. \nThank you for your support, \nManuel Dietrich \nLogistics Systems Manager",
+        "source_document": "2017-11-15_Campus_Parking_Pilot_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.46
+      },
+      {
+        "cause_description": "The adjustments to building access protocols during evening and weekend hours, as outlined in the communication from Campus Security Operations, may suggest a series of small, incremental changes aimed at enhancing security and operational efficiency. This could reflect a broader trend of iterative improvements in process management within the organization, indicating agile practices in response to evolving needs.",
+        "evidence_snippet": "Due to increased activity and construction in the South Campus zone, we are adjusting building access protocols during evening and weekend hours, effective Monday, 13 November. Key Changes \u001a Doors will auto-lock from 18:00 onward \n\u2022 Badge entry is still available for all registered staff \n\u2022 Visitors must be signed in at the new reception kiosk.",
+        "source_document": "2017-11-09_Building_Access_Notice.pdf",
+        "context_category": "ORGANIZATION_INTERNAL::Process_Management",
+        "confidence_score": 0.37
+      }
+    ]
+  },
+  "8dd50edfffceb1f8651f755573474584": "The analysis reveals a trend of incremental process improvements across various organizational practices, including mandatory metadata checks for prepaid travel requests, an updated absence logging system, a pilot digital parking management system, and adjustments to building access protocols. These iterative changes suggest a shift towards agile methodologies, enhancing data accuracy, operational efficiency, and security while allowing for adaptive responses to evolving needs. Collectively, these developments indicate a significant transformation in the organization's approach to process management.",
+  "fb597e8728b4a5f4771b09db6b1d37e2": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "61308a58f0007e24c1a33a2f4746b442": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "442d122392bcaaebb13029276b11428f": {
+    "connection_type": "Thematic Overlap",
+    "summary": "Both drifts highlight the organization's response to compliance and operational efficiency challenges, with Drift #1 focusing on a sudden need for process changes due to urgent compliance issues and Drift #2 emphasizing incremental adjustments aimed at enhancing compliance and risk management. This thematic overlap suggests a broader organizational trend towards improving process management in response to evolving compliance needs."
+  },
+  "2ba2dca053adc68a0f0e9726f5c45196": {
+    "reranked_indices": [
+      1,
+      2,
+      3,
+      5
+    ]
   }
 }

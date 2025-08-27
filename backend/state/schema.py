@@ -34,7 +34,8 @@ class ContextSnippet(TypedDict):
     source_document: str
     timestamp: int # Stored as Unix timestamp
     source_type: str # "context" or "bpm-kb"
-    specificity_score: float # The calculated specificity score
+    similarity_score: float
+    semantic_specificity: Optional[float]
     priority_score: Optional[float]
     support_only: bool # True if this came from the glossary ("bpm-kb")
     classifications: List[FranzoiClassification] # list of detailed classifications
@@ -78,11 +79,11 @@ class GraphState(TypedDict):
     drift_phrase: Optional[str]
 
     # Populated by the ContextRetrievalAgent with a broad list of candidates.
-    raw_context_snippets: List[Dict]
+    raw_context_snippets: List[ContextSnippet]
     # Populated by the ReRankerAgent with a filtered, more relevant list.
-    reranked_context_snippets: List[Dict]
+    reranked_context_snippets: List[ContextSnippet]
     # Populated by the ReRankerAgent with glossary terms for reasoning.
-    supporting_context: List[Dict]
+    supporting_context: List[ContextSnippet]
 
     # Populated by the ExplanationAgent with the final, synthesized explanation.
     explanation: Explanation
@@ -93,6 +94,7 @@ class GraphState(TypedDict):
     full_state_log: List[Dict]
     # The summary from the DriftLinkerAgent for multi-drift analysis.
     linked_drift_summary: Optional[str]
+    connection_type: Optional[str]
 
     # The current question from the user for the chatbot.
     user_question: Optional[str]
