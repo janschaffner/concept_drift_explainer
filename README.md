@@ -1,146 +1,167 @@
-# Masterthesis
+## Concept Drift Explainer
 
-The focus of this Master's thesis is to bridge the gap between the detection of concept drifts in event logs and their practical interpretation. My initial research question is:  
-**"How can external and internal context dimensions be integrated into process mining sense-making?"**
+A prototype application for explaining concept drift in business processes. It links detected drift periods from event logs with relevant internal and external context (e.g., policy changes, organizational memos, presentations) to produce concise, evidence‑backed explanations of what changed and why.
 
-Currently, the CV4CDD framework for concept drift detection outputs change points in the form of JSON files. However, these are often not meaningful enough for analysts, as they lack explanations of *what* actually changed and *why*. 
+The research question driving this work: How can internal and external context dimensions be integrated into process mining sense‑making?
 
-My approach is to enrich these change points with relevant contextual data—such as organizational charts or new regulations—to help make sense of why a process has changed at a particular point in time. To achieve this, I use a large language model (specifically GPT-4o), which links the JSON output and event logs with contextual company data. This includes internal documents like Word files, PowerPoint presentations, intranet articles, and knowledge bases such as Confluence.
+Built with a multi‑agent pipeline (LangGraph) and a simple Streamlit UI, the system ingests context documents into a vector database, retrieves and re‑ranks relevant evidence for a given drift, maps evidence to a BPM context taxonomy, and synthesizes an explanation with citations and confidence scores.
 
-For example, if the intranet announces a new CIO taking office, the language model can associate that information with a nearby change point in the event logs. This helps analysts understand that a leadership change might be the underlying cause of the concept drift. In essence, the LLM serves as a bridge between the raw change points from the framework and the company-specific context, providing well-founded explanations for observed process changes.
+---
 
+## Features
 
-# Entwurf ReadMe.md
+- Automated explanations: Generates a structured explanation with summary and ranked, evidence‑backed causes.
+- Multimodal ingestion: Reads PDFs, PPTX, DOCX/TXT, and images; uses GPT‑4o vision for images in slides.
+- Agentic pipeline: Orchestrated via LangGraph with specialized agents (retrieval, reranking, mapping, synthesis, chatbot).
+- Hybrid vector search: Pinecone with two namespaces — `context` for documents and `bpm-kb` for a BPM glossary.
+- Interactive UI: Streamlit app to pick event logs, run analysis, inspect causes, export DOCX, and chat.
+- Evaluation assets: Test logs and scripts to reproduce end‑to‑end runs.
 
-# Concept Drift Explanation Engine
-This repository contains the prototype for a Master's thesis project designed to bridge the gap between the technical detection of concept drifts in business process event logs and their practical, human-understandable interpretation.
+---
 
-The core research question is: "How can external and internal context dimensions be integrated into process mining sense-making?"
+## Repository Structure
 
-This system addresses the challenge that while process mining frameworks can detect when a process has changed, they don't explain why. This project uses a sophisticated pipeline of AI agents to analyze a detected drift, retrieve relevant contextual documents (e.g., internal memos, new regulations, presentation slides), and generate a clear, evidence-based explanation for the change.
+- `frontend/app.py`: Streamlit application entry point.
+- `frontend/pages/`: UI pages (Home, Manage Context, Settings).
+- `frontend/static/documents/`: Context documents for ingestion (PDF, PPTX, DOCX, TXT, PNG/JPG).
+- `backend/graph/build_graph.py`: Assembles the LangGraph workflow.
+- `backend/agents/`: Drift analysis, retrieval, re‑ranking, mapping, explanation, and chatbot agents.
+- `backend/state/schema.py`: TypedDict state schema passed through the graph.
+- `backend/utils/ingest_documents.py`: Ingestion pipeline for documents and glossary (creates/connects Pinecone index).
+- `backend/utils/reporting.py`: DOCX export of explanations.
+- `data/event_logs/<LogName>/`: Event logs with `*.csv`, `*.json`, `*.xes` per log.
+- `data/knowledge_base/bpm_glossary.csv`: BPM glossary ingested into `bpm-kb` namespace.
+- `tests/`: Evaluation assets and scripts.
 
-# Core Features
-Automated Explanation Generation: Ingests raw drift data and produces a structured JSON explanation with a summary and ranked, evidence-backed causes.
+---
 
-Multimodal Document Ingestion: Builds a comprehensive knowledge base by processing various document types, including PDFs, PowerPoint (.pptx) slides, Word (.docx) files, and even images (.png, .jpg) found within them.
+## Architecture (High Level)
 
-Advanced AI Agent Pipeline: Utilizes LangGraph to orchestrate a multi-step agentic workflow where each agent has a specialized task, from retrieval and re-ranking to classification and synthesis.
+1) Ingestion
+- Extracts text (and image descriptions) from `frontend/static/documents/`.
+- Embeds chunks with `text-embedding-3-small` (1536‑D) and upserts into Pinecone `context` namespace.
+- Embeds `data/knowledge_base/bpm_glossary.csv` into Pinecone `bpm-kb` namespace.
 
-Dual-Namespace Vector Search: Leverages a Pinecone vector database with separate namespaces for general context documents and a specialized BPM glossary, enabling hybrid search strategies.
+2) Explanation Pipeline (LangGraph)
+- Drift Agent: Parses selected drift window from `*.csv/json/xes`, generates keywords and a drift phrase.
+- Context Retrieval Agent: Hybrid semantic + temporal retrieval from Pinecone (`context` + `bpm-kb`).
+- Re‑Ranker Agent: Curates and scores snippets; keeps a safety net candidate.
+- Franzoi Mapper Agent: Maps evidence to Franzoi et al. context taxonomy paths.
+- Explanation Agent: Synthesizes a summary and ranked causes; calibrates confidence.
+- Chatbot Agent: Answers follow‑ups using the full state log.
 
-Interactive Web Interface: A Streamlit application provides a user-friendly interface to run analyses, review explanations, upload new documents, and ask follow-up questions via an integrated chatbot.
+---
 
-Robust Evaluation Suite: Includes automated evaluation harnesses to rigorously test the pipeline's accuracy using metrics like Recall@2 and MRR.
+## Prerequisites
 
-# System Architecture
-The system is built around a central, stateful graph of AI agents that process information sequentially.
+- Python 3.10+ (3.11 recommended)
+- OpenAI API key (for embeddings, text, and vision)
+- Pinecone account and API key
+- Windows, macOS, or Linux (tested primarily with Python/Streamlit)
 
-1. Data Ingestion (ingest_documents.py)
-Before analysis can begin, a knowledge base is created by the ingestion script. This script:
+Optional (improves ingestion of some formats):
+- Poppler (for robust PDF processing); not required if sticking to PyPDFLoader
+- Tesseract OCR (only if you plan to OCR images/PDFs outside the provided loaders)
 
-Scans a directory for all source documents (.pdf, .pptx, etc.) and a glossary file (.csv).
+---
 
-Extracts text content. For multimodal files like .pptx, it also extracts images and uses the GPT-4o Vision model to generate text descriptions.
+## Quick Start
 
-Chunks the extracted text into manageable pieces.
+1) Clone and install
 
-Creates vector embeddings for each chunk using an OpenAI embedding model.
-
-Upserts the vectors into a Pinecone index, attaching critical metadata like the source filename and a timestamp parsed from the name.
-
-General documents are added to the context namespace.
-
-Glossary terms are added to the bpm-kb namespace.
-
-2. The Explanation Pipeline (build_graph.py)
-When an analysis is triggered, the langgraph application executes a chain of agents:
-
-Drift Agent: Parses the initial drift data (changepoints, timestamps, drift type) and extracts relevant keywords and specific entities (e.g., form IDs, project numbers) from the corresponding .xes event log to guide the search.
-
-Context Retrieval Agent: Formulates a rich semantic query using the drift info and keywords. It queries both Pinecone namespaces:
-
-It retrieves the top 30 candidate documents from the context namespace using a skewed temporal filter (prioritizing documents published 14 days before and 3 days after the drift).
-
-It retrieves the single best-matching term from the bpm-kb glossary namespace.
-
-Re-Ranker Agent: Intelligently filters the 30+ candidates down to a handful of highly relevant snippets.
-
-It applies a heuristic date bonus to scores.
-
-It force-keeps the single best candidate as a safety net.
-
-It uses GPT-4o to re-rank the remaining candidates based on engineered features like a Specificity Score (how many unique entities a snippet contains).
-
-Franzoi Mapper Agent: Classifies each of the final evidence snippets against the three-level Franzoi et al. (2025) context taxonomy (e.g., ORGANIZATION_INTERNAL::Process_Management), adding a layer of academic rigor.
-
-Explanation Agent: Synthesizes the final output.
-
-It dynamically selects a specialized prompt based on the drift type (Sudden, Gradual, Incremental, or Recurring).
-
-It uses a two-step "draft and refine" chain to generate a high-quality, structured JSON explanation.
-
-It performs a final confidence score calibration based on business rules (e.g., penalizing very old evidence).
-
-Chatbot Agent: If the user asks a follow-up question in the UI, this agent is triggered. It uses the full context of the analysis and conversation history to provide an answer.
-
-# Key Technologies
-Backend: Python 3.10+
-
-AI Orchestration: LangChain, LangGraph
-
-LLMs: OpenAI (GPT-4o, GPT-4o-mini)
-
-Vector Database: Pinecone
-
-Web UI: Streamlit
-
-Data Handling: Pandas
-
-# Getting Started
-Follow these steps to set up and run the project locally.
-
-1. Prerequisites
-Python 3.10 or higher
-
-An OpenAI API Key
-
-A Pinecone API Key
-
-2. Installation
-Clone the repository and install the required dependencies. It is recommended to use a virtual environment.
-
-Bash
-
-git clone https://github.com/your-repo/masterthesis.git
-cd masterthesis
+```bash
 pip install -r requirements.txt
-3. Configuration
-Create a .env file in the project's root directory. This file stores your secret API keys.
+```
 
-Code-Snippet
+2) Configure environment
 
-OPENAI_API_KEY="sk-..."
-PINECONE_API_KEY="your-pinecone-api-key"
-PINECONE_INDEX_NAME="concept-drift-explainer"
-4. Data Ingestion
-Before running the application for the first time, you must populate your Pinecone vector database. Place your source documents in the data/documents/ folder and your glossary in data/knowledge_base/. Then, run the ingestion script:
+Create a `.env` file in the project root:
 
-Bash
+```env
+OPENAI_API_KEY=sk-...
+PINECONE_API_KEY=your-pinecone-api-key
+PINECONE_INDEX_NAME=concept-drift-explainer
+```
 
+Notes:
+- The ingestion script will create the Pinecone index if it does not exist (serverless, `aws`/`us-east-1`).
+- No region var is required for connecting; creation uses a default serverless spec.
+
+3) Prepare documents and logs
+
+- Put context documents in: `frontend/static/documents/`
+  - Filenames should start with `YYYY-MM-DD_...` so the system can parse timestamps (e.g., `2017-10-11_Conference_Catering_Guidelines.pdf`).
+- Ensure event logs are present in: `data/event_logs/<LogName>/` with three files:
+  - `prediction_results.csv`
+  - `window_info.json`
+  - `<LogName>.xes`
+
+4) Ingest documents and glossary
+
+```bash
 python -m backend.utils.ingest_documents
-This will create the Pinecone index if it doesn't exist and upload all processed documents.
+```
 
-5. Running the Application
-Launch the Streamlit web interface:
+This will:
+- Create/connect to the Pinecone index named in `PINECONE_INDEX_NAME`.
+- Upsert document chunks into `context` namespace.
+- Upsert BPM glossary terms into `bpm-kb` namespace.
 
-Bash
+5) Run the UI
 
-streamlit run ui/app.py
-Open your web browser to the local URL provided by Streamlit to start using the application.
+```bash
+streamlit run frontend/app.py
+```
 
-# Testing and Evaluation
-The project includes two evaluation scripts located in the /tests directory.
+Then in your browser:
+- Choose an event log under “Select Event Log to Analyze”.
+- Click “Run Drift Analysis” to generate explanations.
+- Inspect causes, download the DOCX report, and optionally ask follow‑up questions via the chatbot.
 
-run_single_evaluation.py: A lightweight script for quickly testing the pipeline against the single test case in data/drift_outputs/.
+---
 
-run_master_evaluation.py: A comprehensive harness that runs the pipeline against all test sets found in data/event_logs/, generating a final master_eval_report.csv with performance metrics.
+## Configuration & Environment
+
+Environment variables (via `.env`):
+- `OPENAI_API_KEY`: Required. Used by embeddings and GPT‑4o/4o‑mini.
+- `PINECONE_API_KEY`: Required. Used by ingestion and retrieval.
+- `PINECONE_INDEX_NAME`: Required. Name of the Pinecone index (created automatically if missing).
+
+Models used:
+- Text embeddings: `text-embedding-3-small`
+- Text generation: `gpt-4o-mini`
+- Vision (image analysis during ingestion): `gpt-4o`
+
+---
+
+## Usage Tips
+
+- Document dating: The UI builds timelines and temporal filters using the date prefix in filenames. Prefer `YYYY-MM-DD_...` naming.
+- Glossary: Keep `data/knowledge_base/bpm_glossary.csv` present to enrich reasoning; it is queried in a separate `bpm-kb` namespace and not cited as evidence.
+- Caching: LLM responses are cached in `data/cache/llm_cache.json` to reduce cost and latency across runs.
+
+---
+
+## Testing & Evaluation
+
+Evaluation assets and examples are under `tests/`. Useful entries include:
+- `tests/run_master_evaluation.py`: Runs the pipeline across all logs in `data/event_logs/` and writes CSV reports.
+- `tests/test_*`: Unit and scenario tests for core components.
+
+You can also run scripts in `scripts/` to exercise parts of the pipeline for debugging.
+
+---
+
+## Troubleshooting
+
+- “OPENAI_API_KEY not found…”: Ensure `.env` exists and the key is valid; restart the app/terminal after changes.
+- Pinecone index errors: Verify `PINECONE_API_KEY` and `PINECONE_INDEX_NAME`; re‑run ingestion to create the index.
+- No evidence found: Check that documents are ingested and date‑prefixed; verify the selected event log has valid `*.csv/json/xes` trio.
+- Windows PDF ingestion: The pipeline uses `PyPDFLoader`; if switching to other loaders, you may need Poppler or additional dependencies.
+
+---
+
+## License
+
+This is academic prototype code for a Master’s thesis. Unless otherwise specified, all rights reserved by the author. Contact the author for reuse permissions.
+

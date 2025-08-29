@@ -79,10 +79,28 @@ def is_on_topic(user_question: str, context: str) -> bool:
     logging.info("--- Running Topical Guardrail Check ---")
     
     prompt_template = textwrap.dedent("""\
-    You are a topic-classification assistant. Your task is to determine if a user's question is relevant to the provided context about a concept drift analysis. The user should only be asking questions about the drift, the process, the evidence, or the analysis itself.
+    You are a topic-classification assistant. Your task is to determine if a user's question is relevant to the provided 'Analysis Context'.
 
-    **Context:**
+    An on-topic question is one that asks about the concept drift, the business process, the evidence documents, or seeks clarification on the content within the analysis.
+    An off-topic question asks about something completely unrelated to the provided context.
+
+    **Analysis Context:**
     {context}
+
+    ---
+    Here are some examples:
+
+    - User Question: "Who was responsible for the new pre-approval step?"
+    - Your Decision: On-topic. (This is a valid question about the content of the evidence).
+
+    - User Question: "Can you summarize the 'Compliance Guidance' document?"
+    - Your Decision: On-topic. (This is a valid question about one of the evidence documents).
+
+    - User Question: "What is the recipe for a strawberry cake?"
+    - Your Decision: Off-topic. (This is completely unrelated to the analysis).
+    ---
+
+    Now, based on the provided 'Analysis Context', make a decision for the following question:
 
     **User's Question:**
     {question}
