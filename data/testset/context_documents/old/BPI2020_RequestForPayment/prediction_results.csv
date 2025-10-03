@@ -1,2 +1,0 @@
-,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-RequestForPayment,"[('request for payment 152684', 'request for payment 177786'), ('request for payment 154897', 'request for payment 154897')]","['incremental', 'sudden']",[0.7064 0.6604],"['2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf', '2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf']"

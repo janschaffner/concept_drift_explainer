@@ -1,3 +1,13 @@
+"""
+This module serves as the central orchestrator for the Concept Drift Explainer.
+
+It is responsible for constructing and compiling the complete, conditional LangGraph
+application. It defines the sequence of all agents (nodes), the data flow
+between them (edges), and the conditional logic for the interactive chatbot
+loop. It also manages the initialization of shared resources, such as the
+Pinecone database connection, and injects them into the agents that require them.
+"""
+
 import sys
 from pathlib import Path
 from langgraph.graph import StateGraph, END
@@ -52,6 +62,9 @@ def build_graph():
 
     This function defines the architecture of the agentic workflow, registering each
     agent as a node and defining the sequence of execution through directed edges.
+    It also handles the centralized initialization of shared resources, such as the
+    Pinecone index. This resource is then passed to the agents that require it
+    using dependency injection (`functools.partial`).
 
     Returns:
         A compiled LangGraph application that is ready to be executed.
@@ -66,7 +79,9 @@ def build_graph():
     index = pc.Index(pinecone_index_name)
     # -----------------------------------------
 
-    # Bind the index object to the agents that need it
+    # Use functools.partial to inject the initialized Pinecone index into the agents
+    # that need to access the vector database. This keeps the agent functions pure
+    # and makes them easier to test independently.
     retrieval_agent_with_index = partial(run_context_retrieval_agent, index=index)
     explanation_agent_with_index = partial(run_explanation_agent, index=index)
 

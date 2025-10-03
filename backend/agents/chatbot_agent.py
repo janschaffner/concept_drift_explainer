@@ -1,3 +1,13 @@
+"""
+This module contains the implementation of the Chatbot Agent.
+
+Its primary responsibility is to provide an interactive, conversational Q&A layer
+on top of the completed drift analysis. It is designed to be a stateful assistant
+that can answer follow-up questions from the user, using the full context of all
+previously analyzed drifts. It includes a topical guardrail to ensure the
+conversation remains focused on the analysis.
+"""
+
 import os
 import sys
 import logging
@@ -33,12 +43,14 @@ class ChatbotGuardrail(BaseModel):
     """Boolean check for whether a user's question is on-topic."""
     is_on_topic: bool = Field(description="True if the user's question is relevant to the provided context, False otherwise.")
 
+# --- Helper Functions ---
+
 def format_chat_history(chat_history: list) -> str:
-    """
-    Formats the chat history into a string for the LLM prompt.
+    """Formats the chat history into a string for the LLM prompt.
 
     Args:
-        chat_history: A list of tuples, where each tuple is a (user, assistant) exchange.
+        chat_history: A list of tuples, where each tuple is a (user, assistant)
+                      exchange.
 
     Returns:
         A formatted string representing the conversation history.
@@ -48,8 +60,19 @@ def format_chat_history(chat_history: list) -> str:
     return "\n".join([f"Human: {q}\nAssistant: {a}" for q, a in chat_history])
 
 def format_full_analysis_context(full_state_log: List[Dict]) -> str:
-    """
-    Formats the entire analysis log into a comprehensive context block.
+    """Formats the entire analysis log into a compact context block for the LLM.
+
+    This function iterates through the log of all completed drift analyses,
+    extracting the key findings (summary, causal documents, etc.) for each one.
+    This provides the chatbot with a comprehensive, at-a-glance summary of all
+    the information it needs to answer user questions.
+
+    Args:
+        full_state_log: A list of GraphState dictionaries, one for each
+                        completed drift analysis.
+
+    Returns:
+        A formatted string summarizing all drift analyses.
     """
     context_str = ""
     for i, state in enumerate(full_state_log, 1):
@@ -71,10 +94,19 @@ def format_full_analysis_context(full_state_log: List[Dict]) -> str:
         """)
     return context_str
 
-# --- Topical Guardrail Function ---
 def is_on_topic(user_question: str, context: str) -> bool:
-    """
-    Uses an LLM to quickly check if a user's question is relevant to the provided context.
+    """Uses an LLM to check if a user's question is relevant to the analysis.
+
+    This function acts as a "topical guardrail" to prevent the chatbot from
+    engaging in off-topic conversations. It uses a few-shot prompt to give the
+    LLM clear examples of what is and isn't on-topic, improving its accuracy.
+
+    Args:
+        user_question: The question asked by the user.
+        context: The full analysis context.
+
+    Returns:
+        True if the question is on-topic, False otherwise.
     """
     logging.info("--- Running Topical Guardrail Check ---")
     
@@ -121,6 +153,8 @@ def is_on_topic(user_question: str, context: str) -> bool:
         logging.error(f"Error in topical guardrail check: {e}")
         # Default to assuming the question is on-topic in case of an error
         return True
+    
+# --- Main Agent Logic ---
 
 def run_chatbot_agent(state: GraphState) -> dict:
     """
@@ -128,7 +162,8 @@ def run_chatbot_agent(state: GraphState) -> dict:
     and the ongoing conversation history.
 
     This agent is part of the graph's main loop and is only called if the user
-    submits a question through the UI's chat dialog.
+    submits a question. It first uses a topical guardrail to validate the
+    question's relevance before generating a contextualized answer.
 
     Args:
         state: The current graph state, which must contain the `user_question`.
@@ -142,6 +177,7 @@ def run_chatbot_agent(state: GraphState) -> dict:
     if not user_question:
         return {"error": "No user question provided."}
 
+    # Step 1: Assemble the full context from the analysis log and chat history.
     # The chatbot now receives the full log of all states.
     full_state_log = state.get('full_state_log', [])
     chat_history = state.get('chat_history', [])
@@ -149,13 +185,14 @@ def run_chatbot_agent(state: GraphState) -> dict:
     # Format the new, comprehensive context
     full_analysis_context = format_full_analysis_context(full_state_log)
 
-    # --- Guardrail Integration ---
+    # Step 2: Apply the topical guardrail to ensure the question is relevant.
+    # If it's not, return a polite refusal and do not proceed.
     if not is_on_topic(user_question, full_analysis_context):
         ai_answer = "I am an assistant for analyzing concept drifts. I can only answer questions related to the drift analysis, the process, and the provided evidence. How can I help you with the analysis?"
         new_history = chat_history + [(user_question, ai_answer)]
         return {"chat_history": new_history}
     
-    # --- Main Chatbot Logic (only runs if the guardrail passes) ---    
+    # Step 3: If the guardrail passes, generate a contextualized answer using the LLM. 
     full_context = textwrap.dedent(f"""
         **Full Analysis Report:**
         {full_analysis_context}
@@ -184,7 +221,7 @@ def run_chatbot_agent(state: GraphState) -> dict:
     # Use a non-zero temperature to make the chatbot's responses more creative.
     llm = ChatOpenAI(model=MODEL_NAME, temperature=0.3)
     
-    # Caching Logic
+    # Step 4: Use caching to improve performance and reduce costs for repeated questions.
     llm_cache = load_cache()
     cache_key = get_cache_key(prompt, MODEL_NAME)
 
@@ -204,8 +241,7 @@ def run_chatbot_agent(state: GraphState) -> dict:
     else:
         logging.info(f"CACHE HIT for user question: '{user_question}'")
 
-    # Append the new interaction to the history.
-    # The previous history is already in the state, so we just append the latest interaction.
+    # Step 5: Append the new Q&A turn to the chat history and return the updated state.
     new_history = chat_history + [(user_question, ai_answer)]
     
     # Return the updated chat history to the state.

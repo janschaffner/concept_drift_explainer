@@ -1,2 +1,0 @@
-,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-InternationalDeclarations,"[('declaration 84536', 'declaration 28200'), ('declaration 81722', 'declaration 32593')]","['incremental', 'gradual']",[0.7172 0.6428],"['2017-10-16_FA_Directive_01-2018_CBCR_Expansion.pdf', '2017-10-10_LeadershipMemo_IntlReorg_AdvanceDraft.pdf']"

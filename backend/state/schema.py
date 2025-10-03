@@ -1,3 +1,10 @@
+"""
+Defines the formal data contract for the Concept Drift Explainer's agentic
+workflow. This module contains the TypedDict definitions for the main GraphState
+and all of its component data structures, ensuring type safety and clear data
+hand-offs between agents.
+"""
+
 from typing import TypedDict, List, Tuple, Optional, Dict
 
 # --- Data Structures for Individual Components ---
@@ -14,6 +21,7 @@ class DriftInfo(TypedDict):
     changepoints: Tuple[str, str]
     drift_type: str
     confidence: float
+    # Timestamps are stored in ISO 8601 format (e.g., "2023-10-27T10:00:00")
     start_timestamp: str
     end_timestamp: str
 
@@ -35,9 +43,11 @@ class ContextSnippet(TypedDict):
     timestamp: int # Stored as Unix timestamp
     source_type: str # "context" or "bpm-kb"
     similarity_score: float
+    # These scores are calculated and added by the Re-Ranker Agent.
     semantic_specificity: Optional[float]
     priority_score: Optional[float]
     support_only: bool # True if this came from the glossary ("bpm-kb")
+    # Populated by the Franzoi Mapper Agent.
     classifications: List[FranzoiClassification] # list of detailed classifications
 
 class RankedCause(TypedDict):

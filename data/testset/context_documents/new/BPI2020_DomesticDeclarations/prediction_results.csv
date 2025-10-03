@@ -1,2 +1,0 @@
-,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-DomesticDeclarations,"[('declaration 90778', 'declaration 131325')]",['incremental'],[0.5882],"['2017-12-05_Compliance_Guidance_Update.pdf']"

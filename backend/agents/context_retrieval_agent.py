@@ -1,3 +1,13 @@
+"""
+This module contains the implementation of the Context Retrieval Agent.
+
+This agent is the first stage in the two-stage retrieval process. Its primary
+responsibility is to perform a broad, hybrid search to gather a wide set of
+potentially relevant documents ("candidate snippets") from the Pinecone vector
+database. It combines semantic search with temporal filtering and queries both a
+general context knowledge base and a specialized BPM glossary.
+"""
+
 import os
 import sys
 import logging
@@ -23,29 +33,35 @@ EMBEDDING_MODEL_NAME = "text-embedding-3-small" # This model has 1536 dimensions
 CONTEXT_NS = "context"
 KB_NS      = "bpm-kb"
 CONTEXT_TOP_K = 30 # Retrieve a large number of candidates to ensure that the gold doc isn't missed.
-# Skewed temporal window constants.
-WINDOW_BEFORE = 14
+# Define constants for the skewed temporal window.
+WINDOW_BEFORE = 14 # days *before* start
 WINDOW_AFTER  = 3 # days *after* start
 
 def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dict:
-    """
-    Retrieves and merges context snippets from both the 'context' and 'bpm-kb' namespaces.
+    """Performs a hybrid search to retrieve candidate context snippets.
 
-    This agent performs a hybrid search. It uses a semantic query enhanced with
-    keywords to find relevant documents, while also applying a temporal filter
-    to narrow the search space. It queries two separate Pinecone namespaces:
-    one for general context documents and one for a BPM-specific knowledge base.
+    This agent acts as the "collector" in the pipeline. It formulates a rich
+    semantic query using the drift information and keywords from the Drift Agent.
+    It then queries two separate Pinecone namespaces:
+    1.  'context': A broad search for general context documents, filtered by a
+        skewed temporal window around the drift's start date.
+    2.  'bpm-kb': A targeted search for the single most relevant term from a
+        curated BPM knowledge base.
+
+    The results are then merged, deduplicated, and sorted by similarity score
+    before being passed to the Re-Ranker Agent.
 
     Args:
-        state: The current graph state, which must contain `drift_info` and `drift_keywords`.
-        index: An initialized Pinecone index object.
-        
+        state: The current graph state, which must contain `drift_info`.
+        index: An initialized Pinecone index object (dependency injected).
+
     Returns:
-        A dictionary with the `raw_context_snippets` field populated with a merged and
-        sorted list of candidate snippets for the Re-Ranker Agent.
+        A dictionary with the `raw_context_snippets` field populated with a
+        merged and sorted list of candidate snippets.
     """
     logging.info("--- Running Context Retrieval Agent ---")
     
+    # Step 1: Extract necessary data from the state and perform input validation.
     drift_info = state.get("drift_info")
     # Get the keywords extracted by the Drift Agent.
     drift_keywords = state.get("drift_keywords", [])
@@ -55,7 +71,7 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         logging.error(error_msg)
         return {"error": error_msg}
     
-    # Input Validation)
+    # Input Validation for changepoints.
     changepoints = drift_info.get("changepoints", [])
     if not isinstance(changepoints, (list, tuple)) or len(changepoints) != 2:
         error_msg = f"Invalid changepoints format: Expected a pair, but got {changepoints}"
@@ -63,19 +79,17 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         return {"error": error_msg}
     start_activity, end_activity = changepoints
 
-    # --- 1. Load .env and check API key before doing any OpenAI calls ---
+    # Step 2: Initialize the embedding model.
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
         error_msg = "OPENAI_API_KEY not found in .env; cannot embed query."
         logging.error(error_msg)
         return {"error": error_msg}
-
-    # --- 2. Initialize Embedder (after key loaded) ---
     embedder = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 
-    # --- 3. Formulate Semantic Query ---
+    # Step 3: Formulate the rich semantic query by combining the drift type,
+    # process name, activities, and extracted keywords.
     process_name = drift_info.get("process_name", "a business process") # Get the process name
-    # The query includes the process name for better context.
     base_query = (
         f"A concept drift of type '{drift_info['drift_type']}' was detected. "
         f"It occurred in the '{process_name}' process involving the activities '{start_activity}' and '{end_activity}'."
@@ -98,15 +112,14 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         logging.error(error_msg)
         return {"error": error_msg}
 
-    # --- 3. Define Temporal Filter (only for the 'context' namespace) ---
-    # Create a time window around the drift to filter documents by metadata.
-    # The window is skewed to prioritize documents published shortly before or after the drift start date.
+    # Step 4: Define a skewed temporal filter to prioritize documents published
+    # shortly before or after the drift's start date.
     try:
         start_date = datetime.fromisoformat(drift_info["start_timestamp"])
         filter_start = start_date - timedelta(days=WINDOW_BEFORE)
         filter_end   = start_date + timedelta(days=WINDOW_AFTER)
 
-        # Convert the filter dates to integer Unix timestamps for the query.
+        # Convert dates to integer Unix timestamps for the Pinecone query.
         temporal_filter = {
             "timestamp": {
                 "$gte": int(filter_start.timestamp()),
@@ -118,7 +131,7 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         logging.warning(f"Could not create temporal filter: {e}. Proceeding without it.")
         temporal_filter = {}
 
-    # --- 4. Query Both Namespaces and Merge Results ---
+    # Step 5: Query both the 'context' and 'bpm-kb' namespaces in Pinecone.
     all_hits = {}
 
     # Query 'context' namespace with the time filter
@@ -132,7 +145,8 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
                 namespace=CONTEXT_NS,
                 include_metadata=True
             )
-            # Fallback if no matches
+            # Fallback mechanism: If the narrow temporal filter returns no results,
+            # re-query without the filter to ensure some context is always found.
             if not getattr(context_response, "matches", []):
                 logging.info("Fallback: disabled time filter to find more results.")
                 context_response = index.query(
@@ -153,7 +167,8 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         logging.error(error_msg)
         return {"error": error_msg}
 
-    # Add context hits to the result dictionary, handling potential duplicates.
+    # Use a dictionary with a (source, text) tuple as the key to automatically
+    # handle deduplication of snippets, keeping only the highest-scoring version.
     for match in context_response.matches:
         src = match.metadata.get('source', 'Unknown')
         txt = match.metadata.get('text', '')
@@ -185,6 +200,7 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         src = match.metadata.get('source', 'Unknown')
         txt = match.metadata.get('text', '')
         dedupe_key = (src, txt)
+        # Explicitly flag glossary items so they can be handled separately.
         match.metadata['support_only'] = True
         if dedupe_key not in all_hits or match.score > all_hits[dedupe_key]['score']:
             all_hits[dedupe_key] = {
@@ -193,7 +209,7 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
                 'source_type': KB_NS
             }
 
-    # --- 5. Sort the combined list by score and process the final snippets ---
+    # Step 6: Merge, sort, and format the final list of candidate snippets.
     sorted_hits = sorted(all_hits.values(), key=lambda x: x['score'], reverse=True)
     
     retrieved_snippets: list[ContextSnippet] = []
@@ -224,9 +240,10 @@ def run_context_retrieval_agent(state: GraphState, index: Pinecone.Index) -> dic
         all_docs = [Path(s['source_document']).name for s in retrieved_snippets]
         logging.info(f"All retrieved docs: {all_docs}")
 
+        # Diagnostic check to see if the gold document was retrieved (in evaluation).
         gold_doc = drift_info.get("gold_doc", "")
         if gold_doc:
-        # normalize case to avoid mismatches
+        # Normalize case to avoid mismatches
             found = "✅" if gold_doc.lower() in [d.lower() for d in all_docs] else "❌"
             logging.info(f"Gold doc: {gold_doc}  Recall@all: {found}")
 

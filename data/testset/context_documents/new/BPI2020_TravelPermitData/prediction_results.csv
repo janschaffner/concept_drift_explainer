@@ -1,2 +1,0 @@
-,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-PermitLog,"[('travel permit 81954', 'travel permit 68879'), ('travel permit 80698', 'travel permit 8058')]","['incremental', 'gradual']",[0.6871 0.5593],"['2017-10-17_Data_Validation_Update_Notice.pdf', '2017-10-03_PreApproval_Practice_Memo.pdf']"

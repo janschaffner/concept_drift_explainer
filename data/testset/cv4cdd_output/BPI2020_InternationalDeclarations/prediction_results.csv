@@ -1,2 +1,2 @@
 ,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-InternationalDeclarations,"[('international declaration 84536', 'international declaration 28200'), ('international declaration 81722', 'international declaration 32593')]","['incremental', 'gradual']",[0.7172 0.6428],"['2017-10-15_Travel_Compliance_Notice.pdf', '2017-10-10_Leadership_Note_Mobility_Oversight.pdf']"
+InternationalDeclarations,"[('declaration 84536', 'declaration 28200'), ('declaration 81722', 'declaration 32593')]","['incremental', 'gradual']",[0.7172 0.6428],"['2017-10-05_Travel_Compliance_Notice.pdf', '2017-10-10_Leadership_Note_Mobility_Oversight.pdf']"

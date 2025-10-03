@@ -1,3 +1,13 @@
+"""
+This module provides functionality for generating and exporting the final drift
+analysis results into a formatted, human-readable DOCX report.
+
+It is designed to be called by the frontend, allowing users to download a
+professional-looking document that summarizes the key findings for a single
+drift. The module includes helpers for sanitizing text to ensure compatibility
+with the DOCX format.
+"""
+
 import docx
 import io
 import re
@@ -5,8 +15,18 @@ from datetime import datetime
 
 def sanitize_xml_string(text: str) -> str:
     """
-    Removes illegal XML characters from a string to prevent errors
-    when writing to file formats like DOCX.
+    Removes illegal XML characters from a string.
+
+    This is a crucial sanitization step because the underlying `python-docx`
+    library works with XML. Certain control characters can create invalid XML,
+    causing the document generation to fail. This function removes them to
+    ensure the report is always generated successfully.
+
+    Args:
+        text: The input string to sanitize.
+
+    Returns:
+        The sanitized string.
     """
     if not isinstance(text, str):
         return ""
@@ -18,17 +38,26 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     """
     Generates a formatted DOCX report for a single drift analysis.
 
+    This function assembles a professional report with a clear structure:
+    1. Header: Drift type, timeframe, and report title.
+    2. Executive Summary: The high-level summary from the Explanation Agent.
+    3. Ranked Causes: A detailed breakdown of each potential cause, including
+       its confidence score, description, and the supporting evidence snippet.
+
+    The final document is returned as an in-memory byte stream, which is ideal
+    for being served as a file download in a web application like Streamlit.
+
     Args:
-        info (dict): The drift_info dictionary containing metadata.
-        explanation (dict): The explanation dictionary with summary and causes.
-        drift_index (int): The 1-based index of the drift (e.g., 1, 2, 3).
+        info (dict): The `drift_info` dictionary.
+        explanation (dict): The `explanation` dictionary.
+        drift_index (int): The 1-based index of the drift for the report title.
 
     Returns:
-        Bytes of the generated DOCX document.
+        The bytes of the generated DOCX document.
     """
     document = docx.Document()
 
-    # --- Header ---
+    # --- Section 1: Report Header ---
     # Sanitize all text before adding it to the document
     dtype = sanitize_xml_string(info.get("drift_type", "Unknown").capitalize())
     start = info.get("start_timestamp", "N/A").split(" ")[0]
@@ -44,12 +73,12 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
     document.add_paragraph(f"Drift Type: {dtype}")
     document.add_paragraph(f"Timeframe: {timeframe}")
 
-    # --- Summary ---
+    # --- Section 2: Executive Summary ---
     summary = sanitize_xml_string(explanation.get("summary", "No summary available."))
     document.add_heading("Executive Summary", level=2)
     document.add_paragraph(summary)
     
-    # --- Ranked Causes ---
+    # --- Section 3: Detailed Ranked Causes ---
     document.add_heading("Top Ranked Causes", level=2)
     ranked_causes = explanation.get("ranked_causes", [])
     if not ranked_causes:
@@ -75,7 +104,10 @@ def generate_docx_report(info: dict, explanation: dict, drift_index: int):
             p.add_run('Evidence Snippet:').bold = True
             document.add_paragraph(snippet, style='Intense Quote')
 
-    # --- Save to an in-memory stream ---
+    # --- Section 4: Save to an in-memory stream ---
+    # Instead of saving to a file on disk, the document is saved to a
+    # BytesIO object. This allows to return the raw bytes of the file,
+    # which can be used by Streamlit's st.download_button.
     doc_stream = io.BytesIO()
     document.save(doc_stream)
     doc_stream.seek(0)

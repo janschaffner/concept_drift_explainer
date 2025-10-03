@@ -1,3 +1,11 @@
+"""
+This module contains the implementation of the Drift Agent, the first agent in the
+Concept Drift Explainer's pipeline. Its primary responsibility is to take the
+raw output from a concept drift detector (CV4CDD-4D), parse it, and transform
+it into a structured, semantically rich representation of the drift that can be
+used by downstream agents for retrieval and explanation.
+"""
+
 import os
 import sys
 import logging
@@ -21,14 +29,24 @@ from langchain_openai import ChatOpenAI
 from backend.state.schema import GraphState, DriftInfo
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
-# Configure basic logging.
+# --- Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 MODEL_NAME = "gpt-4o-mini"
 
+# --- Helper Functions ---
+
 def build_activity_to_timestamp_map(window_info: dict) -> dict:
-    """
-    Pre-processes the window_info.json data into a direct lookup table for efficiency.
-    This allows for quick retrieval of timestamps based on activity instance IDs.
+    """Converts the raw window_info.json data into a simple lookup map.
+
+    This pre-processes the nested JSON structure into a flat dictionary that maps
+    an activity instance ID directly to its ISO 8601 timestamp string, allowing for
+    efficient lookups.
+
+    Args:
+        window_info: The loaded JSON data from the detector's output.
+
+    Returns:
+        A dictionary mapping activity IDs to their timestamps.
     """
     activity_map = {}
     # Assumes the JSON has a single root key which is the process name.
@@ -40,20 +58,36 @@ def build_activity_to_timestamp_map(window_info: dict) -> dict:
 
 # Keyword Extraction to enrich VecDB Query
 def extract_general_keywords(trace: etree._Element) -> list:
-    """Extracts a flat list of general keywords from an XES trace."""
+    """Extracts and normalizes a flat list of keywords from an XES trace element.
+
+    This function iterates through all string, int, and float attributes within a
+    trace, as well as the 'concept:name' of each event, to build a set of
+    relevant keywords. It applies several heuristics to filter out noise, such
+    as removing numeric IDs and short words, and uses a Porter Stemmer to
+    normalize the keywords to their root form.
+
+    Args:
+        trace: An lxml etree._Element representing a single <trace>.
+
+    Returns:
+        A list of unique, stemmed keywords.
+    """
     general_keywords = set()
     st = PorterStemmer()
     
     if trace is None:
         return []
 
+    # First pass: Extract keywords from all general trace attributes.
     for attr in trace.xpath(".//string | .//int | .//float"):
         val = attr.get("value", "")
+        # Filter out common noise and purely numeric values.
         if val and val not in {"UNKNOWN", "MISSING", "EMPTY"} and not any(char.isdigit() for char in val) and len(val) > 3:
             for word in re.split(r'[\s,()/-]', val):
                 if word and len(word) > 3:
                     general_keywords.add(st.stem(word.lower()))
 
+    # Second pass: Extract keywords from the 'concept:name' of each event.
     for event in trace.findall('event'):
         for key in ["concept:name", "activityNameEN"]:
             name_element = event.find(f"string[@key='{key}']")
@@ -67,10 +101,20 @@ def extract_general_keywords(trace: etree._Element) -> list:
     return list(general_keywords)
 
 def _find_trace_by_id(traces: list, changepoint_id: str) -> etree._Element:
+    """Internal helper to find a specific trace element by its numeric ID.
+
+    The CV4CDD-4D detector output uses activity instance IDs (e.g.,
+    "declaration 81722"). This function robustly extracts the numeric part of
+    that ID and searches the full .xes log to find the corresponding <trace>
+    element whose 'concept:name' contains the same numeric ID.
+
+    Args:
+        traces: A list of all <trace> elements from the .xes file.
+        changepoint_id: The activity instance ID from the detector's output.
+
+    Returns:
+        The matching lxml etree._Element for the trace, or None if not found.
     """
-    Finds a specific trace by matching the numeric ID from the changepoint.
-    """
-    # --- CHANGE START ---
     logging.info(f"Attempting to find trace for changepoint ID: '{changepoint_id}'")
     changepoint_nums = re.findall(r'\d+', changepoint_id)
     if not changepoint_nums:
@@ -91,10 +135,16 @@ def _find_trace_by_id(traces: list, changepoint_id: str) -> etree._Element:
     
     logging.warning(f"❌ No matching trace found for numeric ID {target_num}.")
     return None
-    # --- CHANGE END ---
 
 def _format_trace_for_llm(trace: etree._Element) -> str:
-    """Formats a trace's events into a clean, human-readable string for the LLM."""
+    """Internal helper to format a trace's events into a clean string for an LLM.
+
+    Args:
+        trace: The lxml etree._Element representing the trace.
+
+    Returns:
+        A formatted, human-readable string of the trace's events.
+    """
     if trace is None:
         return "Trace not found."
     
@@ -110,16 +160,31 @@ def _format_trace_for_llm(trace: etree._Element) -> str:
             
     return "\n".join(events_str)
 
+# --- Main Agent Logic ---
+
 def run_drift_agent(state: GraphState) -> dict:
-    """
-    Parses a selected drift, extracts key information, and creates a semantic
-    drift phrase to populate the initial state.
+    """The entrypoint agent for the CDE pipeline.
+
+    This agent performs the initial data ingestion and transformation. It reads
+    the raw output files from the CV4CDD-4D detector, identifies the specific
+    drift selected by the user, and performs a comparative trace analysis using
+    an LLM to generate a rich, semantic `drift_phrase`. It populates the initial
+    `GraphState` with the `drift_info`, `drift_keywords`, and `drift_phrase`,
+    which serve as the foundation for all downstream agents.
+
+    Args:
+        state: The current graph state. Must contain the `selected_drift` key.
+
+    Returns:
+        A dictionary with the updated state fields to be merged into the `GraphState`.
     """
     logging.info("--- Running Drift Agent ---")
     selection = state.get("selected_drift")
     if not selection:
         return {"error": "No drift was selected."}
     
+    # Step 1: Load all necessary data files (CSV, JSON, XES) from the frontend, 
+    # else from the detector output directory (e.g., for testing).
     data_dir = selection.get("data_dir")
     data_dir = Path(data_dir) if data_dir and Path(data_dir).exists() else project_root / "data" / "drift_outputs"
     logging.info(f"Using data directory: {data_dir}")
@@ -136,6 +201,7 @@ def run_drift_agent(state: GraphState) -> dict:
     except (StopIteration, Exception) as e:
         return {"error": f"Failed to load or find data files in {data_dir}: {e}"}
 
+    # Step 2: Isolate the specific drift to be analyzed based on the user's selection from the UI.
     row_index = selection.get("row_index", 0)
     drift_index_in_row = selection.get("drift_index", 0)
     selected_row = drift_df.iloc[row_index]
@@ -147,6 +213,7 @@ def run_drift_agent(state: GraphState) -> dict:
         changepoint_pair = all_changepoints[drift_index_in_row]
         logging.debug(f"Looking for timestamps for: {changepoint_pair}")
 
+        # Find the full "before" and "after" traces from the .xes log.
         start_trace = _find_trace_by_id(traces, changepoint_pair[0])
         end_trace = _find_trace_by_id(traces, changepoint_pair[1])
         logging.debug(f"DEBUGGING {start_trace}")
@@ -154,7 +221,8 @@ def run_drift_agent(state: GraphState) -> dict:
 
         if start_trace is None or end_trace is None:
             return {"error": f"Could not find one or both traces for changepoints: {changepoint_pair}"}
-            
+
+        # Extract keywords for the broad, initial retrieval query.    
         start_keywords = extract_general_keywords(start_trace)
         end_keywords = extract_general_keywords(end_trace)
         general_keywords = list(set(start_keywords + end_keywords))
@@ -170,6 +238,7 @@ def run_drift_agent(state: GraphState) -> dict:
     except (ValueError, SyntaxError, IndexError) as e:
         return {"error": f"Could not parse or index drift data from CSV: {e}"}
     
+    # Step 3: Perform comparative trace analysis with an LLM to generate a rich, semantic drift_phrase.
     load_dotenv()
     llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
     llm_cache = load_cache()
@@ -206,9 +275,11 @@ The process involves travel expense claims at a university. There are two main t
             llm_cache[cache_key] = summary
             save_to_cache(llm_cache)
         except Exception as e:
+            # Fallback to a simple phrase if the LLM call fails.
             logging.warning(f"LLM summary for drift phrase failed: {e}. Falling back to basic phrase.")
             summary = " ".join(re.findall(r"[A-Za-z]+", " ".join(changepoint_pair))).lower()
 
+    # Step 4: Assemble and return the initial state fields for the graph.
     process_name = xes_path.stem
     drift_phrase = f"{process_name}: {summary}"
     
@@ -225,6 +296,7 @@ The process involves travel expense claims at a university. There are two main t
         "end_timestamp": end_timestamp,
     }
     
+    # Pass along the gold document if it's provided (for evaluation).
     if "gold_doc" in selection:
         drift_info["gold_doc"] = selection["gold_doc"]
 

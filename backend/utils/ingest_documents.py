@@ -1,3 +1,17 @@
+"""
+This module provides a complete, multimodal data ingestion pipeline for populating
+the Pinecone vector database.
+
+It is designed to be run as a standalone script or to be called by the frontend
+for on-the-fly document uploads. It can process a variety of file formats,
+including text-based documents (.pdf, .docx, .txt), presentations (.pptx), and
+standalone images (.png, .jpg). For multimodal files, it extracts both textual
+content and uses a vision model to analyze and describe embedded images.
+
+The script also handles the ingestion of a curated BPM glossary into a separate,
+dedicated namespace within the same Pinecone index.
+"""
+
 import os
 import sys
 from pathlib import Path
@@ -42,7 +56,18 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_timestamp_from_filename(filename: str) -> int:
-    """Parses yyyy-mm-dd from the start of a filename and returns a Unix timestamp."""
+    """Parses a YYYY-MM-DD date from a filename and returns a Unix timestamp.
+
+    This function expects filenames to follow a convention like:
+    '2023-10-27_document_name.pdf'. It extracts the date part and converts it
+    to a Unix epoch timestamp, which is required for metadata filtering in Pinecone.
+
+    Args:
+        filename: The name of the file.
+
+    Returns:
+        An integer representing the Unix timestamp, or None if parsing fails.
+    """
     try:
         date_str = filename.split('_')[0]
         dt_obj = datetime.strptime(date_str, '%Y-%m-%d')
@@ -53,12 +78,12 @@ def get_timestamp_from_filename(filename: str) -> int:
 
 # process_and_embed now accepts a namespace parameter
 def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, source_document_name: str, doc_timestamp: int, namespace: str):
-    """
-    Helper function to chunk, embed, and upsert a list of texts into a specific Pinecone namespace.
+    """Chunks, embeds, and upserts a list of texts into a Pinecone namespace.
 
-    This function takes a list of raw text strings, splits them into manageable chunks,
-    creates vector embeddings for each chunk, and then uploads them to the specified
-    namespace in the Pinecone index.
+    This is a generic helper function that takes raw text, splits it into
+    manageable chunks, creates vector embeddings for each chunk, and then
+    uploads them with their associated metadata to the specified namespace in
+    the Pinecone index.
 
     Args:
         index: The initialized Pinecone index object.
@@ -103,7 +128,13 @@ def process_and_embed(index, text_splitter, embedder, texts_to_embed: list, sour
 
 # Function to specifically process the glossary file
 def process_glossary_file(index, embedder):
-    """Loads, embeds, and upserts the BPM glossary into the 'bpm-kb' namespace."""
+    """Loads and ingests the BPM glossary into the 'bpm-kb' namespace.
+
+    This function specifically processes the `bpm_glossary.csv` file, combining
+    the term and its definition into a single text block for richer embeddings.
+    It then upserts these into the dedicated 'bpm-kb' namespace to create a
+    domain-specific knowledge layer for the retrieval agents.
+    """
     glossary_path = project_root / "data" / "knowledge_base" / "bpm_glossary.csv"
     if not glossary_path.exists():
         logging.warning(f"BPM glossary not found at {glossary_path}. Skipping glossary ingestion.")
@@ -138,9 +169,13 @@ def process_glossary_file(index, embedder):
 
 # --- Main function to process context documents ---
 def process_context_files(files_to_process: list, index, embedder, text_splitter):
-    """
-    Processes a list of context documents, handling different file types
-    including text documents, presentations, and images.
+    """Processes a list of documents, handling various file types.
+
+    This is the main processing function for context documents. It iterates
+    through a list of file paths, determines the file type, and uses the
+    appropriate loader or utility to extract all textual and visual content.
+    The extracted content is then passed to the `process_and_embed` helper to
+    be ingested into the 'context' namespace.
     """
     logging.info(f"--- Processing {len(files_to_process)} Context Documents ---")
     
@@ -157,13 +192,13 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
         texts_to_embed = []
         file_suffix = doc_path.suffix.lower()
 
-        # Handle standalone image files.
+        # Branch 1: Handle standalone image files.
         if file_suffix in [".png", ".jpg", ".jpeg"]:
             description = analyze_image_content(doc_path)
             if "Error" not in description:
                 texts_to_embed.append(description)
 
-        # Handle PowerPoint files
+        # Branch 2: Handle PowerPoint files, extracting both text and images.
         elif file_suffix == ".pptx":
             try:
                 prs = Presentation(doc_path)
@@ -191,7 +226,7 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
                 logging.error(f"Error processing PowerPoint file {doc_path.name}: {e}")
                 continue
         
-        # Handle PDF files with a dedicated, stable loader
+        # Branch 3: Handle PDF files with the robust PyPDFLoader.
         elif file_suffix == ".pdf":
             try:
                 loader = PyPDFLoader(str(doc_path))
@@ -201,7 +236,7 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
                 logging.error(f"Error processing PDF file with PyPDFLoader {doc_path.name}: {e}")
                 continue
         
-        # Use a general loader as default for other text-based files like .docx and .txt
+        # Branch 4: Use a general loader for other text-based files (.docx, .txt).
         else:
             try:
                 loader = UnstructuredFileLoader(str(doc_path))
@@ -211,7 +246,7 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
                 logging.error(f"Error processing document with UnstructuredFileLoader {doc_path.name}: {e}")
                 continue
 
-        # After extracting all text from the document, embed and upsert it.            
+        # After extracting all text, embed and upsert it into the 'context' namespace.            
         if texts_to_embed:
             # Call process_and_embed with the "context" namespace using the constant
             count = process_and_embed(index, text_splitter, embedder, texts_to_embed, doc_path.name, doc_timestamp, namespace=CONTEXT_NS)
@@ -222,9 +257,14 @@ def process_context_files(files_to_process: list, index, embedder, text_splitter
     return total_vectors_ingested
 
 def initialize_ingestion_backend():
-    """
-    Initializes and returns the Pinecone index, embedder, and text splitter.
-    This function contains the setup logic previously in the __main__ block.
+    """Initializes and returns all necessary backend resources for ingestion.
+
+    This function centralizes the setup logic for Pinecone, the OpenAI embedder,
+    and the LangChain text splitter. It checks if the Pinecone index exists and
+    creates it if necessary.
+
+    Returns:
+        A tuple containing the initialized index, embedder, and text_splitter.
     """
     load_dotenv()
     api_key = os.getenv("PINECONE_API_KEY")
@@ -257,8 +297,13 @@ def initialize_ingestion_backend():
 
 
 if __name__ == "__main__":
-    # This block allows the script to be run directly from the command line.
-    # It will find all supported files in the documents directory and process them.
+    """
+    Main execution block to run the script in standalone mode.
+
+    This will initialize the backend, discover all supported document types in
+    the `DOCUMENTS_PATH`, and process them. It will then process the BPM
+    glossary file separately.
+    """
     logging.info("--- Running Ingestion Script in Standalone Mode ---")
     
     # 1. Initialize all backend resources using the new reusable function

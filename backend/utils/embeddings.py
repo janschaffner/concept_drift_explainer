@@ -1,3 +1,14 @@
+"""
+This module provides a centralized and optimized function for generating vector
+embeddings using OpenAI's models.
+
+It is designed to be a single source of truth for all embedding generation
+across the application. The core function, `get_embedding`, uses an in-memory
+LRU (Least Recently Used) cache to prevent redundant API calls for the same
+text within a single agent's execution, which improves performance and reduces
+costs.
+"""
+
 import os
 import numpy as np
 from functools import lru_cache
@@ -10,15 +21,21 @@ EMBEDDING_MODEL_NAME = "text-embedding-3-small"
 @lru_cache(maxsize=128)
 def get_embedding(text: str) -> np.ndarray:
     """
-    Generates a vector embedding for a given text using a cached OpenAI model.
-    The lru_cache decorator ensures that repeated calls with the same text
-    do not result in redundant API calls.
+    Generates a vector embedding for a given text using a cached model call.
+
+    This function is decorated with @lru_cache, which creates an in-memory
+    cache. This ensures that repeated calls with the same text string within a
+    single application run do not result in redundant and expensive API calls to
+    the OpenAI embedding endpoint.
 
     Args:
         text: The input text string to embed.
 
     Returns:
         A numpy array representing the vector embedding.
+
+    Raises:
+        ValueError: If the OPENAI_API_KEY environment variable is not set.
     """
     if not os.getenv("OPENAI_API_KEY"):
         raise ValueError("OPENAI_API_KEY not found in environment variables.")

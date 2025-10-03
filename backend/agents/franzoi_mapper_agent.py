@@ -1,3 +1,13 @@
+"""
+This module contains the implementation of the Franzoi Mapper Agent.
+
+Its primary responsibility is to enrich the curated list of evidence snippets by
+classifying each one against the formal, three-level Process Mining Context
+Taxonomy from Franzoi, Hartl et al. (2025). This agent adds a crucial layer of
+structured, academic context to the evidence before it is passed to the final
+Explanation Agent.
+"""
+
 import os
 import sys
 import logging
@@ -33,7 +43,10 @@ class ClassificationList(BaseModel):
     """A list of all relevant classifications for the given text snippet."""
     classifications: List[Classification]
 
-# The prompt instructs the LLM to classify a snippet against the Franzoi et al. taxonomy.
+# --- Prompt Template ---
+# This prompt operationalizes the Process Mining Context Taxonomy (Franzoi et al., 2025), instructing
+# the LLM to act as a process analyst and map a given text snippet to the
+# formal, three-level classification system.
 PROMPT_TEMPLATE = """You are an expert business process analyst specializing in process mining. Your task is to classify a given text snippet against the full three-level Franzoi et al. context taxonomy.
 
 The snippet may fit into one or more categories. Identify all relevant categories from the taxonomy provided below.
@@ -57,6 +70,8 @@ TEXT SNIPPET:
 "{snippet_text}"
 """
 
+# --- Main Agent Logic ---
+
 def run_franzoi_mapper_agent(state: GraphState) -> dict:
     """
     Classifies a list of context snippets against the Franzoi context taxonomy.
@@ -69,11 +84,11 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         state: The current graph state, which must contain `reranked_context_snippets`.
 
     Returns:
-        An empty dictionary, as it modifies the state directly.
+        An empty dictionary, as it modifies the state directly for efficiency.
     """
     logging.info("--- Running Franzoi Mapper Agent ---")
 
-    # This agent receives the curated list of snippets from the Re-Ranker Agent.
+    # Step 1: Get the curated list of snippets from the state.
     context_snippets: List[ContextSnippet] = state.get("reranked_context_snippets", [])
     if not context_snippets:
         logging.warning("No context snippets found to classify.")
@@ -84,21 +99,22 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
     doc_sources = [Path(s['source_document']).name for s in context_snippets]
     logging.info(f"Received {len(doc_sources)} snippets to classify: {doc_sources}")
 
+    # Step 2: Initialize the LLM with structured output capabilities.
     load_dotenv()
     if not os.getenv("OPENAI_API_KEY"):
         error_msg = "OPENAI_API_KEY not found in .env file."
         logging.error(error_msg)
         return {"error": error_msg}
 
-    # Initialize the LangChain LLM with structured output capabilities.
     llm = ChatOpenAI(model=MODEL_NAME, temperature=0)
     structured_llm = llm.with_structured_output(ClassificationList)
 
-    # Load the persistent cache to avoid redundant API calls.-
+    # Step 3: Load the persistent cache to avoid redundant API calls.
     llm_cache = load_cache()
     cache_updated = False
 
-    # Loop through and classify each snippet.
+    # Step 4: Loop through and classify each snippet, using the cache to
+    # maximize performance and reduce costs.
     for snippet in context_snippets:
         logging.info(f"Classifying snippet from: {snippet['source_document']}")
 
@@ -124,7 +140,8 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         else:
             logging.info(f"CACHE HIT for snippet from: {snippet['source_document']}")
 
-        # Process the response data (from cache or API) and enrich the snippet.
+        # Step 5: Process the response and enrich the snippet object in-place.
+        # This is an efficient way to add data without creating a new list.
         typed_classifications: List[FranzoiClassification] = [
             {"full_path": item.get("full_path", "UNKNOWN"), "reasoning": item.get("reasoning", "")}
             for item in response_data.get("classifications", [])

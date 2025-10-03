@@ -100,7 +100,6 @@ nest-asyncio==1.6.0
 networkx==3.2.1
 nltk==3.9.1
 numpy==1.26.4
-olefile==0.47
 omegaconf==2.3.0
 onnx==1.18.0
 onnxruntime==1.19.2
@@ -120,7 +119,7 @@ pinecone-plugin-assistant==1.7.0
 pinecone-plugin-interface==0.0.7
 plotly==6.2.0
 pluggy==1.6.0
-pm4py==2.7.16
+pm4py==2.7.15
 propcache==0.3.2
 proto-plus==1.26.1
 protobuf==6.31.1

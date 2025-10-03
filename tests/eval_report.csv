@@ -1,3 +1,0 @@
-drift_id,drift_type,gold_document,predicted_doc_1,predicted_doc_2,recall@1,recall@2,mrr
-drift_0_0,incremental,2017-12-11_Executive_Notice_FinanceLeadershipTransition.pdf,2017-12-11_executive_notice_financeleadershiptransition.pdf,2017-12-11_executive_notice_financeleadershiptransition.pdf,1,1,1.0
-drift_0_1,sudden,2018-01-08_EmergencyDirective_RP_Safeguards_Immediate.pdf,2018-01-08_emergencydirective_rp_safeguards_immediate.pdf,N/A,1,1,1.0

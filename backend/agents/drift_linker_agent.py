@@ -1,3 +1,13 @@
+"""
+This module contains the implementation of the Drift Linker Agent.
+
+This agent performs a meta-analysis on the results of multiple, individual drift
+explanations. It is invoked by the frontend after the main pipeline has been run
+for two or more drifts. Its purpose is to identify and summarize high-level
+relationships between these drifts, such as a shared root cause or a causal link,
+providing an additional layer of analytical insight.
+"""
+
 import os
 import sys
 import logging
@@ -34,12 +44,20 @@ class DriftLinkAnalysis(BaseModel):
     connection_type: ConnectionType = Field(description="The classification of the relationship between the drifts.")
     summary: str = Field(description="Your detailed analysis and reasoning for the chosen connection type. If no connection is found, briefly state that.")
 
+# --- Helper Functions ---
+
 def format_states_for_prompt(full_states: List[Dict]) -> str:
-    """
-    Formats a list of full state objects into a structured string for the LLM prompt.
-    
-    This function creates a detailed profile of each drift, including its timeframe,
-    summary, evidence sources, and the key semantic phrase.
+    """Formats a list of state objects into a structured string for the LLM.
+
+    This function creates a detailed, human-readable profile for each drift,
+    extracting its key characteristics (type, timeframe, summary, evidence) to
+    make it easy for the LLM to compare and analyze them.
+
+    Args:
+        full_states: A list of final GraphState dictionaries for each drift.
+
+    Returns:
+        A formatted string containing the profiles of all drifts.
     """
     formatted = ""
     for i, st in enumerate(full_states, 1):
@@ -48,7 +66,7 @@ def format_states_for_prompt(full_states: List[Dict]) -> str:
         # Pull in the drift_phrase, which is the key semantic signal
         drift_phrase = st.get("drift_phrase", "N/A")
 
-        # Top-3 causes only for brevity
+        # Use only the top-3 causes for brevity in the prompt.
         top_causes = ex.get("ranked_causes", [])[:3]
         evidence_docs = sorted({c["source_document"] for c in top_causes})
         
@@ -68,12 +86,26 @@ def format_states_for_prompt(full_states: List[Dict]) -> str:
         formatted += "\n"
     return formatted
 
+# --- Main Agent Logic ---
+
 def run_drift_linker_agent(full_states: List[Dict]) -> dict:
-    """
-    Analyzes a list of drift explanations to find potential relationships between them.
+    """Analyzes a list of drift explanations to find potential relationships.
+
+    This agent is run as a post-processing step by the frontend. It takes the
+    final states of all analyzed drifts, formats them into a comprehensive
+    prompt, and uses an LLM to perform a meta-analysis to classify the
+    relationship between them.
+
+    Args:
+        full_states: A list of final GraphState objects from the main pipeline.
+
+    Returns:
+        A dictionary containing the `connection_type` and `linked_drift_summary`.
     """
     logging.info("--- Running Drift Linker Agent ---")
     
+    # Step 1: Input validation. The agent requires at least two drifts to perform
+    # a meaningful comparison.
     if not full_states or len(full_states) < 2:
         logging.warning("Need at least two drifts to run relationship analysis.")
         # Always return a consistent schema
@@ -83,7 +115,8 @@ def run_drift_linker_agent(full_states: List[Dict]) -> dict:
     if not os.getenv("OPENAI_API_KEY"):
         return {"error": "OPENAI_API_KEY not found."}
     
-    # Truncate to the most recent N drifts to avoid excessive prompt length
+    # Step 2: Prepare the input for the LLM. Truncate the list of drifts to
+    # the most recent N to manage prompt length and API costs.
     states_to_process = sorted(full_states, key=lambda s: s.get("drift_info", {}).get("start_timestamp", ""), reverse=True)
     states_to_process = states_to_process[:MAX_DRIFTS_TO_LINK]
     
@@ -94,9 +127,9 @@ def run_drift_linker_agent(full_states: List[Dict]) -> dict:
     # Format the inputs for the prompt.
     context_block = format_states_for_prompt(states_to_process)
     
-    # --- Prompt Template ---
+    # Step 3: Build the prompt dynamically and make the cached LLM call.
+    # The prompt instructs the LLM to act as a senior analyst performing a meta-analysis.
     connection_options = "\n".join([f"- `{e.value}`" for e in ConnectionType])
-    # This prompt asks the LLM to act as a senior analyst and find connections.
     prompt = f"""You are a senior business process analyst conducting a meta-analysis. 
     Your goal is to find high-level insights by identifying potential relationships between several independently explained concept drifts.
     You will be provided with structured data profiles for multiple concept drifts that occurred in the same process log.
@@ -135,7 +168,8 @@ def run_drift_linker_agent(full_states: List[Dict]) -> dict:
             logging.error(f"Failed to generate linked drift summary: {e}")
             return {"error": str(e)}
         
-    # Always return a consistent shape, even if no link is found
+    # Step 4: Process the response and return it in a consistent format. If no
+    # significant connection is found, the summary is set to None.
     connection_type = response_data.get("connection_type", ConnectionType.NONE.value)
     summary = response_data.get("summary") if connection_type != ConnectionType.NONE.value else None
 

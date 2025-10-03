@@ -1,2 +1,0 @@
-,Detected Changepoints,Detected Drift Types,Prediction Confidence,gold_source_document
-Road_Traffic_Fine_Management_Process,"[('V10630', 'S179079')]",['incremental'],[0.7164],"['2002-10-08_DigitalPenaltyPointSystem_Directive_AlphaRollout.pdf']"

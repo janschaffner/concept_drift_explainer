@@ -1,3 +1,14 @@
+"""
+This module provides a simple, persistent, file-based caching mechanism for LLM
+API calls.
+
+Its purpose is to improve the performance, reduce the cost, and increase the
+repeatability of the application by storing the results of expensive LLM calls
+to a local JSON file. Subsequent runs with the same prompt and model will read
+from this cache instead of making a new API call. The cache key is a
+deterministic hash of the prompt and model name.
+"""
+
 import json
 import hashlib
 import logging
@@ -15,17 +26,19 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def _ensure_cache_dir_exists():
     """
-    Private helper function to create the cache directory if it doesn't already exist.
-    This prevents errors when trying to write the cache file for the first time.
+    Private helper to create the cache directory if it doesn't exist.
+
+    This prevents FileNotFoundError when trying to write the cache file for the
+    first time in a clean environment.
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 def load_cache() -> dict:
-    """
-    Loads the entire LLM call cache from the `llm_cache.json` file.
+    """Loads the LLM call cache from the `llm_cache.json` file.
 
-    If the file or directory does not exist, it returns an empty dictionary,
-    allowing the system to proceed as if there is no cache.
+    If the file does not exist or is corrupted (e.g., empty or invalid JSON),
+    it robustly returns an empty dictionary, allowing the system to proceed as
+    if there is no cache.
 
     Returns:
         A dictionary representing the loaded cache.
@@ -41,11 +54,11 @@ def load_cache() -> dict:
         return {}
 
 def save_to_cache(cache: dict):
-    """
-    Saves the provided cache dictionary back to the `llm_cache.json` file.
-    
+    """Saves the provided cache dictionary to the `llm_cache.json` file.
+
     This function overwrites the existing file with the updated cache,
-    persisting the results of new LLM calls for future runs.
+    persisting the results of new LLM calls for future runs. The JSON is
+    saved with an indent for human readability.
 
     Args:
         cache: The cache dictionary to be saved.
@@ -77,8 +90,13 @@ def get_cache_key(prompt: str, model_name: str) -> str:
     return hashlib.md5(hash_input.encode()).hexdigest()
 
 def clear_llm_cache():
-    """
-    Deletes the LLM cache file if it exists and returns a status message.
+    """Deletes the LLM cache file if it exists.
+
+    This function is exposed to the UI to allow the user to manually clear the
+    cache and force all subsequent calls to go to the live API.
+
+    Returns:
+        A string indicating the success or failure of the operation.
     """
     if CACHE_FILE.exists():
         try:

@@ -1,3 +1,13 @@
+"""
+This module provides a utility for analyzing the content of images using a
+multimodal Large Language Model (GPT-4o with vision).
+
+Its primary purpose is to extract structured, textual information from visual
+media such as organizational charts, process diagrams, and slides. The generated
+text can then be ingested into the vector database, making the visual content
+searchable and available as context for the drift explanation pipeline.
+"""
+
 import base64
 import logging
 from pathlib import Path
@@ -11,14 +21,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 MODEL_NAME = "gpt-4o" 
 
 def encode_image(image_path: Path) -> str:
-    """
-    Reads an image file from the given path and encodes it into a base64 string.
+    """Reads an image file and encodes it into a base64 string.
+
+    This is a necessary preprocessing step to prepare an image to be sent to the
+    OpenAI API in a JSON payload.
 
     Args:
         image_path: The path to the image file.
 
     Returns:
-        A base64 encoded string representation of the image, or an empty string on error.
+        A base64 encoded string representation of the image, or an empty
+        string if an error occurs during encoding.
     """
     try:
         with open(image_path, "rb") as image_file:
@@ -29,22 +42,25 @@ def encode_image(image_path: Path) -> str:
 
 def analyze_image_content(image_path: Path) -> str:
     """
-    Analyzes an image using a multimodal LLM (GPT-4o with vision) and returns a
-    detailed text description of its content.
+    Analyzes an image using a multimodal LLM and returns a text description.
 
-    This function first encodes the image into base64, then constructs a prompt
-    that instructs the LLM to act as a business analyst and describe the image's
-    content, focusing on aspects relevant to process analysis (e.g., org charts,
-    graphs, or transcribed text).
+    This function orchestrates the image analysis process:
+    1. Encodes the image into a base64 string.
+    2. Constructs a detailed, role-specific prompt instructing the LLM to act
+       as a business analyst.
+    3. Sends the prompt and image data to the GPT-4o vision model.
+    4. Returns the LLM's textual description of the image content.
 
     Args:
         image_path: The path to the image file to be analyzed.
 
     Returns:
-        A string containing the LLM-generated description of the image.
+        A string containing the LLM-generated description of the image, or an
+        error message if the process fails.
     """
     logging.info(f"Analyzing image content for: {image_path.name}")
     
+    # Step 1: Encode the image to a base64 string for the API payload.
     base64_image = encode_image(image_path)
     if not base64_image:
         return "Error encoding image."
@@ -55,8 +71,9 @@ def analyze_image_content(image_path: Path) -> str:
     # Initialize the vision-capable LLM.
     llm = ChatOpenAI(model=MODEL_NAME, max_tokens=1024)
     
-    # The prompt is a list containing a HumanMessage object. This object's content
-    # is a list of dictionaries, one for the text instruction and one for the image data.
+    # Step 2: Construct the multimodal prompt. This is a list containing a single
+    # HumanMessage object. The content of this message is itself a list, with
+    # one dictionary for the text instructions and another for the image data.
     prompt = [
         HumanMessage(
             content=[
@@ -77,6 +94,7 @@ def analyze_image_content(image_path: Path) -> str:
         )
     ]
 
+    # Step 3: Invoke the LLM and return the generated description.
     try:
         # Invoke the LLM with the multimodal prompt.
         response = llm.invoke(prompt)
