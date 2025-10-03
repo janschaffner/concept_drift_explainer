@@ -165,3 +165,33 @@ You can also run scripts in `scripts/` to exercise parts of the pipeline for deb
 
 This is academic prototype code for a Master’s thesis. Unless otherwise specified, all rights reserved by the author. Contact the author for reuse permissions.
 
+
+
+The heart of the application's backend is the orchestration and state management system, which governs the agentic workflow.
+The primary orchestrator is located in \textit{backend/graph/build\_graph.py}, which is responsible for assembling and compiling the complete LangGraph application.
+This script registers each agent as a distinct node.
+It also defines the linear sequence of the main analytical pipeline through directed edges, and implements the conditional routing logic via the \textit{should\_continue} function. 
+Additionally, this script centralizes the initialization of shared resources, such as the Pinecone database connection, which is then partially applied to the agents that require it.
+The active workflow is complemented by the passive data contract, which is defined in \textit{backend/state/schema.py}.
+This file serves as the application's information model's single source of truth and formally specifies the \textit{GraphState}, as discussed in Section \ref{sec:4.3}.
+
+The agents and utilities are modularized within the backend.
+The systems' core logic, embodied by the agents, is encapsulated within self-contained modules.
+These modules are located in the designated \textit{backend/agents/} directory.
+Each file corresponds to a specific agent in the workflow, from the initial data ingestion and abstraction in \textit{drift\_agent.py}, through the semantic retrieval and re-ranking in \textit{context\_retrieval\_agent.py} and \textit{re\_ranker\_ agent.py}, to the final synthesis and user interaction in \textit{explanation\_agent.py} and \textit{chatbot\_agent.py}.
+The standalone \textit{drift\_linker\_agent.py}, which contains the logic for the drift meta-analysis, is also included here.
+Utilities and shared helper functions are organized in the \textit{backend/utils/} directory.
+They include modules for managing LLM response caching (\textit{cache.py}), generating vector embeddings for the \textit{drift\_phrase} (\textit{embeddings.py}) and exporting final reports from the frontend (\textit{reporting.py}).
+A dedicated script for analyzing and describing images in general or in PowerPoint presentations (\textit{image\_analyzer.py}) is also located here, as well as the handling of the data ingestion process for new context documents into the vector database (\textit{ingest\_documents.py}).
+Finally, \textit{clear\_namespace.py} has the capacity to reset a namespace in the vector database.
+
+The remaining directories contain the data fixtures, the user interface, and the evaluation scripts.
+The \textit{data/} directory contains all persistent data, knowledge bases, and evaluation assets utilized by the application.
+This includes the curated BPM glossary (\textit{data/knowledge\_base/}), the raw event logs and detector outputs (\textit{data/event\_logs/}, \textit{data/drift\_outputs/}), the unstructured documents for the retrieval corpus (\textit{data/testset/context\_ documents/}), and the persistent caches and feedback logs (\textit{data/cache/llm\_cache.json}, \textit{data/feedback/feedback\_log.jsonl}).
+The user interface is implemented as a Streamlit application, with the main entry point located in \textit{frontend/app.py}
+The application is structured using Streamlit's multi-page app format, with distinct pages for the main dashboard, context management, and settings.
+The pages are defined within the \textit{frontend/pages/} directory.
+All static assets, including images and documents for direct access, are stored in \textit{frontend/static/} and \textit{frontend/assets/}.
+Finally, the repository contains directories designated for testing and evaluation purposes. 
+The \textit{tests/} directory contains the master evaluation harness, which is utilized to calculate performance metrics such as Recall@k and the Mean Reciprocal Rank (MRR). 
+The \textit{scripts/} directory offers executable entry points for diverse component and end-to-end evaluations.
