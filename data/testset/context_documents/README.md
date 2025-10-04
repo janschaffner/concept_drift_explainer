@@ -7,5 +7,5 @@ Documents in `to_be_uploaded` were not upserted to Pinecone.
 
 ## Contents
 
-- **Gold Documents**: A set of 8 documents, where each is the known correct explanation for one of the specific concept drifts.
+- **Gold Documents**: A set of documents, where each is the known correct explanation for one of the specific concept drifts.
 - **Noise Documents**: A set of documents that are thematically related to the business process but are *not* the correct explanation for any drift.

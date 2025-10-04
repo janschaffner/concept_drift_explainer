@@ -1,6 +1,22 @@
 # Concept Drift Explainer
 
-A research prototype for explaining concept drift in business processes. The application links detected drift periods from process event logs with relevant internal and external context (policies, memos, slides, etc.) to produce concise, evidence-backed narratives about what changed and why. The system combines a multi-agent reasoning pipeline built with [LangGraph](https://github.com/langchain-ai/langgraph), a Pinecone vector database, and a Streamlit front end for interactive analysis.
+This repository contains the Concept Drift Explainer (CDE), a research prototype from a master's thesis that explains why business process changes occur. While traditional process mining can detect a "concept drift", it often fails to explain the root cause, creating a detection-interpretation gap.
+The CDE bridges this gap by using an LLM-based multi-agent pipeline to link drift signals from event logs with evidence from unstructured documents like policies and memos. Built with [LangGraph](https://github.com/langchain-ai/langgraph), Pinecone, and Streamlit, the system automates the search for causes and generates traceable, evidence-backed hypotheses. In a controlled evaluation using real-world event logs, the CDE successfully identified the correct explanatory document within the top two results for every test case (100% Recall@2).
+
+---
+
+## Abstract
+
+Concept drift detection in process mining identifies process changes but often fails to explain their underlying causes, creating a detection-interpretation gap. 
+This thesis addresses this problem by designing and evaluating the Concept Drift Explainer (CDE), a prototypical artifact that provides context-aware explanations for such drifts. Using a Design Science Research methodology, an LLM-based multi-agent system was developed that systematically links drift signals from event logs to evidence from unstructured enterprise knowledge sources. The artifact was evaluated through a controlled experiment using real-world event logs and a synthetic context corpus. 
+It achieved high accuracy in identifying the correct explanatory documents. Subsequent expert evaluation confirmed the artifact's practical utility, demonstrating its ability to significantly enhance analytical efficiency by generating traceable, evidence-based hypotheses. This thesis contributes to the research by operationalizing context-aware sense-making in process mining. It also offers a design pattern for trustworthy, AI-driven, explanatory tools for practitioners.
+
+---
+
+## Use the CDE as a WebApp
+
+The Concept Drift Explainer is deployed via Streamlit and accessible at https://concept-drift-explainer.streamlit.app/.
+By default, the web app is set to private. To access it, please create a [Streamlit Account](https://share.streamlit.io/) and provide your email address used to the author or request public access for a limited time for a day or two (<mailto:jschaffn@uni-muenster.de>). This way, you will not need to clone and set up the entire application. Streamlit mirrors the entire GitHub repository.
 
 ---
 
@@ -24,32 +40,52 @@ A research prototype for explaining concept drift in business processes. The app
 ## Repository Layout
 
 ```
-frontend/                # Streamlit application
-  app.py                 # Main entry point
-  pages/                 # Multi-page UI definitions (Home, Manage Context, Settings)
-  static/documents/      # Source documents to ingest (user-provided)
-backend/
-  agents/                # LangGraph agent implementations
-  graph/build_graph.py   # Assembles and compiles the workflow
-  state/schema.py        # Shared GraphState contract
-  utils/                 # Document ingestion, caching, embeddings, reporting helpers
-data/
-  event_logs/            # Event logs and detector outputs (CSV, JSON, XES)
-  knowledge_base/        # BPM glossary CSV
-  cache/                 # LLM response cache and temp files
-scripts/                 # Convenience scripts for exercising the pipeline
-tests/                   # Unit and evaluation scripts (master evaluation harness)
-requirements.txt         # Python dependencies
+backend/                          # Orchestration, state management, and agentic workflow
+  agents/                         # Self-contained agent modules
+    drift_agent.py                # Data ingestion and abstraction agent
+    context_retrieval_agent.py    # Semantic retrieval agent
+    re_ranker_agent.py            # Re-ranking agent
+    explanation_agent.py          # Final synthesis agent
+    chatbot_agent.py              # User interaction agent
+    drift_linker_agent.py         # Drift meta-analysis agent
+  graph/build_graph.py            # Assembles and compiles the LangGraph application
+  state/schema.py                 # Defines the shared GraphState data contract
+  utils/                          # Shared helper functions and utilities
+    cache.py                      # LLM response caching management
+    embeddings.py                 # Vector embedding generation
+    reporting.py                  # Report generation from the frontend
+    image_analyzer.py             # Image and PowerPoint analysis
+    ingest_documents.py           # Handles ingestion of new context documents
+    clear_namespace.py            # Resets a namespace in the vector database
+frontend/                         # Streamlit user interface
+  app.py                          # Main application entry point --> run `streamlit run frontend/app.py`
+  pages/                          # Multi-page UI definitions (Dashboard, Context Management, Settings)
+  static/                         # Static assets for direct user access
+    documents/                    # Primary source documents for ingestion by the application
+  assets/                         # Other static assets (e.g., images)
+data/                             # Persistent data, knowledge bases, and evaluation assets
+  documents/                      # For local, standalone testing of utility scripts only
+  knowledge_base/                 # Curated BPM glossary
+  event_logs/                     # Primary input data for the master evaluation harness (/tests/run_master_evaluation.py)
+  drift_outputs/                  # Default or fallback location for the raw drift detection data + single tests directory
+  testset/                        # Sandbox for testing components
+    context_documents/            # Master archive for the synthetically generated context document corpus used for evaluating the CDE
+    cv4cdd_output/                # Master archive for all evaluation event logs used by the CDE
+  cache/                          # Persistent caches
+    llm_cache.json                # LLM response cache
+  feedback/                       # Feedback logs
+    feedback_log.jsonl            # User feedback log
+scripts/                          # Executable entry points for various evaluations and tests during development
+tests/                            # Master evaluation harness for performance metrics (Recall@k, MRR)
 ```
 
 ---
 
 ## Prerequisites
 
-- Python 3.10 or 3.11 (tested with CPython)
+- Python 3.9 or newer
 - [OpenAI API key](https://platform.openai.com/) with access to GPT-4o / GPT-4o-mini and `text-embedding-3-small`
-- [Pinecone](https://www.pinecone.io/) account and API key (serverless index recommended)
-- Optional: Poppler utilities (improves PDF parsing) and Tesseract OCR (only required if adding external OCR steps)
+- [Pinecone](https://www.pinecone.io/) account, API key and a Pinecone index (index name set to `conceptdriftexplainer`)
 
 ---
 
@@ -58,15 +94,22 @@ requirements.txt         # Python dependencies
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-org>/concept_drift_explainer.git
+git clone https://github.com/janschaffner/concept_drift_explainer.git
 cd concept_drift_explainer
 ```
 
 ### 2. Create a virtual environment (recommended)
 
+macOS / Linux:
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate
+```
+
+Windows:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
 ### 3. Install dependencies
@@ -81,9 +124,9 @@ pip install -r requirements.txt
 Create a `.env` file at the repository root:
 
 ```env
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=your-openai-api-key
 PINECONE_API_KEY=your-pinecone-api-key
-PINECONE_INDEX_NAME=concept-drift-explainer
+PINECONE_INDEX_NAME=conceptdriftexplainer
 ```
 
 Notes:
@@ -92,10 +135,10 @@ Notes:
 
 ### 5. Prepare data assets
 
-1. **Context documents** – Place PDFs, PPTX, DOCX/TXT, PNG, or JPG files in `frontend/static/documents/`. Filenames must start with a date formatted as `YYYY-MM-DD_` (e.g., `2017-10-11_Conference_Guidelines.pdf`). Files without a parsable date are skipped.
+1. **Context documents** – Place PDFs, PPTX, DOCX/TXT, PNG, or JPG files in `frontend/static/documents/`. Filenames must start with a date formatted as `YYYY-MM-DD_` (e.g., `2017-10-11_Conference_Guidelines.pdf`). Files without a parsable date are skipped. The synthetic context document corpus used for evaluation is already stored there.
 2. **Event logs** – Each log folder under `data/event_logs/<LogName>/` should contain:
-   - `prediction_results.csv` – Drift detector output
-   - `window_info.json` – Metadata describing the detected drift windows
+   - `prediction_results.csv` – CV4CDD-4D drift detector output (see: [CV4CDD-4D](https://gitlab.uni-mannheim.de/processanalytics/cv4cdd.git/))
+   - `window_info.json` – Metadata describing the detected drift windows (also given by CV4CDD-4D)
    - `<LogName>.xes` – Original XES process log
    Sample evaluation logs are provided in the repository.
 
@@ -138,12 +181,10 @@ Open the URL printed in the terminal (defaults to http://localhost:8501). From t
 - `scripts/run_compiled_graph_test.py` – Compiles the LangGraph workflow to verify the state graph.
 - `scripts/run_drift_agent_test.py` / `run_agent_chain_test.py` – Exercise specific agents.
 - `backend/utils/clear_namespace.py` – Remove vectors from a Pinecone namespace.
-Each script accepts `--help` for argument details (if applicable).
 Evaluation assets are located in the `tests/` directory:
 - `tests/run_master_evaluation.py` runs the pipeline across all event logs and aggregates metrics into CSV reports.
-- `tests/test_drift_agent.py`, `test_glossary_visibility.py`, etc., cover unit-level behaviour.
 
-Run the full evaluation harness:
+Run the full evaluation harness that was used for Eval3:
 
 ```bash
 python tests/run_master_evaluation.py
@@ -159,36 +200,3 @@ python tests/run_master_evaluation.py
 | No documents ingested | Ensure filenames start with `YYYY-MM-DD_` and the files are supported. Check the terminal for loader errors. |
 | Streamlit app cannot connect to Pinecone | Verify the index exists in the configured region and that your API key has permissions. Rerun the ingestion script to recreate the index if necessary. |
 | Repeated LLM calls are slow or expensive | Keep `data/cache/llm_cache.json`; deleting it forces regeneration. |
-
-
-
-## TODO: CHANGE
-
-The heart of the application's backend is the orchestration and state management system, which governs the agentic workflow.
-The primary orchestrator is located in \textit{backend/graph/build\_graph.py}, which is responsible for assembling and compiling the complete LangGraph application.
-This script registers each agent as a distinct node.
-It also defines the linear sequence of the main analytical pipeline through directed edges, and implements the conditional routing logic via the \textit{should\_continue} function. 
-Additionally, this script centralizes the initialization of shared resources, such as the Pinecone database connection, which is then partially applied to the agents that require it.
-The active workflow is complemented by the passive data contract, which is defined in \textit{backend/state/schema.py}.
-This file serves as the application's information model's single source of truth and formally specifies the \textit{GraphState}, as discussed in Section \ref{sec:4.3}.
-
-The agents and utilities are modularized within the backend.
-The systems' core logic, embodied by the agents, is encapsulated within self-contained modules.
-These modules are located in the designated \textit{backend/agents/} directory.
-Each file corresponds to a specific agent in the workflow, from the initial data ingestion and abstraction in \textit{drift\_agent.py}, through the semantic retrieval and re-ranking in \textit{context\_retrieval\_agent.py} and \textit{re\_ranker\_ agent.py}, to the final synthesis and user interaction in \textit{explanation\_agent.py} and \textit{chatbot\_agent.py}.
-The standalone \textit{drift\_linker\_agent.py}, which contains the logic for the drift meta-analysis, is also included here.
-Utilities and shared helper functions are organized in the \textit{backend/utils/} directory.
-They include modules for managing LLM response caching (\textit{cache.py}), generating vector embeddings for the \textit{drift\_phrase} (\textit{embeddings.py}) and exporting final reports from the frontend (\textit{reporting.py}).
-A dedicated script for analyzing and describing images in general or in PowerPoint presentations (\textit{image\_analyzer.py}) is also located here, as well as the handling of the data ingestion process for new context documents into the vector database (\textit{ingest\_documents.py}).
-Finally, \textit{clear\_namespace.py} has the capacity to reset a namespace in the vector database.
-
-The remaining directories contain the data fixtures, the user interface, and the evaluation scripts.
-The \textit{data/} directory contains all persistent data, knowledge bases, and evaluation assets utilized by the application.
-This includes the curated BPM glossary (\textit{data/knowledge\_base/}), the raw event logs and detector outputs (\textit{data/event\_logs/}, \textit{data/drift\_outputs/}), the unstructured documents for the retrieval corpus (\textit{data/testset/context\_ documents/}), and the persistent caches and feedback logs (\textit{data/cache/llm\_cache.json}, \textit{data/feedback/feedback\_log.jsonl}).
-The user interface is implemented as a Streamlit application, with the main entry point located in \textit{frontend/app.py}
-The application is structured using Streamlit's multi-page app format, with distinct pages for the main dashboard, context management, and settings.
-The pages are defined within the \textit{frontend/pages/} directory.
-All static assets, including images and documents for direct access, are stored in \textit{frontend/static/} and \textit{frontend/assets/}.
-Finally, the repository contains directories designated for testing and evaluation purposes. 
-The \textit{tests/} directory contains the master evaluation harness, which is utilized to calculate performance metrics such as Recall@k and the Mean Reciprocal Rank (MRR). 
-The \textit{scripts/} directory offers executable entry points for diverse component and end-to-end evaluations.

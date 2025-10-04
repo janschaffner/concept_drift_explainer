@@ -240,7 +240,7 @@ def expand_context(snippets: List[Dict], index: Pinecone.Index) -> List[Dict]:
         except Exception as e:
             logging.error(f"Failed to expand context for '{source}': {e}")
 
-    # Re-sort the final list by the original priority_score to maintain rank order.
+    # Re-sort the final list to maintain rank order.
     return sorted(expanded_docs, key=lambda d: d.get("priority_score", 0.0), reverse=True)
 
 # Note: The 'rank' parameter is 0-based.
