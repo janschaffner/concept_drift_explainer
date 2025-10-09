@@ -1,6 +1,6 @@
 # Concept Drift Explainer
 
-This repository contains the source code for the Concept Drift Explainer (CDE), a tool developed 
+This repository contains the source code for the Concept Drift Explainer (CDE), a tool developed for the master's thesis "Explaining Concept Drifts in Business Processes: An LLM-Based Approach to Context-Aware Sense-Making in Process Mining" at the University of Münster.
 
 ## Abstract
 
