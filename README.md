@@ -1,9 +1,6 @@
 # Concept Drift Explainer
 
-This repository contains the Concept Drift Explainer (CDE), a research prototype from a master's thesis that explains why business process changes occur. While traditional process mining can detect a "concept drift", it often fails to explain the root cause, creating a detection-interpretation gap.
-The CDE bridges this gap by using an LLM-based multi-agent pipeline to link drift signals from event logs with evidence from unstructured documents like policies and memos. Built with [LangGraph](https://github.com/langchain-ai/langgraph), Pinecone, and Streamlit, the system automates the search for causes and generates traceable, evidence-backed hypotheses. In a controlled evaluation using real-world event logs, the CDE successfully identified the correct explanatory document within the top two results for every test case (100% Recall@2).
-
----
+This repository contains the source code for the Concept Drift Explainer (CDE), a tool developed 
 
 ## Abstract
 
@@ -16,7 +13,7 @@ It achieved high accuracy in identifying the correct explanatory documents. Subs
 ## Use the CDE as a WebApp
 
 The Concept Drift Explainer is deployed via Streamlit and accessible at https://concept-drift-explainer.streamlit.app/.
-By default, the web app is set to private. To access it, please create a [Streamlit Account](https://share.streamlit.io/) and provide your email address used to the author or request public access for a limited time for a day or two (<mailto:jschaffn@uni-muenster.de>). This way, you will not need to clone and set up the entire application. Streamlit mirrors the entire GitHub repository.
+By default, the web app is set to private. To access it, please create a [Streamlit Account](https://share.streamlit.io/) and provide your email address used to the author or request public access for a limited time for a day or two (<mailto:jschaffn@uni-muenster.de> or DM via Slack). This way, you will not need to clone and set up the entire application. Streamlit mirrors the entire GitHub repository.
 
 ---
 
@@ -26,12 +23,14 @@ By default, the web app is set to private. To access it, please create a [Stream
    - Context documents placed in `frontend/static/documents/` are chunked, embedded with `text-embedding-3-small`, and upserted into the Pinecone `context` namespace. Filenames must begin with a `YYYY-MM-DD_` date prefix so timestamps can be inferred.
    - The BPM glossary at `data/knowledge_base/bpm_glossary.csv` is embedded into the `bpm-kb` namespace for terminology grounding.
 2. **Explanation Pipeline (LangGraph)**
+   - `Orchestrator` assembles and compiles the full agentic workflow, manages the shared state, and routes control flow between all other agents.
    - `drift_agent` derives a drift phrase, keywords, and case statistics from the selected event log window.
    - `context_retrieval_agent` performs semantic + temporal retrieval from Pinecone and constructs candidate evidence sets.
    - `re_ranker_agent` scores and curates the evidence, keeping a safety-net fallback snippet.
    - `franzoi_mapper_agent` maps snippets to the Franzoi context taxonomy, enriching the explanation structure.
    - `explanation_agent` synthesizes the final narrative with citations and confidence estimates; it also persists conversation state.
    - `chatbot_agent` enables iterative questioning using the accumulated graph state.
+   - `drift_linker_agent` performs a meta-analysis after multiple runs to identify and summarize relationships between different drifts.
 3. **Streamlit Interface**
    - The UI exposes workflows for managing documents, configuring settings, selecting drift windows, running the analysis, and exporting reports.
 
