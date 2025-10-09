@@ -21,7 +21,7 @@ def init_session_state():
         st.session_state.state_initialized = True
         
         # --- Settings ---
-        st.session_state.max_causes = 5 # Default value
+        st.session_state.max_causes = 3 # Default value
         st.session_state.confidence_threshold = 0.25
         
         # --- Analysis Results & UI State ---

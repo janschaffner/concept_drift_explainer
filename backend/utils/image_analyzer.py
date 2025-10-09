@@ -112,7 +112,7 @@ if __name__ == '__main__':
     load_dotenv()
     
     # To test, place an image named 'test_org_chart.png' in the 'data/documents/' folder.
-    test_image_path = project_root / "data" / "documents" / "test_org_chart.png"
+    test_image_path = project_root / "data" / "documents" / "2025-07-07_empireorg.png"
     if test_image_path.exists():
         description = analyze_image_content(test_image_path)
         print("\n--- Generated Description ---")
