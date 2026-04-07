@@ -16,6 +16,9 @@ import os
 from functools import partial
 from pinecone import Pinecone
 
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
 # --- Path Correction ---
 # Ensures that the script can correctly import modules from the 'backend' directory
 # by adding the project's root directory to the system's path.
