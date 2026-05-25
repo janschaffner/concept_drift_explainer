@@ -1,6 +1,6 @@
 # Concept Drift Explainer
 
-This repository contains the source code for the Concept Drift Explainer (CDE), a tool developed for the master's thesis "Explaining Concept Drifts in Business Processes: An LLM-Based Approach to Context-Aware Sense-Making in Process Mining" at the University of Münster.
+This repository contains the source code for the Concept Drift Explainer (CDE), a tool developed for the paper "Explaining Concept Drifts in Business Processes: An LLM-Based Approach to Context-Aware Sense-Making in Process Mining".
 
 ## Abstract
 
@@ -13,7 +13,7 @@ It achieved high accuracy in identifying the correct explanatory documents. Subs
 ## Use the CDE as a WebApp
 
 The Concept Drift Explainer is deployed via Streamlit and accessible at https://concept-drift-explainer.streamlit.app/.
-By default, the web app is set to private. To access it, please create a [Streamlit Account](https://share.streamlit.io/) and provide your email address used to the author or request public access for a limited time for a day or two (<mailto:jschaffn@uni-muenster.de> or DM via Slack). This way, you will not need to clone and set up the entire application. Streamlit mirrors the entire GitHub repository.
+By default, the web app is set to private. To access it, please create a [Streamlit Account](https://share.streamlit.io/) and provide your email address used to the author or request public access for a limited time for a day or two. This way, you will not need to clone and set up the entire application. Streamlit mirrors the entire GitHub repository.
 
 ---
 
@@ -93,7 +93,7 @@ tests/                            # Master evaluation harness for performance me
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/janschaffner/concept_drift_explainer.git
+git clone <repository link>
 cd concept_drift_explainer
 ```
 
