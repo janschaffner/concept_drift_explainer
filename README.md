@@ -27,7 +27,7 @@ By default, the web app is set to private. To access it, please create a [Stream
    - `drift_agent` derives a drift phrase, keywords, and case statistics from the selected event log window.
    - `context_retrieval_agent` performs semantic + temporal retrieval from Pinecone and constructs candidate evidence sets.
    - `re_ranker_agent` scores and curates the evidence, keeping a safety-net fallback snippet.
-   - `franzoi_mapper_agent` maps snippets to the Franzoi context taxonomy, enriching the explanation structure.
+   - `context_mapper_agent` maps snippets to the Franzoi context taxonomy, enriching the explanation structure.
    - `explanation_agent` synthesizes the final narrative with citations and confidence estimates; it also persists conversation state.
    - `chatbot_agent` enables iterative questioning using the accumulated graph state.
    - `drift_linker_agent` performs a meta-analysis after multiple runs to identify and summarize relationships between different drifts.

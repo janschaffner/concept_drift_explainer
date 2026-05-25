@@ -25,7 +25,7 @@ class DriftInfo(TypedDict):
     start_timestamp: str
     end_timestamp: str
 
-class FranzoiClassification(TypedDict):
+class ContextClassification(TypedDict):
     """
     Represents a single classification according to the Process Mining Context 
     Taxonomy by Franzoi, Hartl et al. (2025).
@@ -47,8 +47,8 @@ class ContextSnippet(TypedDict):
     semantic_specificity: Optional[float]
     priority_score: Optional[float]
     support_only: bool # True if this came from the glossary ("bpm-kb")
-    # Populated by the Franzoi Mapper Agent.
-    classifications: List[FranzoiClassification] # list of detailed classifications
+    # Populated by the Context Mapper Agent.
+    classifications: List[ContextClassification] # list of detailed classifications
 
 class RankedCause(TypedDict):
     """

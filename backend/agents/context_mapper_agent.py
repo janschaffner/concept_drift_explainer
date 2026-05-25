@@ -1,5 +1,5 @@
 """
-This module contains the implementation of the Franzoi Mapper Agent.
+This module contains the implementation of the Context Mapper Agent.
 
 Its primary responsibility is to enrich the curated list of evidence snippets by
 classifying each one against the formal, three-level Process Mining Context
@@ -25,7 +25,7 @@ from langchain_openai import ChatOpenAI
 from pydantic.v1 import BaseModel, Field
 
 # Import our graph state schema and caching utility.
-from backend.state.schema import GraphState, ContextSnippet, FranzoiClassification
+from backend.state.schema import GraphState, ContextSnippet, ContextClassification
 from backend.utils.cache import load_cache, save_to_cache, get_cache_key
 
 # --- Configuration ---
@@ -72,7 +72,7 @@ TEXT SNIPPET:
 
 # --- Main Agent Logic ---
 
-def run_franzoi_mapper_agent(state: GraphState) -> dict:
+def run_context_mapper_agent(state: GraphState) -> dict:
     """
     Classifies a list of context snippets against the Franzoi context taxonomy.
 
@@ -86,7 +86,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
     Returns:
         An empty dictionary, as it modifies the state directly for efficiency.
     """
-    logging.info("--- Running Franzoi Mapper Agent ---")
+    logging.info("--- Running Context Mapper Agent ---")
 
     # Step 1: Get the curated list of snippets from the state.
     context_snippets: List[ContextSnippet] = state.get("reranked_context_snippets", [])
@@ -142,7 +142,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
 
         # Step 5: Process the response and enrich the snippet object in-place.
         # This is an efficient way to add data without creating a new list.
-        typed_classifications: List[FranzoiClassification] = [
+        typed_classifications: List[ContextClassification] = [
             {"full_path": item.get("full_path", "UNKNOWN"), "reasoning": item.get("reasoning", "")}
             for item in response_data.get("classifications", [])
         ]
@@ -155,7 +155,7 @@ def run_franzoi_mapper_agent(state: GraphState) -> dict:
         logging.info("LLM cache file updated.")
 
 
-    logging.info("Franzoi Mapper Agent execution successful.")
+    logging.info("Context Mapper Agent execution successful.")
 
     # This agent modifies the state in-place, so it returns an empty dictionary.
     return {}

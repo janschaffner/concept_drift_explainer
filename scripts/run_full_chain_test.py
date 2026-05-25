@@ -9,7 +9,7 @@ sys.path.append(str(project_root))
 
 from backend.agents.drift_agent import run_drift_agent
 from backend.agents.context_retrieval_agent import run_context_retrieval_agent
-from backend.agents.franzoi_mapper_agent import run_franzoi_mapper_agent
+from backend.agents.context_mapper_agent import run_context_mapper_agent
 from backend.agents.explanation_agent import run_explanation_agent # <-- NEW IMPORT
 
 if __name__ == "__main__":
@@ -33,12 +33,12 @@ if __name__ == "__main__":
         print(f"ERROR: {state['error']}"); sys.exit(1)
     print(f"Context Retrieval Agent completed successfully. Found {len(state.get('raw_context_snippets', []))} snippets.")
 
-    # 4. Run the Franzoi Mapper Agent
-    print("\n[Step 3] Running Franzoi Mapper Agent...")
-    state.update(run_franzoi_mapper_agent(state))
+    # 4. Run the Context Mapper Agent
+    print("\n[Step 3] Running Context Mapper Agent...")
+    state.update(run_context_mapper_agent(state))
     if state.get("error"):
         print(f"ERROR: {state['error']}"); sys.exit(1)
-    print("Franzoi Mapper Agent completed successfully.")
+    print("Context Mapper Agent completed successfully.")
 
     # 5. Run the Explanation Agent <-- NEW STEP
     print("\n[Step 4] Running Explanation Agent...")

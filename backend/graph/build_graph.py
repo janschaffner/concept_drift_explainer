@@ -33,7 +33,7 @@ from backend.state.schema import GraphState
 from backend.agents.drift_agent import run_drift_agent
 from backend.agents.context_retrieval_agent import run_context_retrieval_agent
 from backend.agents.re_ranker_agent import run_reranker_agent
-from backend.agents.franzoi_mapper_agent import run_franzoi_mapper_agent
+from backend.agents.context_mapper_agent import run_context_mapper_agent
 from backend.agents.explanation_agent import run_explanation_agent
 from backend.agents.chatbot_agent import run_chatbot_agent
 
@@ -96,7 +96,7 @@ def build_graph():
     workflow.add_node("drift_agent", run_drift_agent)
     workflow.add_node("context_retrieval_agent", retrieval_agent_with_index)
     workflow.add_node("re_ranker_agent", run_reranker_agent)
-    workflow.add_node("franzoi_mapper_agent", run_franzoi_mapper_agent)
+    workflow.add_node("context_mapper_agent", run_context_mapper_agent)
     workflow.add_node("explanation_agent", explanation_agent_with_index)
     workflow.add_node("chatbot_agent", run_chatbot_agent)
 
@@ -106,8 +106,8 @@ def build_graph():
     workflow.set_entry_point("drift_agent")
     workflow.add_edge("drift_agent", "context_retrieval_agent")
     workflow.add_edge("context_retrieval_agent", "re_ranker_agent")
-    workflow.add_edge("re_ranker_agent", "franzoi_mapper_agent")
-    workflow.add_edge("franzoi_mapper_agent", "explanation_agent")
+    workflow.add_edge("re_ranker_agent", "context_mapper_agent")
+    workflow.add_edge("context_mapper_agent", "explanation_agent")
     
     # Define the conditional logic for the interactive chatbot loop
     # After the main explanation is generated, the `should_continue` router is called.
